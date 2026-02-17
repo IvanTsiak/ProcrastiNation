@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="ProcrastiDomain/ProcrastiDomain.csproj" />
+  <Project Path="ProcrastiInfrastructure/ProcrastiInfrastructure.csproj" />
+</Solution>
