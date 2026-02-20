@@ -1,4 +1,16 @@
+using Microsoft.EntityFrameworkCore;
+using Npgsql;
+using ProcrastiDomain.Model;
+using ProcrastiInfrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
+
+var dataSourceBuilder = new NpgsqlDataSourceBuilder(builder.Configuration.GetConnectionString("DefaultConnection"));
+dataSourceBuilder.MapEnum<LogType>();
+var dataSource = dataSourceBuilder.Build();
+
+builder.Services.AddDbContext<ProcrastiContext>(options =>
+    options.UseNpgsql(dataSource));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -22,7 +34,7 @@ app.MapStaticAssets();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
+    pattern: "{controller=Logs}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 

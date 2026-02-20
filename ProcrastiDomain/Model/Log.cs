@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProcrastiDomain.Model;
 
@@ -8,6 +9,9 @@ public partial class Log : Entity
     public int? Userid { get; set; }
 
     public int? Activityid { get; set; }
+
+    [Column("logtype")]
+    public LogType Logtype { get; set; }
 
     public int Amount { get; set; }
 
