@@ -11,31 +11,41 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="HelloWorld" asp-action="Index">Movie App</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+        <div style="display: flex;">
+            <div style="width: 250px; background-color: #f4f4f4; height: 100vh; padding: 20px; display: flex; flex-direction: column; justify-content: space-between;">
+
+                <div>
+                    <h3>NAVIGATION</h3> <ul style="list-style-type: none; padding: 0;">
+                        <li style="margin-bottom: 10px;">
+                            <a asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        <li style="margin-bottom: 10px;">
+                            <a asp-controller="Logs" asp-action="Index">Global</a>
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <a asp-controller="Logs" asp-action="Create">Create Log</a>
+                        </li>
+                        <li style="margin-bottom: 10px;">
+                            <a asp-controller="Achievements" asp-action="Index">Achievements</a>
                         </li>
                     </ul>
                 </div>
+
+                <div style="border-top: 1px solid #ccc; padding-top: 10px;">
+                    <a asp-controller="Home" asp-action="Profile">Profile</a>
+                </div>
             </div>
-        </nav>
+
+            <div style="flex-grow: 1; padding: 20px;">
+                @RenderBody()
+            </div>
+        </div>
     </header>
-    <div class="container">
+    @* <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
-    </div>
+    </div> *@
 
     <footer class="border-top footer text-muted">
         <div class="container">
