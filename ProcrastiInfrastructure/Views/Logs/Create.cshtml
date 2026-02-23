@@ -1,56 +1,56 @@
 ﻿@model ProcrastiDomain.Model.Log
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Log";
 }
 
-<h1>Create</h1>
-
-<h4>Log</h4>
+<h1>Create Log</h1>
 <hr />
-<div class="row">
-    <div class="col-md-4">
+
+<div  class="row">
+    <div class="col-md-6">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Userid" class="control-label"></label>
-                <select asp-for="Userid" class ="form-control" asp-items="ViewBag.Userid"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Activityid" class="control-label"></label>
-                <select asp-for="Activityid" class ="form-control" asp-items="ViewBag.Activityid"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Logtype" class="control-label"></label>
-                <select asp-for="Logtype" class="form-control"></select>
+
+            <div class="form-group mb-3">
+                <label asp-for="Logtype" class="control-label fw-bold">Log type</label>
+                <select asp-for="Logtype" class="form-control" asp-items="ViewBag.Logtype"></select>
                 <span asp-validation-for="Logtype" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Amount" class="control-label"></label>
-                <input asp-for="Amount" class="form-control" />
+
+            <div class="form-group mb-3">
+                <label asp-for="Activityid" class="control-label fw-bold">Where have you wasted your time?</label>
+                <select asp-for="Activityid" class="form-control" asp-items="ViewBag.Activityid"></select>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Amount" class="control-label fw-bold">How many minutes were wasted?</label>
+                <input asp-for="Amount" class="form-control" type="number" min="1" />
                 <span asp-validation-for="Amount" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Rating" class="control-label"></label>
-                <input asp-for="Rating" class="form-control" />
+
+            <div class="form-group mb-3">
+                <label asp-for="Rating" class="control-label fw-bold">Estimate the time wasted (from 1 to 5)</label>
+                <input asp-for="Rating" class="form-control" type="number" min="1" max="5" />
                 <span asp-validation-for="Rating" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Comment" class="control-label"></label>
-                <input asp-for="Comment" class="form-control" />
+
+            <div class="form-group mb-3">
+                <label asp-for="Comment" class="control-label fw-bold">Comment</label>
+                <input asp-for="Comment" class="form-control" placeholder="For example: I was watching TikTok again..." />
                 <span asp-validation-for="Comment" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+
+            <div class="form-group mt-4">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary ms-2">I changed my mind about sharing this.</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

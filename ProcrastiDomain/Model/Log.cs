@@ -10,7 +10,6 @@ public partial class Log : Entity
 
     public int? Activityid { get; set; }
 
-    [Column("logtype")]
     public LogType Logtype { get; set; }
 
     public int Amount { get; set; }

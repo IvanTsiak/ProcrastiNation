@@ -50,8 +50,14 @@ namespace ProcrastiInfrastructure.Controllers
         public IActionResult Create()
         {
             ViewData["Activityid"] = new SelectList(_context.Activities, "Id", "Name");
-            ViewData["Userid"] = new SelectList(_context.Users, "Id", "Email");
-            ViewData["Logtype"] = new SelectList(Enum.GetValues(typeof(LogType)));
+
+            var logTypes = new List<SelectListItem>
+            {
+                new SelectListItem { Value = LogType.win.ToString(), Text = "Win" },
+                new SelectListItem { Value = LogType.loss.ToString(), Text = "Loss" }
+            };
+            ViewData["Logtype"] = logTypes;
+
             return View();
         }
 
@@ -60,10 +66,12 @@ namespace ProcrastiInfrastructure.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Userid,Activityid,Logtype,Amount,Rating,Comment,Createdat,Isvisible,Likescount,Id")] Log log)
+        public async Task<IActionResult> Create([Bind("Activityid,Logtype,Amount,Rating,Comment")] Log log)
         {
             log.Userid = 1;
             log.Createdat = DateTime.Now;
+            log.Isvisible = true;
+            log.Likescount = 0;
 
             if (ModelState.IsValid)
             {
@@ -74,6 +82,27 @@ namespace ProcrastiInfrastructure.Controllers
                 {
                     user.Totalloss += log.Amount;
                     _context.Update(user);
+                }
+
+                if (log.Logtype == LogType.loss)
+                {
+                    var globalStat = await _context.Globalstats.FirstOrDefaultAsync();
+
+                    if (globalStat != null)
+                    {
+                        globalStat.Totallossamount += log.Amount;
+                        globalStat.Lastupdated = DateTime.Now;
+                        _context.Update(globalStat);
+                    }
+                    else
+                    {
+                        var newGlobalStat = new Globalstat
+                        {
+                            Totallossamount = log.Amount,
+                            Lastupdated = DateTime.Now
+                        };
+                        _context.Globalstats.Add(newGlobalStat);
+                    }
                 }
 
                 var activity = await _context.Activities.FindAsync(log.Activityid);
@@ -88,7 +117,12 @@ namespace ProcrastiInfrastructure.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["Activityid"] = new SelectList(_context.Activities, "ActivityId", "Name", log.Activityid);
+            ViewData["Activityid"] = new SelectList(_context.Activities, "Id", "Name", log.Activityid);
+            ViewData["Logtype"] = new List<SelectListItem>
+            {
+                new SelectListItem { Value = LogType.win.ToString(), Text = "Win" },
+                new SelectListItem { Value = LogType.loss.ToString(), Text = "Loss" }
+            };
             return View(log);
         }
 

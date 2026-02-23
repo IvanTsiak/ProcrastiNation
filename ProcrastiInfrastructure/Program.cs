@@ -5,12 +5,8 @@ using ProcrastiInfrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var dataSourceBuilder = new NpgsqlDataSourceBuilder(builder.Configuration.GetConnectionString("DefaultConnection"));
-dataSourceBuilder.MapEnum<LogType>();
-var dataSource = dataSourceBuilder.Build();
-
 builder.Services.AddDbContext<ProcrastiContext>(options =>
-    options.UseNpgsql(dataSource));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

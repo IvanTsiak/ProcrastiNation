@@ -38,8 +38,6 @@ public partial class ProcrastiContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasPostgresEnum("log_type", new[] { "win", "loss" });
-
         modelBuilder.Entity<Achievement>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("achievements_pkey");
@@ -153,6 +151,9 @@ public partial class ProcrastiContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("logid");
             entity.Property(e => e.Activityid).HasColumnName("activityid");
+            entity.Property(e => e.Logtype)
+    .HasColumnName("logtype")
+    .HasColumnType("log_type");
             entity.Property(e => e.Amount).HasColumnName("amount");
             entity.Property(e => e.Comment).HasColumnName("comment");
             entity.Property(e => e.Createdat)

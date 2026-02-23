@@ -2,6 +2,6 @@
 
 public enum LogType
 {
-    win,
-    loss
+    win = 0,
+    loss = 1
 }
