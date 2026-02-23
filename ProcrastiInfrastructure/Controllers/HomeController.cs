@@ -1,14 +1,35 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ProcrastiInfrastructure.Models;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace ProcrastiInfrastructure.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly ProcrastiContext _context;
+
+        public HomeController(ProcrastiContext context)
         {
-            return View();
+            _context = context;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var viewModel = new DashboardViewModel();
+
+            var globalStat = await _context.Globalstats.FirstOrDefaultAsync();
+            viewModel.GlobalLossAmount = globalStat != null ? globalStat.Totallossamount ?? 0 : 0;
+
+            viewModel.RecentLogs = await _context.Logs
+                .Include(l => l.User)
+                .Include(l => l.Activity)
+                .OrderByDescending(log => log.Createdat)
+                .Take(100)
+                .ToListAsync();
+
+            return View(viewModel);
         }
 
         public IActionResult Privacy()

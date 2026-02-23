@@ -1,8 +1,33 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model ProcrastiInfrastructure.Models.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div style="border: 2px solid black; padding: 20px; text-align: center; margin-bottom: 30px;">
+    <h2>Time lost by all users:</h2>
+    <h1 style="color: red; font-size: 48px;">@Model.GlobalLossAmount minutes</h1>
+</div>
+
+<div>
+    <h3>Recent Logs</h3>
+    <hr />
+
+    @foreach (var log in Model.RecentLogs)
+    {
+        <div style="border: 1px solid gray; padding: 10px; margin-bottom: 10px;">
+            <p>
+                <strong>@(log.User?.Username ?? "Anonymous")</strong> lost
+                <strong>@log.Amount</strong> minutes
+                in <em>@(log.Activity?.Name ?? "Unknown")</em>
+            </p>
+            <p>
+                <small>Rating: @log.Rating/5 | Date: @log.Createdat?.ToString("dd.MM.yyyy HH:mm")</small>
+            </p>
+            @if (!string.IsNullOrEmpty(log.Comment))
+            {
+                <p><em>" @log.Comment "</em></p>
+            }
+        </div>
+    }
 </div>
