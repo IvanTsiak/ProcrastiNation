@@ -10,9 +10,8 @@
     <link rel="stylesheet" href="~/ProcrastiInfrastructure.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
         <div style="display: flex;">
-            <div style="width: 250px; background-color: #f4f4f4; height: 100vh; padding: 20px; display: flex; flex-direction: column; justify-content: space-between;">
+            <div style="width: 250px; background-color: #f4f4f4; height: 100vh; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; position: sticky; top: 0;">
 
                 <div>
                     <h3>NAVIGATION</h3> <ul style="list-style-type: none; padding: 0;">
@@ -40,7 +39,6 @@
                 @RenderBody()
             </div>
         </div>
-    </header>
     @* <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

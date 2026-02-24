@@ -68,7 +68,7 @@ namespace ProcrastiInfrastructure.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Activityid,Logtype,Amount,Rating,Comment")] Log log)
         {
-            log.Userid = 1;
+            log.Userid = 3;
             log.Createdat = DateTime.Now;
             log.Isvisible = true;
             log.Likescount = 0;
