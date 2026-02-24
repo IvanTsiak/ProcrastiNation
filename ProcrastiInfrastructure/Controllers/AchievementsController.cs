@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProcrastiDomain.Model;
-using ProcrastiInfrastructure;
+using ProcrastiInfrastructure.Models;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ProcrastiInfrastructure.Controllers
 {
@@ -22,7 +19,31 @@ namespace ProcrastiInfrastructure.Controllers
         // GET: Achievements
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Achievements.ToListAsync());
+            int currentUserId = 1;
+
+            var earnedAchievementIds = await _context.Userachievements
+                .Where(ua => ua.Userid == currentUserId)
+                .Select(ua => ua.Achievementid)
+                .ToListAsync();
+
+            var achievements = await _context.Achievements
+                .Where(a => a.Ishidden == false || earnedAchievementIds.Contains(a.Id))
+                .ToListAsync();
+
+            var viewModel = new AchievementsViewModel
+            {
+                EarnedCount = earnedAchievementIds.Count,
+                TotalCount = achievements.Count,
+                Achievements = achievements.Select(a => new AchievementItemViewModel
+                {
+                    Title = a.Title,
+                    Description = a.Description,
+                    Icon = a.Icon,
+                    IsUnlocked = earnedAchievementIds.Contains(a.Id)
+                }).ToList()
+            };
+
+            return View(viewModel);
         }
 
         // GET: Achievements/Details/5

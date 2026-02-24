@@ -25,6 +25,7 @@ namespace ProcrastiInfrastructure.Controllers
             viewModel.RecentLogs = await _context.Logs
                 .Include(l => l.User)
                 .Include(l => l.Activity)
+                .Where(log => log.Isvisible == true)
                 .OrderByDescending(log => log.Createdat)
                 .Take(100)
                 .ToListAsync();

@@ -1,59 +1,36 @@
-﻿@model IEnumerable<ProcrastiDomain.Model.Achievement>
+﻿@model ProcrastiInfrastructure.Models.AchievementsViewModel;
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Achievements";
 }
 
-<h1>Index</h1>
+<div>
+    <h2>Achievements that are not to be ashamed of</h2>
+    <p>Collected: @Model.EarnedCount / @Model.TotalCount</p>
+</div>
+<hr />
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Code)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Icon)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Ishidden)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Code)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Icon)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Ishidden)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div style="display: flex; flex-wrap: wrap; gap: 20px;">
+    @foreach (var achievement in Model.Achievements)
+    {
+    string borderStyle = achievement.IsUnlocked ? "border: 2px solid green;" : "border: 2px solid gray;";
+
+        <div style="padding: 15px; width: 250px; border-radius: 8px; @borderStyle">
+            <div style="width: 50px; height: 50px; background-color: #eee; margin-bottom: 10px; display: flex; align-items: center; justify-content: center;">
+                IMG
+            </div>
+
+            <h4>@achievement.Title</h4>
+            <p style="font-size: 14 px; color: #555;">@achievement.Description</p>
+
+            @if (achievement.IsUnlocked)
+            {
+                <p style="color: green; font-weight: bold;">Unlocked</p>
+            }
+            else
+            {
+                <p style="color: gray; font-style: italic;">Locked</p>
+            }
+        </div>
+    }
+</div>
