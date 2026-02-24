@@ -141,6 +141,13 @@ namespace ProcrastiInfrastructure.Controllers
             }
             ViewData["Activityid"] = new SelectList(_context.Activities, "Id", "Name", log.Activityid);
             ViewData["Userid"] = new SelectList(_context.Users, "Id", "Email", log.Userid);
+
+            var logTypes = new List<SelectListItem>
+            {
+                new SelectListItem { Value = LogType.win.ToString(), Text = "Win" },
+                new SelectListItem { Value = LogType.loss.ToString(), Text = "Loss" }
+            };
+            ViewData["Logtype"] = logTypes;
             return View(log);
         }
 

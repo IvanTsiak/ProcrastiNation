@@ -1,4 +1,5 @@
-﻿@model ProcrastiInfrastructure.Models.DashboardViewModel
+﻿@using ProcrastiDomain.Model;
+@model ProcrastiInfrastructure.Models.DashboardViewModel
 
 @{
     ViewData["Title"] = "Home";
@@ -15,9 +16,14 @@
 
     @foreach (var log in Model.RecentLogs)
     {
-        <div style="border: 1px solid gray; padding: 10px; margin-bottom: 10px;">
+        bool isLoss = log.Logtype == ProcrastiDomain.Model.LogType.loss;
+        string color = isLoss ? "red" : "green";
+        string sign = isLoss ? "wasted" : "spent with pleasure";
+        string styleBorder = isLoss ? "border-left: 5px solid red;" : "border-left: 5px solid green;";
+        <div style="border: 1px solid gray; padding: 10px; margin-bottom: 10px; @styleBorder">
             <p>
-                <strong>@(log.User?.Username ?? "Anonymous")</strong> lost
+                <strong>@(log.User?.Username ?? "Anonymous")</strong>
+                <span style="color: @color;">@sign</span>
                 <strong>@log.Amount</strong> minutes
                 in <em>@(log.Activity?.Name ?? "Unknown")</em>
             </p>
