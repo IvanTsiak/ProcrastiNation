@@ -174,5 +174,40 @@ namespace ProcrastiInfrastructure.Controllers
         {
             return _context.Achievements.Any(e => e.Id == id);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Unlock([FromBody] string code)
+        {
+            int currentUserId = 1;
+
+            var achievement = await _context.Achievements.FirstOrDefaultAsync(a => a.Code == code);
+            if (achievement == null)
+            {
+                return NotFound("Achievement not found");
+            }
+
+            bool alreadyUnlocked = await _context.Userachievements
+                .AnyAsync(ua => ua.Userid == currentUserId && ua.Achievementid == achievement.Id);
+
+            if (alreadyUnlocked)
+            {
+                return BadRequest("Achievement already unlocked");
+            }
+
+            var newEarn = new Userachievement
+            {
+                Userid = currentUserId,
+                Achievementid = achievement.Id,
+            };
+            _context.Userachievements.Add(newEarn);
+            await _context.SaveChangesAsync();
+
+            return Json(new
+            {
+                title = achievement.Title,
+                description = achievement.Description,
+                icon = achievement.Icon
+            });
+        }
     }
 }
