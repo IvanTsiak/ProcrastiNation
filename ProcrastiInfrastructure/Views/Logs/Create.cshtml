@@ -53,4 +53,21 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    
+    <script>
+        const NUM_OF_FAILS = 5;
+        let validationFailCount = 0;
+
+        $("form").on("submit", function (e) {
+            if (!$(this).valid()) {
+                validationFailCount++;
+                
+                if (validationFailCount === NUM_OF_FAILS) {
+                    if (typeof tryUnlockAchievement == 'function') {
+                        tryUnlockAchievement("INTELLECTUAL");
+                    }
+                }
+            }
+        });
+    </script>
 }

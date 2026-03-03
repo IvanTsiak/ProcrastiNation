@@ -1,0 +1,59 @@
+﻿@model ProcrastiInfrastructure.Models.ProfileViewModel
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<div>
+    <img src="@Model.ProfilePicture" alt="Avatar" style="width: 100px; height: 100px; object-fit: cover; border: 1px solid #000;" />
+    <h2>@Model.Username</h2>
+    <p><strong>Title:</strong> @Model.CurrentTitle</p>
+    <p><strong>Joined date:</strong> @Model.JoinedDate?.ToString("dd.MM.yyyy")</p>
+</div>
+
+<hr />
+
+<div>
+    <h3>Statistics:</h3>
+    <ul>
+        <li><strong>Achievements achieved:</strong> @Model.AchievementsCount</li>
+        <li><strong>Titles unlocked:</strong> @Model.TitlesCount</li>
+        <li><strong>Time wasted::</strong> @Model.TotalLoss minutes</li>
+    </ul>
+</div>
+
+<hr />
+
+<div>
+    <h3>Recent Logs:</h3>
+    @if (Model.RecentLogs.Any())
+    {
+        foreach (var log in Model.RecentLogs)
+        {
+            <partial name="_LogCard" model="log" />
+        }
+    }
+    else
+    {
+        <p>Why haven't you created any logs yet?</p>
+    }
+</div>
+
+<hr />
+
+<div>
+    <h3>Losses this month:</h3>
+    @if (Model.MonthlyLossData.Any())
+    {
+        <ul>
+            @foreach (var dataPoint in Model.MonthlyLossData)
+            {
+                <li><strong>@dataPoint.Key</strong> — @dataPoint.Value minutes</li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>Didn't lose anything this month(</p>
+    }
+</div>

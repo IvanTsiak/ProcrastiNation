@@ -21,7 +21,7 @@ function showAchivementPopup(data) {
     const toast = document.createElement('div');
     toast.style.cssText = "position: fixed; bottom: 30px; right: 30px; width: 320px; background-color: #222; color: white; border-radius: 10px; padding: 15px; display: flex; align-items: center; gap: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); z-index: 9999; transition: opacity 0.5s; opacity: 0;";
 
-    const iconSrc = data.icon ? data.icon : '/images/default-icon.png';
+    const iconSrc = data.icon ? data.icon : '/images/achievements/default-icon.png';
     toast.innerHTML = `
         <div style="width: 60px; height: 60px; flex-shrink: 0; background-color: #444; border-radius: 50%; overflow: hidden;">
             <img src="${iconSrc}" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" />

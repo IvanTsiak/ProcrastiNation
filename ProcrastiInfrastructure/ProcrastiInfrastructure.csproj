@@ -25,4 +25,8 @@
     <ProjectReference Include="..\ProcrastiDomain\ProcrastiDomain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\avatars\" />
+  </ItemGroup>
+
 </Project>
