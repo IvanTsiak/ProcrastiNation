@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ProcrastiDomain.Model;
 using ProcrastiInfrastructure.Models;
+using ProcrastiInfrastructure.Services;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,16 +11,18 @@ namespace ProcrastiInfrastructure.Controllers
     public class AchievementsController : Controller
     {
         private readonly ProcrastiContext _context;
+        private readonly ICurrentUserService _currentUserService;
 
-        public AchievementsController(ProcrastiContext context)
+        public AchievementsController(ProcrastiContext context, ICurrentUserService currentUserService)
         {
             _context = context;
+            _currentUserService = currentUserService;
         }
 
         // GET: Achievements
         public async Task<IActionResult> Index()
         {
-            int currentUserId = 1;
+            int currentUserId = _currentUserService.GetCurrentUserId();
 
             var earnedAchievementIds = await _context.Userachievements
                 .Where(ua => ua.Userid == currentUserId)
@@ -178,7 +181,7 @@ namespace ProcrastiInfrastructure.Controllers
         [HttpPost]
         public async Task<IActionResult> Unlock([FromBody] string code)
         {
-            int currentUserId = 1;
+            int currentUserId = _currentUserService.GetCurrentUserId();
 
             var achievement = await _context.Achievements.FirstOrDefaultAsync(a => a.Code == code);
             if (achievement == null)

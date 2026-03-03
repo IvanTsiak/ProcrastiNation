@@ -1,22 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProcrastiDomain.Model;
 using ProcrastiInfrastructure;
+using ProcrastiInfrastructure.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ProcrastiInfrastructure.Controllers
 {
     public class LogsController : Controller
     {
         private readonly ProcrastiContext _context;
+        private readonly ICurrentUserService _currentUserService;
 
-        public LogsController(ProcrastiContext context)
+        public LogsController(ProcrastiContext context, ICurrentUserService currentUserService)
         {
             _context = context;
+            _currentUserService = currentUserService;
         }
 
         // GET: Logs
@@ -68,7 +71,7 @@ namespace ProcrastiInfrastructure.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Activityid,Logtype,Amount,Rating,Comment")] Log log)
         {
-            log.Userid = 3;
+            log.Userid = _currentUserService.GetCurrentUserId();
             log.Createdat = DateTime.Now;
             log.Isvisible = true;
             log.Likescount = 0;
@@ -226,6 +229,46 @@ namespace ProcrastiInfrastructure.Controllers
         private bool LogExists(int id)
         {
             return _context.Logs.Any(e => e.Id == id);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ToggleLike(int id)
+        {
+            int currentUserId = _currentUserService.GetCurrentUserId();
+
+            var log = await _context.Logs.FindAsync(id);
+            if (log == null)
+            {
+                return NotFound(); 
+            }
+
+            var existingLike = await _context.Likes.FirstOrDefaultAsync(l => l.Logid == id && l.Userid == currentUserId);
+
+            bool isLikedNow;
+
+            if (existingLike != null)
+            {
+                _context.Likes.Remove(existingLike);
+
+                log.Likescount = Math.Max(0, (log.Likescount ?? 1) - 1);
+                isLikedNow = false;
+            }
+            else
+            {
+                var newLike = new Like
+                {
+                    Userid = currentUserId,
+                    Logid = id
+                };
+                _context.Likes.Add(newLike);
+
+                log.Likescount = (log.Likescount ?? 0) + 1;
+                isLikedNow = true;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Json(new { newLikesCount = log.Likescount, isLiked = isLikedNow });
         }
     }
 }

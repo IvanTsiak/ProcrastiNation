@@ -28,6 +28,8 @@ public partial class ProcrastiContext : DbContext
 
     public virtual DbSet<Log> Logs { get; set; }
 
+    public virtual DbSet<Like> Likes { get; set; }
+
     public virtual DbSet<Title> Titles { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
@@ -180,6 +182,24 @@ public partial class ProcrastiContext : DbContext
                 .HasConstraintName("fk_user");
         });
 
+        modelBuilder.Entity<Like>(entity =>
+        {
+            entity.ToTable("likes");
+
+            entity.HasKey(e => new { e.Userid, e.Logid });
+
+            entity.Property(e => e.Userid).HasColumnName("userid");
+            entity.Property(e => e.Logid).HasColumnName("logid");
+
+            entity.HasOne(d => d.Log)
+                .WithMany(p => p.Likes)
+                .HasForeignKey(d => d.Logid);
+
+            entity.HasOne(d => d.User)
+                .WithMany(p => p.Likes)
+                .HasForeignKey(d => d.Userid);
+        });
+
         modelBuilder.Entity<Title>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("titles_pkey");
@@ -237,22 +257,22 @@ public partial class ProcrastiContext : DbContext
                 .OnDelete(DeleteBehavior.SetNull)
                 .HasConstraintName("fk_title");
 
-            entity.HasMany(d => d.Logs).WithMany(p => p.Users)
-                .UsingEntity<Dictionary<string, object>>(
-                    "Like",
-                    r => r.HasOne<Log>().WithMany()
-                        .HasForeignKey("Logid")
-                        .HasConstraintName("likes_logid_fkey"),
-                    l => l.HasOne<User>().WithMany()
-                        .HasForeignKey("Userid")
-                        .HasConstraintName("likes_userid_fkey"),
-                    j =>
-                    {
-                        j.HasKey("Userid", "Logid").HasName("likes_pkey");
-                        j.ToTable("likes");
-                        j.IndexerProperty<int>("Userid").HasColumnName("userid");
-                        j.IndexerProperty<int>("Logid").HasColumnName("logid");
-                    });
+            //entity.HasMany(d => d.Logs).WithMany(p => p.Users)
+            //    .UsingEntity<Dictionary<string, object>>(
+            //        "Like",
+            //        r => r.HasOne<Log>().WithMany()
+            //            .HasForeignKey("Logid")
+            //            .HasConstraintName("likes_logid_fkey"),
+            //        l => l.HasOne<User>().WithMany()
+            //            .HasForeignKey("Userid")
+            //            .HasConstraintName("likes_userid_fkey"),
+            //        j =>
+            //        {
+            //            j.HasKey("Userid", "Logid").HasName("likes_pkey");
+            //            j.ToTable("likes");
+            //            j.IndexerProperty<int>("Userid").HasColumnName("userid");
+            //            j.IndexerProperty<int>("Logid").HasColumnName("logid");
+            //        });
         });
 
         modelBuilder.Entity<Userachievement>(entity =>

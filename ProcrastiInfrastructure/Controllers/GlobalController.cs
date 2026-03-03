@@ -24,6 +24,7 @@ namespace ProcrastiInfrastructure.Controllers
             viewModel.TopComments = await _context.Logs
                 .Include(l => l.User)
                 .Include(l => l.Activity)
+                .Include(l => l.Likes)
                 .Where(l => !string.IsNullOrEmpty(l.Comment) && l.Isvisible == true)
                 .OrderByDescending(l => l.Likescount)
                 .Take(5)

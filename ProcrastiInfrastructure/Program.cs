@@ -10,6 +10,7 @@ builder.Services.AddDbContext<ProcrastiContext>(options =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<ProcrastiInfrastructure.Services.ICurrentUserService, ProcrastiInfrastructure.Services.MockCurrentUserService>();
 
 var app = builder.Build();
 

@@ -1,4 +1,6 @@
 ﻿@using ProcrastiDomain.Model
+
+@inject ProcrastiInfrastructure.Services.ICurrentUserService CurrentUserService
 @model Log
 
 @{
@@ -6,6 +8,14 @@
     string color = isLoss ? "red" : "green";
     string sign = isLoss ? "wasted" : "spent with pleasure";
     string styleBorder = isLoss ? "border-left: 5px solid red;" : "border-left: 5px solid green;";
+
+    string likeBtnId = $"like-btn-{Model.Id}";
+    string likeCountId = $"like-count-{Model.Id}";
+
+    int currentUserId = CurrentUserService.GetCurrentUserId();
+    bool isLikedByCurrentUser = Model.Likes != null && Model.Likes.Any(l => l.Userid == currentUserId);
+    string btnBgColor = isLikedByCurrentUser ? "#e6f7ff" : "transparent";
+    string btnBorderColor = isLikedByCurrentUser ? "#1890ff" : "#ccc";
 }
 
 <div style="border: 1px solid gray; padding: 10px; margin-bottom: 10px; @styleBorder">
@@ -22,4 +32,41 @@
     {
         <p><em>" @Model.Comment "</em></p>
     }
+
+    <div style="margin-top: 10px;">
+        <button id="@likeBtnId" onclick="likeLog(@Model.Id)" style="background-color: @btnBgColor; border: 1px solid @btnBorderColor; border-radius: 5px; padding: 5px 10px; cursor: pointer;">
+            👍 <span id="@likeCountId">@(Model.Likescount ?? 0)</span>
+        </button>
+    </div>
 </div>
+
+<script>
+    if (typeof likeLog !== 'function') {
+        window.likeLog = async function(logId) {
+            try {
+                const response = await fetch(`/Logs/ToggleLike/${logId}`, {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    document.getElementById(`like-count-${logId}`).innerText = data.newLikesCount;
+
+                    const btn = document.getElementById(`like-btn-${logId}`);
+                    if (data.isLiked) {
+                        btn.style.backgroundColor = '#e6f7ff';
+                        btn.style.borderColor = '#1890ff';
+                    } else {
+                        btn.style.backgroundColor = 'transparent';
+                        btn.style.borderColor = '#ccc';
+                    }
+                } else {
+                    console.error('Failed to toggle like. Status:', response.status);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+    }
+</script>
