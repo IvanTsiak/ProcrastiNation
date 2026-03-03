@@ -1,0 +1,39 @@
+﻿@model ProcrastiInfrastructure.Models.GlobalStatsViewModel
+
+@{
+    ViewData["Title"] = "Global Stats";
+}
+
+<h1>Global Stats</h1>
+
+<hr />
+<h2>Top 3 biggest procrastinators</h2>
+<ol>
+    @foreach (var user in Model.TopUsers)
+    {
+        <li>
+            <strong>@(user.Username ?? "Anonym")</strong> — lost in total: @user.Totalloss minutes.
+        </li>
+    }
+</ol>
+
+<hr />
+
+<h2>Top 3 activities</h2>
+
+<ul>
+    @foreach (var activity in Model.TopActivities)
+    {
+        <li>
+            <strong>@activity.Name</strong> — number of mentions: @activity.Mentionscount.
+        </li>
+    }
+</ul>
+
+<hr />
+
+<h2>Top 5 logs</h2>
+@foreach (var log in Model.TopComments)
+{
+    <partial name="_LogCard" model="log" />
+}

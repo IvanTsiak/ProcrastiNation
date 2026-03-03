@@ -16,24 +16,6 @@
 
     @foreach (var log in Model.RecentLogs)
     {
-        bool isLoss = log.Logtype == ProcrastiDomain.Model.LogType.loss;
-        string color = isLoss ? "red" : "green";
-        string sign = isLoss ? "wasted" : "spent with pleasure";
-        string styleBorder = isLoss ? "border-left: 5px solid red;" : "border-left: 5px solid green;";
-        <div style="border: 1px solid gray; padding: 10px; margin-bottom: 10px; @styleBorder">
-            <p>
-                <strong>@(log.User?.Username ?? "Anonymous")</strong>
-                <span style="color: @color;">@sign</span>
-                <strong>@log.Amount</strong> minutes
-                in <em>@(log.Activity?.Name ?? "Unknown")</em>
-            </p>
-            <p>
-                <small>Rating: @log.Rating/5 | Date: @log.Createdat?.ToString("dd.MM.yyyy HH:mm")</small>
-            </p>
-            @if (!string.IsNullOrEmpty(log.Comment))
-            {
-                <p><em>" @log.Comment "</em></p>
-            }
-        </div>
+        <partial name="_LogCard" model="log" />
     }
 </div>

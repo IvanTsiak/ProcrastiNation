@@ -1,0 +1,25 @@
+﻿@using ProcrastiDomain.Model
+@model Log
+
+@{
+    bool isLoss = Model.Logtype == LogType.loss;
+    string color = isLoss ? "red" : "green";
+    string sign = isLoss ? "wasted" : "spent with pleasure";
+    string styleBorder = isLoss ? "border-left: 5px solid red;" : "border-left: 5px solid green;";
+}
+
+<div style="border: 1px solid gray; padding: 10px; margin-bottom: 10px; @styleBorder">
+    <p>
+        <strong>@(Model.User?.Username ?? "Anonymous")</strong>
+        <span style="color: @color; font-weight: bold;">@sign</span>
+        <strong>@Model.Amount</strong> minutes
+        in <em>@(Model.Activity?.Name ?? "Unknown")</em>
+    </p>
+    <p>
+        <small>Rating: @Model.Rating/5 | Date: @Model.Createdat?.ToString("dd.MM.yyyy HH:mm")</small>
+    </p>
+    @if (!string.IsNullOrEmpty(Model.Comment))
+    {
+        <p><em>" @Model.Comment "</em></p>
+    }
+</div>
