@@ -115,6 +115,11 @@ namespace ProcrastiInfrastructure.Controllers
                     _context.Update(activity);
                 }
 
+                if (log.Logtype == LogType.loss && log.Amount >= 300)
+                {
+                    TempData["PendingAchievement"] = "SURVIVOR";
+                }
+
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
