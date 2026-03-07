@@ -20,7 +20,20 @@
 
             <div class="form-group mb-3">
                 <label asp-for="Activityid" class="control-label fw-bold">Where have you wasted your time?</label>
-                <select asp-for="Activityid" class="form-control" asp-items="ViewBag.Activityid"></select>
+                
+                <input name="activityName" class="form-control" list="verifiedActivities" placeholder="Choose or type a new one..." required autocomplete="off" />
+
+                <span class="text-danger">@Html.ValidationMessage("activityName")</span>
+
+                <datalist id="verifiedActivities">
+                    @if (ViewBag.VerifiedActivityNames != null)
+                    {
+                        foreach (var name in ViewBag.VerifiedActivityNames)
+                        {
+                            <option value="@name"></option>
+                        }
+                    }
+                </datalist>
             </div>
 
             <div class="form-group mb-3">

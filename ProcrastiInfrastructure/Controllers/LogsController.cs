@@ -52,7 +52,10 @@ namespace ProcrastiInfrastructure.Controllers
         // GET: Logs/Create
         public IActionResult Create()
         {
-            ViewData["Activityid"] = new SelectList(_context.Activities, "Id", "Name");
+            ViewBag.VerifiedActivityNames = _context.Activities
+                 .Where(a => a.Isverified == true)
+                 .Select(a => a.Name)
+                 .ToList();
 
             var logTypes = new List<SelectListItem>
             {
@@ -69,15 +72,43 @@ namespace ProcrastiInfrastructure.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Activityid,Logtype,Amount,Rating,Comment")] Log log)
+        public async Task<IActionResult> Create([Bind("Logtype,Amount,Rating,Comment")] Log log, string activityName)
         {
             log.Userid = _currentUserService.GetCurrentUserId();
             log.Createdat = DateTime.Now;
             log.Isvisible = true;
             log.Likescount = 0;
 
+            if (string.IsNullOrWhiteSpace(activityName))
+            {
+                ModelState.AddModelError("activityName", "You must specify an activity.");
+            }
+
             if (ModelState.IsValid)
             {
+                var existingActivity = await _context.Activities
+                    .FirstOrDefaultAsync(a => a.Name.ToLower() == activityName.ToLower());
+
+                if (existingActivity != null)
+                {
+                    log.Activityid = existingActivity.Id;
+                    existingActivity.Mentionscount = (existingActivity.Mentionscount ?? 0) + 1;
+                    _context.Update(existingActivity);
+                }
+                else
+                {
+                    var newActivity = new Activity
+                    {
+                        Name = activityName,
+                        Isverified = false,
+                        Mentionscount = 1
+                    };
+                    _context.Activities.Add(newActivity);
+                    await _context.SaveChangesAsync();
+
+                    log.Activityid = newActivity.Id;
+                }
+                
                 _context.Add(log);
 
                 var user = await _context.Users.FindAsync(log.Userid);
@@ -108,13 +139,6 @@ namespace ProcrastiInfrastructure.Controllers
                     }
                 }
 
-                var activity = await _context.Activities.FindAsync(log.Activityid);
-                if (activity != null)
-                {
-                    activity.Mentionscount += 1;
-                    _context.Update(activity);
-                }
-
                 if (log.Logtype == LogType.loss && log.Amount >= 300)
                 {
                     TempData["PendingAchievement"] = "SURVIVOR";
@@ -125,7 +149,11 @@ namespace ProcrastiInfrastructure.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["Activityid"] = new SelectList(_context.Activities, "Id", "Name", log.Activityid);
+            ViewBag.VerifiedActivityNames = _context.Activities
+                 .Where(a => a.Isverified == true)
+                 .Select(a => a.Name)
+                 .ToList();
+
             ViewData["Logtype"] = new List<SelectListItem>
             {
                 new SelectListItem { Value = LogType.win.ToString(), Text = "Win" },
