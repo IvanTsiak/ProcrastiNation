@@ -7,6 +7,7 @@ using ProcrastiInfrastructure.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 
 namespace ProcrastiInfrastructure.Controllers
@@ -192,7 +193,7 @@ namespace ProcrastiInfrastructure.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Userid,Activityid,Logtype,Amount,Rating,Comment,Createdat,Isvisible,Likescount,Id")] Log log)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Activityid,Logtype,Amount,Rating,Comment")] Log log)
         {
             if (id != log.Id)
             {
@@ -203,7 +204,77 @@ namespace ProcrastiInfrastructure.Controllers
             {
                 try
                 {
-                    _context.Update(log);
+                    var dbLog = await _context.Logs.FirstOrDefaultAsync(l => l.Id == id);
+
+                    if (dbLog != null)
+                    {
+                        if (dbLog.Userid != _currentUserService.GetCurrentUserId())
+                        {
+                            return Unauthorized();
+                        }
+
+                        int lossDifference = 0;
+
+                        if (dbLog.Logtype == LogType.loss && log.Logtype == LogType.loss)
+                        {
+                            lossDifference = log.Amount - dbLog.Amount;
+                        }
+                        else if (dbLog.Logtype == LogType.win && log.Logtype == LogType.loss)
+                        {
+                            lossDifference = log.Amount;
+
+                        }
+                        else if (dbLog.Logtype == LogType.loss && log.Logtype == LogType.win)
+                        {
+                            lossDifference = -dbLog.Amount;
+                        }
+
+                        if (lossDifference != 0)
+                        {
+                            var user = await _context.Users.FindAsync(log.Userid);
+                            if (user != null)
+                            {
+                                user.Totalloss = Math.Max(0, (user.Totalloss ?? 0) + lossDifference);
+                                _context.Update(user);
+                            }
+                            var globalStat = await _context.Globalstats.FirstOrDefaultAsync();
+                            if (globalStat != null)
+                            {
+                                globalStat.Totallossamount = Math.Max(0, (globalStat.Totallossamount ?? 0) + lossDifference);
+                                globalStat.Lastupdated = DateTime.Now;
+                                _context.Update(globalStat);
+                            }
+                        }
+
+                        if (dbLog.Activityid != log.Activityid)
+                        {
+                            if (dbLog.Activityid.HasValue)
+                            {
+                                var oldActivity = await _context.Activities.FindAsync(dbLog.Activityid);
+                                if (oldActivity != null)
+                                {
+                                    oldActivity.Mentionscount = Math.Max(0, (oldActivity.Mentionscount ?? 1) - 1);
+                                    _context.Update(oldActivity);
+                                }
+                            }
+                            if (log.Activityid.HasValue)
+                            {
+                                var newActivity = await _context.Activities.FindAsync(log.Activityid);
+                                if (newActivity != null)
+                                {
+                                    newActivity.Mentionscount = (newActivity.Mentionscount ?? 0) + 1;
+                                    _context.Update(newActivity);
+                                }
+                            }
+                        }
+                    }
+
+                    dbLog.Activityid = log.Activityid;
+                    dbLog.Logtype = log.Logtype;
+                    dbLog.Amount = log.Amount;
+                    dbLog.Rating = log.Rating;
+                    dbLog.Comment = log.Comment;
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -220,7 +291,11 @@ namespace ProcrastiInfrastructure.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["Activityid"] = new SelectList(_context.Activities, "Id", "Name", log.Activityid);
-            ViewData["Userid"] = new SelectList(_context.Users, "Id", "Email", log.Userid);
+            ViewData["Logtype"] = new List<SelectListItem>
+            {
+                new SelectListItem { Value = LogType.win.ToString(), Text = "Win" },
+                new SelectListItem { Value = LogType.loss.ToString(), Text = "Loss" }
+            };
             return View(log);
         }
 
@@ -252,10 +327,37 @@ namespace ProcrastiInfrastructure.Controllers
             var log = await _context.Logs.FindAsync(id);
             if (log != null)
             {
+                if (log.Logtype == LogType.loss)
+                {
+                    var user = await _context.Users.FindAsync(log.Userid);
+                    if (user != null)
+                    {
+                        user.Totalloss = Math.Max(0, (user.Totalloss ?? 0) - log.Amount);
+                        _context.Update(user);
+                    }
+
+                    var globalStat = await _context.Globalstats.FirstOrDefaultAsync();
+                    if (globalStat != null)
+                    {
+                        globalStat.Totallossamount = Math.Max(0, (globalStat.Totallossamount ?? 0) - log.Amount);
+                        globalStat.Lastupdated = DateTime.Now;
+                        _context.Update(globalStat);
+                    }
+                }
+
+                if (log.Activityid.HasValue)
+                {
+                    var activity = await _context.Activities.FindAsync(log.Activityid.Value);
+                    if (activity != null)
+                    {
+                        activity.Mentionscount = Math.Max(0, (activity.Mentionscount ?? 1) - 1);
+                        _context.Update(activity);
+                    }
+                }
                 _context.Logs.Remove(log);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
