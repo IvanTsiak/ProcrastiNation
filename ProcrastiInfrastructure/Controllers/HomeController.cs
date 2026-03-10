@@ -26,6 +26,7 @@ namespace ProcrastiInfrastructure.Controllers
                 .Include(l => l.User)
                 .Include(l => l.Activity)
                 .Include(l => l.Likes)
+                .Include(l => l.Comments)
                 .Where(log => log.Isvisible == true)
                 .OrderByDescending(log => log.Createdat)
                 .Take(100)

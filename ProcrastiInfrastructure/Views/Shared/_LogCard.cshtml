@@ -37,9 +37,33 @@
         <button id="@likeBtnId" onclick="likeLog(@Model.Id)" style="background-color: @btnBgColor; border: 1px solid @btnBorderColor; border-radius: 5px; padding: 5px 10px; cursor: pointer;">
             👍 <span id="@likeCountId">@(Model.Likescount ?? 0)</span>
         </button>
+
+        <button onclick="toggleComment(@Model.Id)" style="background: transparent; border: 1px solid #ccc; border-radius: 5px; padding: 5px 10px; cursor: pointer;">
+            💬 Comments (<span id="comment-count-@Model.Id">@(Model.Comments?.Count ?? 0)</span>)
+        </button>
+    </div>
+
+    <div id="comments-section-@Model.Id" style="display: none; margin-top: 15px; padding-top: 10px; border-top: 1px dashed #ccc;">
+        <div id="comments-list-@Model.Id" style="max-height: 200px; overflow-y: auto; margin-bottom: 10px;">
+            @if (Model.Comments != null)
+            {
+                foreach (var c in Model.Comments.OrderBy(x => x.Createdat))
+                {
+                    <div style="border-bottom: 1px solid #eee; padding: 5px 0;">
+                        <strong>@(c.Author?.Username ?? "Anonymous")</strong>
+                        <span style="color: #555; font-size: 12px;">(@c.Createdat?.ToString("dd.MM.yyyy HH:mm"))</span>
+                        <div style="margin: 4px;">@c.Content</div>
+                    </div>
+                }
+            }
+        </div>
+
+        <div style="display: flex; gap: 10px">
+            <input type="text" id="comment-input-@Model.Id" class="form-control form-control-sm" placeholder="Write something..." />
+            <button onclick="submitComment(@Model.Id)" class="btn btn-sm btn-primary">Send</button>
+        </div>
     </div>
 </div>
-
 <script>
     if (typeof likeLog !== 'function') {
         window.likeLog = async function(logId) {
@@ -63,6 +87,53 @@
                     }
                 } else {
                     console.error('Failed to toggle like. Status:', response.status);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+    }
+
+    if (typeof toggleComment !== 'function') {
+        window.toggleComment = function(logId) {
+            const section = document.getElementById(`comments-section-${logId}`);
+            section.style.display = section.style.display === 'none' ? 'block' : 'none';
+        };
+
+        window.submitComment = async function(logId) {
+            const input = document.getElementById(`comment-input-${logId}`);
+            const text = input.value.trim();
+            if (!text) {
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('logId', logId);
+            formData.append('text', text);
+
+            try {
+                const response = await fetch('/Logs/AddComment', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    const list = document.getElementById(`comments-list-${logId}`);
+                    list.innerHTML += `
+                        <div style="margin-bottom: 8px; font-size: 14px; background-color: #e6f7ff; padding: 8px; border-radius: 5px;">
+                            <strong>${data.username}</strong>
+                            <span style="color: gray; font-size: 12px; margin-left: 5px;">${data.date}</span>
+                            <div style="margin-top: 4px;">${data.text}</div>
+                        </div>`;
+
+                    input.value = '';
+
+                    const countSpan = document.getElementById(`comment-count-${logId}`);
+                    countSpan.innerText = parseInt(countSpan.innerText) + 1;
+
+                    list.scrollTop = list.scrollHeight;
                 }
             } catch (error) {
                 console.error('Error:', error);

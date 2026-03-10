@@ -405,5 +405,36 @@ namespace ProcrastiInfrastructure.Controllers
 
             return Json(new { newLikesCount = log.Likescount, isLiked = isLikedNow });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AddComment([FromForm] int logId, [FromForm] string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return BadRequest("Comment text cannot be empty.");
+            }
+
+            int currentUserId = _currentUserService.GetCurrentUserId();
+
+            var newComment = new Comment
+            {
+                Logid = logId,
+                Authorid = currentUserId,
+                Content = text,
+                Createdat = DateTime.Now
+            };
+
+            _context.Comments.Add(newComment);
+            await _context.SaveChangesAsync();
+
+            var user = await _context.Users.FindAsync(currentUserId);
+
+            return Json(new
+            {
+                username = user?.Username ?? "Unknown",
+                text = newComment.Content,
+                date = newComment.Createdat?.ToString("dd.MM.yyyy HH:mm")
+            });
+        }
     }
 }
