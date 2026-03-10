@@ -25,7 +25,41 @@ namespace ProcrastiInfrastructure.Controllers
         // GET: Titles
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Titles.ToListAsync());
+            int currentUserId = _currentUserService.GetCurrentUserId();
+
+            var userTitles = await _context.Usertitles
+                .Include(ut => ut.Title)
+                .Where(ut => ut.Userid == currentUserId)
+                .Select(ut => ut.Title)
+                .ToListAsync();
+
+            var user = await _context.Users.FindAsync(currentUserId);
+            ViewBag.ActiveTitleId = user?.Titleid;
+
+            return View(userTitles);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SetActive(int titleId)
+        {
+            int currentUserId = _currentUserService.GetCurrentUserId();
+
+            bool ownsTitle = await _context.Usertitles
+                .AnyAsync(ut => ut.Userid == currentUserId && ut.Titleid == titleId);
+
+            if (ownsTitle)
+            {
+                var user = await _context.Users.FindAsync(currentUserId);
+                if (user != null)
+                {
+                    user.Titleid = titleId;
+                    _context.Users.Update(user);
+                    await _context.SaveChangesAsync();
+                }
+            }
+
+            return RedirectToAction("Index", "Profile");
         }
 
         // GET: Titles/Details/5
