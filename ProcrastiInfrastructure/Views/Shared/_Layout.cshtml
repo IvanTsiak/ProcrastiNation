@@ -59,5 +59,17 @@
             });
         </script>
     }
+
+    @if (TempData["PendingTitle"] != null)
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                if (typeof tryUnlockTitle === 'function') {
+                    tryUnlockTitle('@TempData["PendingTitle"]');
+                }
+            });
+        </script>
+    }
+
 </body>
 </html>

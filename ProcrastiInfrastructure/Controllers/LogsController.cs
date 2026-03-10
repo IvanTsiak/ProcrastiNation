@@ -117,6 +117,11 @@ namespace ProcrastiInfrastructure.Controllers
                 {
                     user.Totalloss += log.Amount;
                     _context.Update(user);
+
+                    if (user.Totalloss >= 1440)
+                    {
+                        TempData["PendingTitle"] = "PROcrastinator";
+                    }
                 }
 
                 if (log.Logtype == LogType.loss)

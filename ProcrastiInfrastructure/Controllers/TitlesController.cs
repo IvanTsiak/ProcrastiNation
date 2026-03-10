@@ -7,16 +7,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProcrastiDomain.Model;
 using ProcrastiInfrastructure;
+using ProcrastiInfrastructure.Services;
 
 namespace ProcrastiInfrastructure.Controllers
 {
     public class TitlesController : Controller
     {
         private readonly ProcrastiContext _context;
+        private readonly ICurrentUserService _currentUserService;
 
-        public TitlesController(ProcrastiContext context)
+        public TitlesController(ProcrastiContext context, ICurrentUserService currentUserService)
         {
             _context = context;
+            _currentUserService = currentUserService;
         }
 
         // GET: Titles
@@ -152,6 +155,41 @@ namespace ProcrastiInfrastructure.Controllers
         private bool TitleExists(int id)
         {
             return _context.Titles.Any(e => e.Id == id);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Unlock([FromBody] string code)
+        {
+            int currentUserId = _currentUserService.GetCurrentUserId();
+
+            var title = await _context.Titles.FirstOrDefaultAsync(t => t.Code == code);
+            if (title == null)
+            {
+                return NotFound("Title not found.");
+            }
+
+            bool alreadyUnlocked = await _context.Usertitles
+                .AnyAsync(ut => ut.Userid == currentUserId && ut.Titleid == title.Id);
+
+            if (alreadyUnlocked)
+            {
+                return BadRequest("Title already unlocked.");
+            }
+
+            var newTitleUnlock = new Usertitle
+            {
+                Userid = currentUserId,
+                Titleid = title.Id,
+                Unlockedat = DateTime.Now
+            };
+
+            _context.Usertitles.Add(newTitleUnlock);
+            await _context.SaveChangesAsync();
+
+            return Json(new
+            {
+                name = title.Name
+            });
         }
     }
 }
