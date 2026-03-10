@@ -61,6 +61,8 @@ namespace ProcrastiInfrastructure.Controllers
         {
             if (ModelState.IsValid)
             {
+                activity.Isverified = true;
+
                 _context.Add(activity);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

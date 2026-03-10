@@ -327,33 +327,16 @@ namespace ProcrastiInfrastructure.Controllers
             var log = await _context.Logs.FindAsync(id);
             if (log != null)
             {
-                if (log.Logtype == LogType.loss)
-                {
-                    var user = await _context.Users.FindAsync(log.Userid);
-                    if (user != null)
-                    {
-                        user.Totalloss = Math.Max(0, (user.Totalloss ?? 0) - log.Amount);
-                        _context.Update(user);
-                    }
-
-                    var globalStat = await _context.Globalstats.FirstOrDefaultAsync();
-                    if (globalStat != null)
-                    {
-                        globalStat.Totallossamount = Math.Max(0, (globalStat.Totallossamount ?? 0) - log.Amount);
-                        globalStat.Lastupdated = DateTime.Now;
-                        _context.Update(globalStat);
-                    }
-                }
-
                 if (log.Activityid.HasValue)
                 {
-                    var activity = await _context.Activities.FindAsync(log.Activityid.Value);
+                    var activity = await _context.Activities.FindAsync(log.Activityid);
                     if (activity != null)
                     {
                         activity.Mentionscount = Math.Max(0, (activity.Mentionscount ?? 1) - 1);
                         _context.Update(activity);
                     }
                 }
+
                 _context.Logs.Remove(log);
                 await _context.SaveChangesAsync();
             }
