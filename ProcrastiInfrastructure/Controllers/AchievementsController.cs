@@ -178,6 +178,12 @@ namespace ProcrastiInfrastructure.Controllers
             return _context.Achievements.Any(e => e.Id == id);
         }
 
+        [HttpGet]
+        public IActionResult Rickroll()
+        {
+            return View();
+        }
+
         [HttpPost]
         public async Task<IActionResult> Unlock([FromBody] string code)
         {

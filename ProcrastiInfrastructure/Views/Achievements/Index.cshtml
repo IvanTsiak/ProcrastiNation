@@ -13,9 +13,13 @@
 <div style="display: flex; flex-wrap: wrap; gap: 20px;">
     @foreach (var achievement in Model.Achievements)
     {
-    string borderStyle = achievement.IsUnlocked ? "border: 2px solid green;" : "border: 2px solid gray;";
+        bool isRickroll = achievement.Title == "Rick Astley";
 
-        <div style="padding: 15px; width: 250px; border-radius: 8px; text-align: center; @borderStyle">
+        string borderStyle = achievement.IsUnlocked ? "border: 2px solid green;" : "border: 2px solid gray;";
+        string cursorStyle = isRickroll ? "cursor: pointer;" : "";
+
+        <div style="padding: 15px; width: 250px; border-radius: 8px; text-align: center; @borderStyle"
+            @if(isRickroll) { <text>onclick="triggerRickroll(this)"</text> }>
             <div style="width: 100px; height: 100px; background-color: #eee; margin: 0 auto 10px auto; display: flex; align-items: center; justify-content: center;">
                 @if (!string.IsNullOrEmpty(achievement.Icon))
                 {

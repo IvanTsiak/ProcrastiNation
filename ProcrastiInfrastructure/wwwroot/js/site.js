@@ -83,3 +83,31 @@ function showTitlePopup(data) {
         setTimeout(() => { toast.remove(); }, 500);
     }, 5000);
 }
+
+function triggerRickroll(element) {
+    if (typeof tryUnlockAchievement === 'function') {
+        tryUnlockAchievement("NGGYU");
+    }
+
+    element.style.border = "2px solid green";
+    element.style.cursor = "default";
+
+    const statusText = element.querySelector('p:last-of-type');
+    if (statusText) {
+        statusText.innerText = "Unlocked";
+        statusText.style.color = "green";
+        statusText.style.fontWeight = "bold";
+        statusText.style.fontStyle = "normal";
+    }
+
+    element.style.transition = "all 0.5s";
+    element.style.transform = "rotate(360deg) scale(0.1)";
+    element.style.opacity = "0";
+
+    setTimeout(() => {
+        window.open('/Achievements/Rickroll', '_blank');
+
+        element.style.transform = "none";
+        element.style.opacity = "1";
+    }, 500);
+}

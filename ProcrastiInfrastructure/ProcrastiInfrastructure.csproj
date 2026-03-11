@@ -29,4 +29,8 @@
     <Folder Include="wwwroot\images\avatars\" />
   </ItemGroup>
 
+  <Target Name="TailwindBuild" BeforeTargets="Build">
+    <Exec Command="npm run build:css" />
+  </Target>
+
 </Project>
