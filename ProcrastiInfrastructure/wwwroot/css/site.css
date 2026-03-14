@@ -3,6 +3,12 @@
 
 @theme {
     --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+    --color-text: #060707;
+    --color-background: #f9fafa;
+    --color-primary: #788393;
+    --color-secondary: #c5b7be;
+    --color-accent: #a5938f;
 }
 
 @layer components {
