@@ -19,25 +19,31 @@
 
 function showAchivementPopup(data) {
     const toast = document.createElement('div');
-    toast.style.cssText = "position: fixed; bottom: 30px; right: 30px; width: 320px; background-color: #222; color: white; border-radius: 10px; padding: 15px; display: flex; align-items: center; gap: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); z-index: 9999; transition: opacity 0.5s; opacity: 0;";
+    toast.className = "fixed bottom-8 right-8 z-[9999] transition-all duration-500 opacity-0 translate-y-5";
 
     const iconSrc = data.icon ? data.icon : '/images/achievements/default-icon.png';
     toast.innerHTML = `
-        <div style="width: 60px; height: 60px; flex-shrink: 0; background-color: #444; border-radius: 50%; overflow: hidden;">
-            <img src="${iconSrc}" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" />
-        </div>
-        <div>
-            <small style="color: #4caf50; font-weight: bold; text-transform: uppercase;">Achievement Unlocked!</small>
-            <h5 style="margin: 5px 0 0 0;">${data.title}</h5>
-            <p style="margin: 5px 0 0 0; font-size: 12px; color: #ccc; white-space: pre-wrap;">${data.description}</p>
+        <div class="alert bg-background border-2 border-accent text-text shadow-xl flex items-center gap-4 w-88 p-4 rounded-xl">
+            <div class="w-14 h-14 bg-secondary/20 rounded-full shrink-0 overflow-hidden flex items-center justify-center">
+                <img src="${iconSrc}" class="w-full h-full object-cover object-center" />
+            </div>
+            <div class="flex flex-col text-left">
+                <span class="text-accent font-bold text-sm uppercase tracking-wider">Досягнення розблоковано!</span>
+                <h5 class="font-bold text-base mt-0.5">${data.title}</h5>
+                <p class="text-xs text-primary mt-1 whitespace-pre-wrap">${data.description}</p>
+            </div>
         </div>
     `;
 
     document.body.appendChild(toast);
-    setTimeout(() => { toast.style.opacity = '1'; }, 10);
+    requestAnimationFrame(() => {
+        toast.classList.remove('opacity-0', 'translate-y-5');
+        toast.classList.add('opacity-100', 'translate-y-0');
+    });
 
     setTimeout(() => {
-        toast.style.opacity = '0';
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-5');
         setTimeout(() => { toast.remove(); }, 500);
     }, 5000);
 }
@@ -63,14 +69,18 @@ async function tryUnlockTitle(titleCode) {
 
 function showTitlePopup(data) {
     const toast = document.createElement('div');
-    toast.style.cssText = "position: fixed; bottom: 30px; right: 30px; width: 320px; background: linear-gradient(135deg, #2b1055, #7597de); color: white; border: 1px solid #ffd700; border-radius: 10px; padding: 15px; display: flex; align-items: center; gap: 15px; box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3); z-index: 9999; transition: opacity 0.5s; opacity: 0;";
 
-    toast.innerHTML = `<div style="width: 50px; height: 50px; flex-shrink: 0; background-color: rgba(255,255,255,0.2); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 24px;">
-            👑
-        </div>
-        <div>
-            <small style="color: #ffd700; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">New Title Unlocked!</small>
-            <h5 style="margin: 5px 0 0 0; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);">${data.name}</h5>
+    toast.className = "fixed bottom-8 right-8 z-[9999] transition-all duration-500 opacity-0 translate-y-5";
+
+    toast.innerHTML = `
+        <div class="alert bg-gradient-to-br from-text to-primary border-2 border-amber-400 text-background shadow-[0_0_20px_rgba(251,191,36,0.3)] flex items-center gap-4 w-88 p-4 rounded-xl">
+            <div class="w-12 h-12 bg-white/20 rounded-full shrink-0 flex justify-center items-center text-2xl">
+                👑
+            </div>
+            <div class="flex flex-col text-left">
+                <span class="text-amber-400 font-bold text-xs uppercase tracking-widest">Титул розблоковано!</span>
+                <h5 class="font-bold text-lg mt-0.5 drop-shadow-md">${data.name}</h5>
+            </div>
         </div>
     `;
 
@@ -78,10 +88,16 @@ function showTitlePopup(data) {
 
     setTimeout(() => { toast.style.opacity = '1'; }, 10);
 
+    requestAnimationFrame(() => {
+        toast.classList.remove('opacity-0', 'translate-y-5');
+        toast.classList.add('opacity-100', 'translate-y-0');
+    });
+
     setTimeout(() => {
-        toast.style.opacity = '0';
+        toast.classList.remove('opacity-100', 'translate-y-0');
+        toast.classList.add('opacity-0', 'translate-y-5');
         setTimeout(() => { toast.remove(); }, 500);
-    }, 5000);
+    }, 9999000);
 }
 
 function triggerRickroll(element) {
