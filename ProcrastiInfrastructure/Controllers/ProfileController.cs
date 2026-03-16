@@ -49,7 +49,11 @@ namespace ProcrastiInfrastructure.Controllers
             viewModel.RecentLogs = await _context.Logs
                 .Include(l => l.Activity)
                 .Include(l => l.User)
+                    .ThenInclude(u => u.Title)
                 .Include(l => l.Likes)
+                .Include(l => l.Comments)
+                    .ThenInclude(c => c.Author)
+                        .ThenInclude(a => a.Title)
                 .Where(l => l.Userid == userId)
                 .OrderByDescending(l => l.Createdat)
                 .Take(3)

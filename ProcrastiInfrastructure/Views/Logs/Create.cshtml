@@ -1,66 +1,87 @@
 ﻿@model ProcrastiDomain.Model.Log
 
 @{
-    ViewData["Title"] = "Create Log";
+    ViewData["Title"] = "Створити запис";
 }
 
-<h1>Create Log</h1>
-<hr />
+<div class="max-w-2xl mx-auto mt-0 p-8 bg-background border border-secondary/40 rounded-2xl shadow-sm">
+    <h1 class="text-3xl font-black text-text mb-6 tracking-tight">Створення запису</h1>
+    <div class="border-b border-secondary/40 mb-6"></div>
 
-<div  class="row">
-    <div class="col-md-6">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <form asp-action="Create">
+        <div asp-validation-summary="ModelOnly" class="text-rose-500 mb-4 text-sm font-semibold"></div>
 
-            <div class="form-group mb-3">
-                <label asp-for="Logtype" class="control-label fw-bold">Log type</label>
-                <select asp-for="Logtype" class="form-control" asp-items="ViewBag.Logtype"></select>
-                <span asp-validation-for="Logtype" class="text-danger"></span>
-            </div>
+        <div class="form-control mb-6 flex flex-col gap-2 items-start">
+            <span class="font-bold text-text text-base">Як пройшла прокрастинація?</span>
 
-            <div class="form-group mb-3">
-                <label asp-for="Activityid" class="control-label fw-bold">Where have you wasted your time?</label>
-                
-                <input name="activityName" class="form-control" list="verifiedActivities" placeholder="Choose or type a new one..." required autocomplete="off" />
+            <label class="cursor-pointer inline-flex items-center gap-3">
+                <span class="font-bold text-emerald-500 text-sm uppercase tracking-wider">Чудово</span>
+                <input type="checkbox" id="visualToggle" class="toggle bg-emerald-500 border-emerald-500 checked:bg-rose-500 checked:border-rose-500" checked />
+                <span class="font-bold text-rose-500 text-sm uppercase tracking-wider">Марно</span>
+            </label>
 
-                <span class="text-danger">@Html.ValidationMessage("activityName")</span>
+            <input type="hidden" asp-for="Logtype" id="hiddenLogType" value="loss" />
+            <span asp-validation-for="Logtype" class="text-rose-500 text-xs"></span>
+        </div>
 
-                <datalist id="verifiedActivities">
-                    @if (ViewBag.VerifiedActivityNames != null)
+        <div class="form-control mb-6">
+            <label class="label pb-1">
+                <span class="label-text font-bold text-text text-base">Де ви витрачали свій час?</span>
+            </label>
+            <input name="activityName" list="verifiedActivities" placeholder="Виберіть або напишіть нове..." required autocomplete="off"
+                   class="input input-bordered w-full bg-transparent border-secondary/50 focus:border-accent focus:outline-none text-text" />
+            <span class="text-rose-500 text-xs mt-1">@Html.ValidationMessage("activityName")</span>
+
+            <datalist id="verifiedActivities">
+                @if (ViewBag.VerifiedActivityNames != null)
+                {
+                    foreach (var name in ViewBag.VerifiedActivityNames)
                     {
-                        foreach (var name in ViewBag.VerifiedActivityNames)
-                        {
-                            <option value="@name"></option>
-                        }
+                        <option value="@name"></option>
                     }
-                </datalist>
+                }
+            </datalist>
+        </div>
+
+        <div class="form-control mb-6">
+            <label class="label pb-1">
+                <span class="label-text font-bold text-text text-base">Скільки хвилин витратили?</span>
+            </label>
+            <input asp-for="Amount" type="number" min="1"
+                   class="input input-bordered w-full bg-transparent border-secondary/50 focus:border-accent focus:outline-none text-text" />
+            <span asp-validation-for="Amount" class="text-rose-500 text-xs mt-1"></span>
+        </div>
+
+        <div class="form-control mb-6 flex flex-col gap-2 items-start">
+            <label asp-for="Rating" class="font-bold text-text text-base">Оцініть витрачений час</label>
+
+            <div class="rating rating-lg gap-1">
+                <input type="radio" name="Rating" value="1" class="mask mask-star-2 bg-amber-400" />
+                <input type="radio" name="Rating" value="2" class="mask mask-star-2 bg-amber-400" />
+                <input type="radio" name="Rating" value="3" class="mask mask-star-2 bg-amber-400" checked="checked" />
+                <input type="radio" name="Rating" value="4" class="mask mask-star-2 bg-amber-400" />
+                <input type="radio" name="Rating" value="5" class="mask mask-star-2 bg-amber-400" />
             </div>
 
-            <div class="form-group mb-3">
-                <label asp-for="Amount" class="control-label fw-bold">How many minutes were wasted?</label>
-                <input asp-for="Amount" class="form-control" type="number" min="1" />
-                <span asp-validation-for="Amount" class="text-danger"></span>
-            </div>
+            <span asp-validation-for="Rating" class="text-rose-500 text-xs"></span>
+        </div>
 
-            <div class="form-group mb-3">
-                <label asp-for="Rating" class="control-label fw-bold">Estimate the time wasted (from 1 to 5)</label>
-                <input asp-for="Rating" class="form-control" type="number" min="1" max="5" />
-                <span asp-validation-for="Rating" class="text-danger"></span>
-            </div>
+        <div class="form-control mb-8 flex flex-col gap-2 items-stretch">
+            <label asp-for="Comment" class="font-bold text-text text-base">Коментар</label>
 
-            <div class="form-group mb-3">
-                <label asp-for="Comment" class="control-label fw-bold">Comment</label>
-                <input asp-for="Comment" class="form-control" placeholder="For example: I was watching TikTok again..." />
-                <span asp-validation-for="Comment" class="text-danger"></span>
-            </div>
+            <textarea asp-for="Comment" placeholder="Для прикладу: Я знову дивився Тік-ток..."
+                      class="textarea textarea-bordered h-28 w-full bg-transparent border-secondary/50 focus:border-accent focus:outline-none text-text text-base leading-relaxed resize-none"></textarea>
 
-            <div class="form-group mt-4">
-                <input type="submit" value="Save" class="btn btn-primary" />
-                <a asp-controller="Home" asp-action="Index" class="btn btn-secondary ms-2">I changed my mind about sharing this.</a>
-            </div>
-        </form>
-    </div>
+            <span asp-validation-for="Comment" class="text-rose-500 text-xs"></span>
+        </div>
+
+        <div class="flex items-center gap-4 pt-2 border-t border-secondary/40 mt-6 pt-6">
+            <button type="submit" class="btn bg-accent hover:bg-accent/80 text-background border-none font-bold px-8">Зберегти</button>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-ghost text-primary hover:text-text hover:bg-secondary/20 font-semibold">Передумав ділитись</a>
+        </div>
+    </form>
 </div>
+
 
 @section Scripts {
     @{
@@ -68,6 +89,14 @@
     }
     
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const visualToggle = document.getElementById('visualToggle');
+            const hiddenLogType = document.getElementById('hiddenLogType');
+
+            visualToggle.addEventListener('change', function() {
+                hiddenLogType.value = this.checked ? 'loss' : 'win';
+            });
+        });
         const NUM_OF_FAILS = 5;
         let validationFailCount = 0;
 

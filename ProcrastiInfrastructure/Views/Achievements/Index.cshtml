@@ -1,47 +1,57 @@
 ﻿@model ProcrastiInfrastructure.Models.AchievementsViewModel;
 
 @{
-    ViewData["Title"] = "Achievements";
+    ViewData["Title"] = "Досягнення";
 }
 
-<div>
-    <h2>Achievements that are not to be ashamed of</h2>
-    <p>Collected: @Model.EarnedCount / @Model.TotalCount</p>
+<div class="mb-6">
+    <h2 class="text-2xl font-bold text-text mb-1">Досягнення, за які не соромно</h2>
+    <p class="text-sm font-semibold text-primary">Зібрано: @Model.EarnedCount / @Model.TotalCount</p>
 </div>
-<hr />
 
-<div style="display: flex; flex-wrap: wrap; gap: 20px;">
+<div class="border-b border-secondary/40 mb-8"></div>
+
+<div class="flex flex-wrap gap-6">
     @foreach (var achievement in Model.Achievements)
     {
         bool isRickroll = achievement.Title == "Rick Astley";
 
-        string borderStyle = achievement.IsUnlocked ? "border: 2px solid green;" : "border: 2px solid gray;";
-        string cursorStyle = isRickroll ? "cursor: pointer;" : "";
+        string cardStateClass = achievement.IsUnlocked
+            ? "border-accent bg-background shadow-sm"
+            : "border-secondary/40 bg-secondary/10 grayscale opacity-60";
 
-        <div style="padding: 15px; width: 250px; border-radius: 8px; text-align: center; @borderStyle"
-            @if(isRickroll) { <text>onclick="triggerRickroll(this)"</text> }>
-            <div style="width: 100px; height: 100px; background-color: #eee; margin: 0 auto 10px auto; display: flex; align-items: center; justify-content: center;">
-                @if (!string.IsNullOrEmpty(achievement.Icon))
-                {
-                    <img src="@achievement.Icon" alt="@achievement.Title" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" />
-                }
-                else
-                {
-                    <img src="/images/achievements/default-icon.png" alt="@achievement.Title" style="width: 100%; height: 100%; object-fit: cover; object-position: center;" />
-                }
+        string cursorClass = isRickroll ? "cursor-pointer" : "";
+
+        <div class="card w-60 border-2 transition-all duration-300 hover:-translate-y-1 @cardStateClass @cursorClass"
+            @(isRickroll ? "onclick=triggerRickroll(this)" : "")>
+            
+            <div class="card-body p-5 items-center text-center">
+                <div class="w-24 h-24 bg-secondary rounded-xl mb-2 flex items-center justify-center overflow-hidden">
+                    @if (!string.IsNullOrEmpty(achievement.Icon))
+                    {
+                        <img src="@achievement.Icon" alt="@achievement.Title" class="w-full h-full object-cover object-center" />
+                    }
+                    else
+                    {
+                        <img src="/images/achievements/default-icon.png" alt="@achievement.Title" class="w-full h-full object-cover object-center" />
+                    }
+                </div>
+
+                <h4 class="card-title text-base font-bold text-text mt-2">@achievement.Title</h4>
+                <p class="text-sm text-primary">@Html.Raw(achievement.Description)</p>
+
+                <div class="mt-4 w-full border-t border-secondary/20 pt-3">
+                    @if (achievement.IsUnlocked)
+                    {
+                        <p class="text-accent font-bold text-sm uppercase tracking-wider">Unlocked</p>
+                    }
+                    else
+                    {
+                        <p class="text-primary italic text-sm">Locked</p>
+                    }
+                </div>
+
             </div>
-
-            <h4>@achievement.Title</h4>
-            <p style="font-size: 14px; color: #555;">@Html.Raw(achievement.Description)</p>
-
-            @if (achievement.IsUnlocked)
-            {
-                <p style="color: green; font-weight: bold;">Unlocked</p>
-            }
-            else
-            {
-                <p style="color: gray; font-style: italic;">Locked</p>
-            }
         </div>
     }
 </div>

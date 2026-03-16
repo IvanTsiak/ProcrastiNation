@@ -9,7 +9,7 @@
     {
         public int GetCurrentUserId()
         {
-            return 3;
+            return 1;
         }
     }
 }
