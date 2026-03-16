@@ -89,25 +89,26 @@ function triggerRickroll(element) {
         tryUnlockAchievement("NGGYU");
     }
 
-    element.style.border = "2px solid green";
-    element.style.cursor = "default";
+    element.classList.remove('border-secondary/40', 'bg-secondary/10', 'grayscale', 'opacity-60', 'cursor-pointer');
+    element.classList.add('border-accent', 'bg-background', 'shadow-sm', 'cursor-default');
 
-    const statusText = element.querySelector('p:last-of-type');
+    const statusText = element.querySelector('.mt-4 p');
     if (statusText) {
         statusText.innerText = "Unlocked";
-        statusText.style.color = "green";
-        statusText.style.fontWeight = "bold";
-        statusText.style.fontStyle = "normal";
+
+        statusText.classList.remove('text-primary', 'italic');
+        statusText.classList.add('text-accent', 'font-bold', 'uppercase', 'tracking-wider');
     }
 
-    element.style.transition = "all 0.5s";
+    element.style.transition = "all 0.5s ease-in-out";
     element.style.transform = "rotate(360deg) scale(0.1)";
     element.style.opacity = "0";
 
     setTimeout(() => {
         window.open('/Achievements/Rickroll', '_blank');
 
-        element.style.transform = "none";
-        element.style.opacity = "1";
+        element.style.transform = "";
+        element.style.opacity = "";
+        element.style.transition = "";
     }, 500);
 }

@@ -56,16 +56,16 @@
         </div>
     </div>
 
-    <div class="font-bold text-[15px] mt-3 @actionColorClass">
+    <div class="font-bold text-base mt-3 @actionColorClass">
         @sign @Model.Amount хв у "@(Model.Activity?.Name ?? "Не знати де")"
     </div>
 
     @if (!string.IsNullOrEmpty(Model.Comment))
     {
-        <div class="mt-2 border-l-2 border-primary pl-3 py-1 text-text text-[15px] whitespace-pre-line max-w-3xl">@Model.Comment</div>
+        <div class="mt-2 border-l-2 border-primary pl-3 py-1 text-text text-base whitespace-pre-line max-w-3xl">@Model.Comment</div>
     }
 
-    <div class="mt-4 flex items-center gap-5 text-[15px] font-bold text-text">
+    <div class="mt-4 flex items-center gap-5 text-base font-bold text-text">
         <button id="@likeBtnId" onclick="likeLog(@Model.Id)" class="flex items-center gap-1.5 transition-colors cursor-pointer @btnColorClass hover:text-rose-500">
             <svg class="w-5 h-5" fill="@heartFill" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
             <span id="@likeCountId">@(Model.Likescount ?? 0)</span>
@@ -177,7 +177,7 @@
 
                     const list = document.getElementById(`comments-list-${logId}`);
                     const titleHtml = data.title
-                        ? `<span class="text-accent font-bold text-[12px] -mt-0.5 mb-1">${data.title}</span>`
+                        ? `<span class="text-accent font-bold text-xs -mt-0.5 mb-1">${data.title}</span>`
                         : '';
                     const newCommentHtml = `
                         <div class="border-b border-secondary/20 py-3 last:border-0 bg-accent/20 transition-colors duration-1000">
@@ -186,11 +186,11 @@
 
                                 <div class="flex flex-col flex-1">
                                     <div class="flex items-baseline gap-2">
-                                        <strong class="text-text text-[14px]">${data.username}</strong>
-                                        <span class="text-primary text-[12px]">${data.date}</span>
+                                        <strong class="text-text text-sm">${data.username}</strong>
+                                        <span class="text-primary text-xs">${data.date}</span>
                                     </div>
                                     ${titleHtml}
-                                    <div class="mt-0.5 text-text text-[14px]">${data.text}</div>
+                                    <div class="mt-0.5 text-text text-sm">${data.text}</div>
                                 </div>
                             </div>
                         </div>`;
