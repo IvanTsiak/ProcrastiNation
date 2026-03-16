@@ -415,13 +415,17 @@ namespace ProcrastiInfrastructure.Controllers
             _context.Comments.Add(newComment);
             await _context.SaveChangesAsync();
 
-            var user = await _context.Users.FindAsync(currentUserId);
+            var user = await _context.Users
+                .Include(u => u.Title)
+                .FirstOrDefaultAsync(u => u.Id == currentUserId);
 
             return Json(new
             {
-                username = user?.Username ?? "Unknown",
+                username = user?.Username ?? "Анонім",
+                title = user?.Title != null ? user.Title.Name : "",
                 text = newComment.Content,
-                date = newComment.Createdat?.ToString("dd.MM.yyyy HH:mm")
+                date = newComment.Createdat?.ToString("dd.MM.yyyy"),
+                profilePicture = string.IsNullOrEmpty(user?.Profilepicture) ? "/images/avatars/default-avatar.png" : user.Profilepicture
             });
         }
     }

@@ -24,9 +24,12 @@ namespace ProcrastiInfrastructure.Controllers
 
             viewModel.RecentLogs = await _context.Logs
                 .Include(l => l.User)
+                    .ThenInclude(u => u.Title)
                 .Include(l => l.Activity)
                 .Include(l => l.Likes)
                 .Include(l => l.Comments)
+                    .ThenInclude(c => c.Author)
+                        .ThenInclude(a => a.Title)
                 .Where(log => log.Isvisible == true)
                 .OrderByDescending(log => log.Createdat)
                 .Take(100)
