@@ -41,22 +41,30 @@ namespace ProcrastiInfrastructure.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SetActive(int titleId)
+        public async Task<IActionResult> SetActive(int? titleId)
         {
             int currentUserId = _currentUserService.GetCurrentUserId();
+            var user = await _context.Users.FindAsync(currentUserId);
 
-            bool ownsTitle = await _context.Usertitles
-                .AnyAsync(ut => ut.Userid == currentUserId && ut.Titleid == titleId);
-
-            if (ownsTitle)
+            if (user != null)
             {
-                var user = await _context.Users.FindAsync(currentUserId);
-                if (user != null)
+                if (titleId.HasValue)
                 {
-                    user.Titleid = titleId;
-                    _context.Users.Update(user);
-                    await _context.SaveChangesAsync();
+                    bool ownsTitle = await _context.Usertitles
+                        .AnyAsync(ut => ut.Userid == currentUserId && ut.Titleid == titleId.Value);
+
+                    if (ownsTitle)
+                    {
+                        user.Titleid = titleId.Value;
+                    }
                 }
+                else
+                {
+                    user.Titleid = null;
+                }
+
+                _context.Users.Update(user);
+                await _context.SaveChangesAsync();
             }
 
             return RedirectToAction("Index", "Profile");
