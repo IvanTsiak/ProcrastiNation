@@ -1,64 +1,98 @@
 ﻿@model ProcrastiInfrastructure.Models.ProfileViewModel
 
 @{
-    ViewData["Title"] = "Profile";
+    ViewData["Title"] = "Профіль";
 }
 
-<div>
-    <img src="@Model.ProfilePicture" alt="Avatar" style="width: 100px; height: 100px; object-fit: cover; border: 1px solid #000;" />
-    <h2>@Model.Username</h2>
-    <p style="display: flex; align-items: center; gap: 10px;">
-        <strong>Title:</strong> @(string.IsNullOrEmpty(Model.CurrentTitle) ? "No Title" : Model.CurrentTitle)
-        <a asp-controller="Titles" asp-action="Index" class="btn btn-sm btn-outline-warning" style="border-radius: 20px;">
-            Change Title 👑
-        </a>
-    </p>
-    <p><strong>Joined date:</strong> @Model.JoinedDate?.ToString("dd.MM.yyyy")</p>
-</div>
+<div class="max-w-5xl mx-auto space-y-6 mt-4">
 
-<hr />
+    <div class="bg-surface border border-secondary/50 rounded-xl p-8 flex items-center gap-6 shadow-sm relative">
 
-<div>
-    <h3>Statistics:</h3>
-    <ul>
-        <li><strong>Achievements achieved:</strong> @Model.AchievementsCount</li>
-        <li><strong>Titles unlocked:</strong> @Model.TitlesCount</li>
-        <li><strong>Time wasted::</strong> @Model.TotalLoss minutes</li>
-    </ul>
-</div>
+        <div class="absolute top-6 right-6">
+            <a asp-controller="Titles" asp-action="Index" class="btn btn-sm bg-background border-secondary/50 text-text hover:bg-secondary/20 hover:border-secondary transition-colors rounded-lg shadow-sm">
+                ⚙️ Змінити титул
+            </a>
+        </div>
 
-<hr />
+        <img src="@(string.IsNullOrEmpty(Model.ProfilePicture) ? "/images/avatars/default-avatar.png" : Model.ProfilePicture)"
+             alt="Avatar"
+             class="w-28 h-28 rounded-full object-cover border-4 border-background shadow-md shrink-0" />
 
-<div>
-    <h3>Recent Logs:</h3>
-    @if (Model.RecentLogs.Any())
-    {
-        foreach (var log in Model.RecentLogs)
-        {
-            <partial name="_LogCard" model="log" />
-        }
-    }
-    else
-    {
-        <p>Why haven't you created any logs yet?</p>
-    }
-</div>
+        <div class="flex flex-col">
+            <h2 class="text-3xl font-black text-text">@Model.Username</h2>
+            <span class="text-accent font-bold text-base mt-1 tracking-wide">
+                @(string.IsNullOrEmpty(Model.CurrentTitle) ? "Нема титулу" : Model.CurrentTitle)
+            </span>
+            <span class="text-primary text-sm mt-3 italic">
+                Почав вести облік страждань з @Model.JoinedDate?.ToString("dd.MM.yyyy")
+            </span>
+        </div>
+    </div>
 
-<hr />
+    <div class="grid grid-cols-3 gap-4">
 
-<div>
-    <h3>Losses this month:</h3>
-    @if (Model.MonthlyLossData.Any())
-    {
-        <ul>
-            @foreach (var dataPoint in Model.MonthlyLossData)
+        <div class="bg-accent/10 border border-accent/30 rounded-xl p-5 flex flex-col items-center justify-center shadow-sm text-center">
+            <span class="text-3xl mb-2 drop-shadow-sm">🏆</span>
+            <span class="text-3xl font-black text-text">@Model.AchievementsCount</span>
+            <span class="text-xs font-bold text-primary uppercase mt-1">Досягнень</span>
+        </div>
+
+        <div class="bg-accent/10 border border-accent/30 rounded-xl p-5 flex flex-col items-center justify-center shadow-sm text-center">
+            <span class="text-3xl mb-2 drop-shadow-sm">👑</span>
+            <span class="text-3xl font-black text-text">@Model.TitlesCount</span>
+            <span class="text-xs font-bold text-primary uppercase mt-1">Титулів</span>
+        </div>
+
+        <div class="bg-accent/10 border border-accent/30 rounded-xl p-5 flex flex-col items-center justify-center shadow-sm text-center">
+            <span class="text-3xl mb-2 drop-shadow-sm">⏳</span>
+            <span class="text-3xl font-black text-text">@Model.TotalLoss</span>
+            <span class="text-xs font-bold text-primary uppercase mt-1">Витрачено хвилин</span>
+        </div>
+
+    </div>
+
+    <div class="bg-surface border border-secondary/50 rounded-xl overflow-hidden shadow-sm">
+        <div class="px-5 py-3 border-b border-secondary/50 bg-background/60 flex justify-between items-center">
+            <h3 class="font-bold text-text text-base">Останні записи</h3>
+        </div>
+
+        <div class="flex flex-col">
+            @if (Model.RecentLogs.Any())
             {
-                <li><strong>@dataPoint.Key</strong> — @dataPoint.Value minutes</li>
+                foreach (var log in Model.RecentLogs)
+                {
+                    <partial name="_LogCard" model="log" />
+                }
             }
-        </ul>
-    }
-    else
-    {
-        <p>Didn't lose anything this month(</p>
-    }
+            else
+            {
+                <div class="p-8 text-center text-primary font-bold">І досі не створив жодного запису!?</div>
+            }
+        </div>
+    </div>
+
+    <div class="bg-surface border border-secondary/50 rounded-xl overflow-hidden shadow-sm">
+        <div class="px-5 py-3 border-b border-secondary/50 bg-background/60 flex justify-between items-center">
+            <h3 class="font-bold text-text text-base">Невтішний графік витрат за місяць</h3>
+        </div>
+
+        <div class="p-8 m-4 min-h-[300px] flex flex-col items-center justify-center border-2 border-dashed border-secondary/40 rounded-xl bg-background/30 relative overflow-hidden">
+
+            <div class="flex flex-col items-center gap-2 text-primary font-bold opacity-70 z-10">
+                
+            </div>
+
+            <div class="hidden">
+                @if (Model.MonthlyLossData.Any())
+                {
+                    foreach (var dataPoint in Model.MonthlyLossData)
+                    {
+                        <span data-month="@dataPoint.Key" data-value="@dataPoint.Value"></span>
+                    }
+                }
+            </div>
+
+        </div>
+    </div>
+
 </div>

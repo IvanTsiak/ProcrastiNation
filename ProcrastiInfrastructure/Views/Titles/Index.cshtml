@@ -1,53 +1,63 @@
 ﻿@model IEnumerable<ProcrastiDomain.Model.Title>
 
 @{
-    ViewData["Title"] = "My Titles";
+    ViewData["Title"] = "Мої титули";
 }
 
-<div class="container mt-4">
-    <h2>👑 My Titles</h2>
-    <p class="text-muted">Choose a title to display next to your username.</p>
-    <hr />
+<div class="banner">
+    <h1 class="text-5xl font-black text-white drop-shadow-md tracking-tight">Мої титули</h1>
+    <p class="text-white/80 mt-2 font-bold text-lg">Виберіть титул, який ідеально буде вас описувати</p>
+</div>
 
-    <div class="row mt-4">
-        @if (Model != null && Model.Any())
-        {
-            foreach (var title in Model)
+<div class="max-w-5xl mx-auto mt-8">
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            @foreach (var title in Model)
             {
                 bool isActive = ViewBag.ActiveTitleId == title.Id;
 
-                <div class="col-md-4 mb-3">
-                    <div class="card text-center @(isActive ? "border-warning shadow-sm" : "")" style="@(isActive ? "background-color: #fffde7;" : "")">
-                        <div class="card-body">
-                            <h5 class="card-title fw-bold" style="color: #2b1055;">@title.Name</h5>
+                string submitValue = isActive ? "" : title.Id.ToString();
 
-                            @if (isActive)
-                            {
-                                <span class="badge bg-warning text-dark mt-2" style="font-size: 14px;">Equipped ✓</span>
-                            }
-                            else
-                            {
-                                <form asp-action="SetActive" method="post">
-                                    <input type="hidden" name="titleId" value="@title.Id" />
-                                    <button type="submit" class="btn btn-outline-primary mt-2">Equip Title</button>
-                                </form>
-                            }
+                string cardClasses = isActive
+                ? "bg-accent/10 border-accent shadow-md text-accent ring-2 ring-accent/50 scale-[1.02]"
+                : "bg-surface border-secondary/40 text-text hover:-translate-y-1 hover:shadow-md";
+
+                <form asp-action="SetActive" method="post" class="h-full block">
+                    <input type="hidden" name="titleId" value="@submitValue" />
+
+                    <div onclick="this.closest('form').submit()"
+                         class="rounded-xl border p-6 h-full flex flex-col items-center justify-center text-center transition-all duration-300 cursor-pointer relative overflow-hidden @cardClasses">
+
+                        <div class="text-4xl mb-3 opacity-90 drop-shadow-sm">
+                            @(isActive ? "✨" : "📜")
                         </div>
-                    </div>
-                </div>
-            }
-        }
-        else
-        {
-            <div class="col-12">
-                <div class="alert alert-info">
-                    You haven't unlocked any titles yet. Keep procrastinating to earn some!
-                </div>
-            </div>
-        }
-    </div>
 
-    <div class="mt-4">
-        <a asp-controller="Profile" asp-action="Index" class="btn btn-secondary">← Back to Profile</a>
+                        <h5 class="font-bold text-lg drop-shadow-sm mb-2">@title.Name</h5>
+
+                        @if (isActive)
+                        {
+                            <span class="bg-accent text-background text-xs font-bold uppercase tracking-wider py-1 px-4 rounded-full mt-2 shadow-sm">
+                                Використовується ✓
+                            </span>
+                        }
+                    </div>
+                </form>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="bg-surface border border-secondary/50 rounded-xl p-10 text-center shadow-sm max-w-2xl mx-auto">
+            <h3 class="text-2xl font-black text-text mb-2 tracking-tight">Ви ще не відкрили жоден титул!</h3>
+            <p class="text-primary font-bold text-base">Бігом прокрастинувати!</p>
+        </div>
+    }
+
+    <div class="mt-8 border-t border-secondary/40 pt-6">
+        <a asp-controller="Profile" asp-action="Index" class="btn bg-secondary text-background hover:bg-text hover:text-background border-none font-bold px-8 transition-colors">
+            ← Повернутися до профілю
+        </a>
     </div>
 </div>

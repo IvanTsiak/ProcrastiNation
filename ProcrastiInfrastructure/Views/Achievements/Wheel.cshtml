@@ -1,0 +1,253 @@
+﻿@{
+    ViewData["Title"] = "Secret Wheel of Fortune";
+}
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.1.0/chartjs-plugin-datalabels.min.js"></script>
+
+<style>
+    .wheel-container {
+        position: relative;
+        width: 100%;
+        max-width: 400px;
+        aspect-ratio: 1 / 1;
+        margin: 0 auto;
+    }
+
+    .wheel-arrow {
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-top: 15px solid transparent;
+        border-bottom: 15px solid transparent;
+        border-right: 30px solid #2b1055;
+        top: 50%;
+        right: -15px;
+        transform: translateY(-50%);
+        z-index: 10;
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    }
+
+    #wheel {
+        max-height: 100%;
+        width: 100%;
+    }
+
+    #spin-btn {
+        position: absolute;
+        transform: translate(-50%, -50%);
+        top: 50%;
+        left: 50%;
+        height: 80px;
+        width: 80px;
+        border-radius: 50%;
+        cursor: pointer;
+        background: #2b1055;
+        color: #ffffff;
+        text-transform: uppercase;
+        font-size: 16px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        border: 4px solid #ffffff;
+        box-shadow: 0 0 15px rgba(0,0,0,0.3);
+        z-index: 5;
+        transition: transform 0.1s;
+    }
+
+        #spin-btn:active {
+            transform: translate(-50%, -50%) scale(0.95);
+        }
+</style>
+
+<div class="max-w-5xl mx-auto mt-6 mb-12 px-4 flex flex-col md:flex-row gap-8 items-center md:items-start">
+
+    <div class="w-full md:w-1/2 flex flex-col items-center">
+        <h2 class="text-3xl font-black text-text mb-6 drop-shadow-sm tracking-tight">Колесо марнотратства</h2>
+
+        <div class="wheel-container">
+            <canvas id="wheel"></canvas>
+            <button id="spin-btn">Spin</button>
+            <div class="wheel-arrow"></div>
+        </div>
+
+        <div class="mt-8 text-center w-full">
+            <a href="/Achievements" class="btn btn-ghost text-primary hover:text-text font-bold">← Назад до досягнень</a>
+        </div>
+    </div>
+
+    <div class="w-full md:w-1/2 flex flex-col gap-6 mt-4 md:mt-16">
+
+        <div class="bg-surface border border-secondary/50 rounded-xl p-6 shadow-sm flex justify-between items-center">
+            <span class="text-text font-bold text-lg">Спроб за сеанс:</span>
+            <span id="spin-counter" class="text-3xl font-black text-accent bg-background px-4 py-1 rounded-lg border border-secondary/30">0</span>
+        </div>
+
+        <div class="bg-surface border border-secondary/50 rounded-xl overflow-hidden shadow-sm">
+            <div class="px-5 py-3 border-b border-secondary/50 bg-background/60">
+                <h3 class="font-bold text-text text-base">Що випало?</h3>
+            </div>
+            <div class="p-6 flex flex-col items-center text-center">
+                <div id="final-color" class="text-2xl font-black text-primary mb-4 opacity-50">
+                    Крути давай...
+                </div>
+
+                <div class="w-full border-t border-secondary/20 my-2"></div>
+
+                <div id="snarky-comment" class="text-base text-text italic mt-4 min-h-[60px] flex items-center justify-center">
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    const wheel = document.getElementById("wheel");
+    const spinBtn = document.getElementById("spin-btn");
+    const finalColorBox = document.getElementById("final-color");
+    const snarkyCommentBox = document.getElementById("snarky-comment");
+    const spinCounterBox = document.getElementById("spin-counter");
+
+    let sessionSpins = 0;
+    let currentCommentIndex = 0;
+
+    const comments = [
+        "Круть-круть.",
+        "Ще одна хвилина життя змарнована успішно.",
+        "Власники онлайн-казино аплодують тобі стоячи.",
+        "Від цього користі стільки ж, скільки ж від пісочниці на пляжі.",
+        "Баба з воза — кобилі легше, а від цих спінів йому легше не стане.",
+        "Можливо, мені почати з тебе гроші за це брати?",
+        "Ти ж розумієш, що це просто генератор випадкових чисел?",
+        "Що в цьому такого цікавого?",
+        "Ура-а-а, знову щось випадкове! Ніколи такого не бачив!",
+        "У п'ятому класі я колись з'їв жука, так от, то було цікавіше за твої ці викрутаси",
+        "О, як цікаво (ні).",
+        "Твої дедлайни передають палкі вітання.",
+        "Ну все, я більше не можу",
+        "Ну і крути собі"
+    ];
+
+    const rotationValues = [
+        { minDegree: 0, maxDegree: 18, value: 'Дуля з маком' },
+        { minDegree: 19, maxDegree: 54, value: 'Нічого' },
+        { minDegree: 55, maxDegree: 90, value: 'Перемога' },
+        { minDegree: 91, maxDegree: 126, value: 'Нічогісінько' },
+        { minDegree: 127, maxDegree: 162, value: 'Дуля без маку' },
+        { minDegree: 163, maxDegree: 198, value: 'Прокрастинація' },
+        { minDegree: 199, maxDegree: 234, value: 'Нуль' },
+        { minDegree: 235, maxDegree: 270, value: 'Головний біль' },
+        { minDegree: 271, maxDegree: 306, value: 'Ані крихти' },
+        { minDegree: 307, maxDegree: 342, value: 'Хрін, а не виграш' },
+        { minDegree: 343, maxDegree: 360, value: 'Дуля з маком' }
+    ];
+
+    const data = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+    var pieColors = [
+        "#e11d48", // Перемога
+        "#3b82f6", // Нічого
+        "#10b981", // Дуля з маком
+        "#8b5cf6", // Хрін, а не виграш
+        "#f97316", // Ані крихти
+        "#eab308", // Головний біль
+        "#ec4899", // Нуль
+        "#06b6d4", // Прокрастинація
+        "#84cc16", // Дуля без маку
+        "#14b8a6"  // Нічогісінько
+    ];
+
+    let myChart = new Chart(wheel, {
+        plugins: [ChartDataLabels],
+        type: "pie",
+        data: {
+            labels: ['Перемога', 'Нічого', 'Дуля з маком', 'Хрін, а не виграш', 'Ані крихти', 'Головний біль', 'Нуль', 'Прокрастинація', 'Дуля без маку', 'Нічогісінько'],
+            datasets: [{ backgroundColor: pieColors, data: data }],
+        },
+        options: {
+            responsive: true,
+            animation: { duration: 0 },
+            plugins: {
+                tooltip: false,
+                legend: { display: false },
+                datalabels: {
+                    color: "#ffffff",
+                    formatter: (_, context) => context.chart.data.labels[context.dataIndex],
+                    font: { size: 12, weight: 'bold' },
+                },
+            },
+        },
+    });
+
+    const valueGenerator = (angleValue) => {
+        for (let i of rotationValues) {
+            if (angleValue >= i.minDegree && angleValue <= i.maxDegree) {
+
+                sessionSpins++;
+                spinCounterBox.innerText = sessionSpins;
+
+                finalColorBox.innerHTML = `Ти отримав <span class="text-3xl ml-2 uppercase" style="color: ${i.value.toLowerCase()}">${i.value}</span>!`;
+                finalColorBox.classList.remove('opacity-50', 'text-primary');
+
+                if (sessionSpins === 1) {
+                    if (typeof tryUnlockAchievement === 'function') {
+                        tryUnlockAchievement("LUDOSEARCHER");
+                    }
+                }
+
+                if (sessionSpins === 50) {
+                    if (typeof tryUnlockAchievement === 'function') {
+                        tryUnlockAchievement("GAMBLER");
+                    }
+                }
+
+                if (i.value === 'Перемога') {
+                    snarkyCommentBox.innerHTML = "ТИ ВИГРАВ!? Ну що за лудоман?..";
+                    snarkyCommentBox.classList.add('text-rose-500', 'text-lg');
+
+                    if (typeof tryUnlockAchievement === 'function') {
+                        tryUnlockAchievement("WINNER");
+                    }
+                } else {
+                    snarkyCommentBox.innerHTML = comments[currentCommentIndex];
+                    snarkyCommentBox.classList.remove('text-rose-500', 'text-lg');
+
+                    if (currentCommentIndex < comments.length - 1) {
+                        currentCommentIndex++;
+                    }
+                }
+
+                spinBtn.disabled = false;
+                break;
+            }
+        }
+    };
+
+    let count = 0;
+    let resultValue = 101;
+
+    spinBtn.addEventListener("click", () => {
+        spinBtn.disabled = true;
+        finalColorBox.innerHTML = "Крутимо...";
+        finalColorBox.classList.add('opacity-50', 'text-primary');
+        snarkyCommentBox.innerHTML = "<em>Іди краще чимось займись...</em>";
+
+        let randomDegree = Math.floor(Math.random() * (355 - 0 + 1) + 0);
+
+        let rotationInterval = window.setInterval(() => {
+            myChart.options.rotation = myChart.options.rotation + resultValue;
+            myChart.update();
+
+            if (myChart.options.rotation >= 360) {
+                count += 1;
+                resultValue -= 5;
+                myChart.options.rotation = 0;
+            } else if (count > 15 && myChart.options.rotation == randomDegree) {
+                valueGenerator(randomDegree);
+                clearInterval(rotationInterval);
+                count = 0;
+                resultValue = 101;
+            }
+        }, 10);
+    });
+</script>

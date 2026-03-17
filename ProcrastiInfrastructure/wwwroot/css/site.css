@@ -3,16 +3,23 @@
 
 @theme {
     --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-
+    
     --color-text: #060707;
     --color-background: #f9fafa;
     --color-primary: #788393;
     --color-secondary: #c5b7be;
     --color-accent: #a5938f;
+    --color-surface: #f7efef;
 }
 
 @layer components {
     .nav-link {
         @apply flex items-center gap-3 px-3 py-2 text-sm font-semibold text-text rounded-lg hover:bg-zinc-200 transition-colors cursor-pointer;
+    }
+
+    .banner {
+        @apply -mt-8 -mx-8 mb-8 min-h-[140px] flex flex-col items-center justify-center p-8 shadow-md relative;
+        background-color: #4a4a4a;
+        color: white;
     }
 }

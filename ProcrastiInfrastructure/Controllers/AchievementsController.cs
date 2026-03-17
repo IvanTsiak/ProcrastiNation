@@ -218,5 +218,11 @@ namespace ProcrastiInfrastructure.Controllers
                 icon = achievement.Icon
             });
         }
+
+        [HttpGet]
+        public IActionResult Wheel()
+        {
+            return View();
+        }
     }
 }

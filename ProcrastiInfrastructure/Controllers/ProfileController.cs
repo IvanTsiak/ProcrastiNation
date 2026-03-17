@@ -37,9 +37,9 @@ namespace ProcrastiInfrastructure.Controllers
 
             var viewModel = new ProfileViewModel
             {
-                Username = user.Username ?? "Anonym",
+                Username = user.Username ?? "Анонім",
                 ProfilePicture = user.Profilepicture ?? "/images/avatars/default-avatar.png",
-                CurrentTitle = user.Title?.Name ?? "No Title",
+                CurrentTitle = user.Title?.Name ?? "Немає титулу",
                 JoinedDate = user.Joineddate,
                 AchievementsCount = user.Userachievements?.Count ?? 0,
                 TitlesCount = user.Usertitles?.Count ?? 0,

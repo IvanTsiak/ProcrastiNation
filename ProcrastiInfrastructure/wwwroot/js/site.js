@@ -23,7 +23,7 @@ function showAchivementPopup(data) {
 
     const iconSrc = data.icon ? data.icon : '/images/achievements/default-icon.png';
     toast.innerHTML = `
-        <div class="alert bg-background border-2 border-accent text-text shadow-xl flex items-center gap-4 w-88 p-4 rounded-xl">
+        <div class="alert bg-background border-2 border-accent text-text shadow-xl flex items-center gap-4 w-92 p-4 rounded-xl">
             <div class="w-14 h-14 bg-secondary/20 rounded-full shrink-0 overflow-hidden flex items-center justify-center">
                 <img src="${iconSrc}" class="w-full h-full object-cover object-center" />
             </div>
@@ -73,7 +73,7 @@ function showTitlePopup(data) {
     toast.className = "fixed bottom-8 right-8 z-[9999] transition-all duration-500 opacity-0 translate-y-5";
 
     toast.innerHTML = `
-        <div class="alert bg-gradient-to-br from-text to-primary border-2 border-amber-400 text-background shadow-[0_0_20px_rgba(251,191,36,0.3)] flex items-center gap-4 w-88 p-4 rounded-xl">
+        <div class="alert bg-gradient-to-br from-text to-primary border-2 border-amber-400 text-background shadow-[0_0_20px_rgba(251,191,36,0.3)] flex items-center gap-4 w-92 p-4 rounded-xl">
             <div class="w-12 h-12 bg-white/20 rounded-full shrink-0 flex justify-center items-center text-2xl">
                 👑
             </div>
@@ -85,8 +85,6 @@ function showTitlePopup(data) {
     `;
 
     document.body.appendChild(toast);
-
-    setTimeout(() => { toast.style.opacity = '1'; }, 10);
 
     requestAnimationFrame(() => {
         toast.classList.remove('opacity-0', 'translate-y-5');
@@ -105,8 +103,8 @@ function triggerRickroll(element) {
         tryUnlockAchievement("NGGYU");
     }
 
-    element.classList.remove('border-secondary/40', 'bg-secondary/10', 'grayscale', 'opacity-60', 'cursor-pointer');
-    element.classList.add('border-accent', 'bg-background', 'shadow-sm', 'cursor-default');
+    element.classList.remove('border-secondary/40', 'bg-secondary/10', 'grayscale', 'opacity-60');
+    element.classList.add('border-accent', 'bg-background', 'shadow-sm');
 
     const statusText = element.querySelector('.mt-4 p');
     if (statusText) {
