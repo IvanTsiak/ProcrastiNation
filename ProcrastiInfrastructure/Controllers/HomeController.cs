@@ -17,8 +17,14 @@ namespace ProcrastiInfrastructure.Controllers
             _context = context;
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
+            if (User.Identity == null || !User.Identity.IsAuthenticated)
+            {
+                return View("Landing");
+            }
+
             var viewModel = new DashboardViewModel();
 
             var globalStat = await _context.Globalstats.FirstOrDefaultAsync();
