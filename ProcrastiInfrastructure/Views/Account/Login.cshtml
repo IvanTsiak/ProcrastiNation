@@ -1,0 +1,29 @@
+﻿<form asp-action="Login" method="post" class="space-y-4">
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="bg-rose-100 text-rose-600 p-3 rounded-lg text-sm font-bold mb-4">
+            <div asp-validation-summary="All"></div>
+        </div>
+    }
+
+    <div class="form-control">
+        <label class="label pb-1">
+            <span class="label-text font-bold text-text text-base">Пошта</span>
+        </label>
+        <input type="email" name="email" required placeholder="твоя@пошта.com"
+               class="input input-bordered w-full bg-transparent border-secondary/50 focus:border-accent focus:outline-none text-text" />
+    </div>
+
+    <div class="form-control">
+        <label class="label pb-1">
+            <span class="label-text font-bold text-text text-base">Пароль</span>
+        </label>
+        <input type="password" name="password" required placeholder="••••••••"
+               class="input input-bordered w-full bg-transparent border-secondary/50 focus:border-accent focus:outline-none text-text" />
+    </div>
+
+    <button type="submit" class="btn bg-accent hover:bg-accent/80 text-background border-none font-bold w-full mt-4">
+        Увійти
+    </button>
+</form>

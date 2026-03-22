@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProcrastiDomain.Model;
 using ProcrastiInfrastructure.Models;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace ProcrastiInfrastructure.Controllers
 {
+    [Authorize]
     public class AchievementsController : Controller
     {
         private readonly ProcrastiContext _context;

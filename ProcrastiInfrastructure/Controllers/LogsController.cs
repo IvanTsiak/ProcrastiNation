@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProcrastiDomain.Model;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace ProcrastiInfrastructure.Controllers
 {
+    [Authorize]
     public class LogsController : Controller
     {
         private readonly ProcrastiContext _context;
@@ -152,7 +154,7 @@ namespace ProcrastiInfrastructure.Controllers
 
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Home");
             }
 
             ViewBag.VerifiedActivityNames = _context.Activities

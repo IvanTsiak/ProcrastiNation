@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProcrastiInfrastructure.Models;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace ProcrastiInfrastructure.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ProcrastiContext _context;
