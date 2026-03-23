@@ -1,37 +1,55 @@
-﻿<form asp-action="Register" method="post" class="space-y-4">
+﻿@{
+    Layout = "_LayoutGuest";
+    ViewData["Title"] = "Реєстрація";
+}
 
-    @if (!ViewData.ModelState.IsValid)
-    {
-        <div class="bg-rose-100 text-rose-600 p-3 rounded-lg text-sm font-bold mb-4">
-            <div asp-validation-summary="All"></div>
+<div class="bg-background w-full max-w-md p-8 sm:p-10 rounded-none shadow-xl shadow-secondary/20 border border-secondary/30">
+
+    <div class="text-center mb-8">
+        <h1 class="text-3xl font-black text-text mb-2 tracking-tight">Реєстрація</h1>
+        <p class="text-primary text-sm font-medium">Створіть новий акаунт — не пожалієте!</p>
+    </div>
+
+    <form asp-action="Register" method="post" class="space-y-5">
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="bg-rose-50 text-rose-600 p-4 rounded-2xl text-sm font-bold border border-rose-100">
+                <div asp-validation-summary="All"></div>
+            </div>
+        }
+
+        <div class="form-control">
+            <label class="label pb-2 px-1">
+                <span class="label-text font-bold text-text text-sm">Ім'я</span>
+            </label>
+            <input type="text" name="username" required placeholder="Ваше чудове ім'я"
+                    class="input w-full bg-white border-secondary/50 focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none text-text rounded-xl h-12 transition-all duration-200" />
         </div>
-    }
 
-    <div class="form-control">
-        <label class="label pb-1">
-            <span class="label-text font-bold text-text text-base">Нікнейм</span>
-        </label>
-        <input type="text" name="username" required placeholder="Наприклад: User228"
-               class="input input-bordered w-full bg-transparent border-secondary/50 focus:border-accent focus:outline-none text-text" />
+        <div class="form-control">
+            <label class="label pb-2 px-1">
+                <span class="label-text font-bold text-text text-sm">Електронна пошта</span>
+            </label>
+            <input type="email" name="email" required placeholder="your@email.com"
+                    class="input w-full bg-white border-secondary/50 focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none text-text rounded-xl h-12 transition-all duration-200" />
+        </div>
+
+        <div class="form-control">
+            <label class="label pb-2 px-1">
+                <span class="label-text font-bold text-text text-sm">Пароль</span>
+            </label>
+            <input type="password" name="password" required placeholder="••••••••"
+                    class="input w-full bg-white border-secondary/50 focus:border-accent focus:ring-2 focus:ring-accent/20 focus:outline-none text-text rounded-xl h-12 transition-all duration-200" />
+        </div>
+
+        <button type="submit" class="btn bg-accent hover:bg-accent/90 text-background border-none font-bold w-full h-12 rounded-xl mt-6 text-base shadow-md shadow-accent/20 transition-all duration-200 hover:-translate-y-0.5">
+            Зареєструватися
+        </button>
+    </form>
+
+    <div class="mt-8 text-center text-sm font-medium text-text">
+        Вже маєте акаунт?
+        <a asp-action="Login" class="text-accent hover:text-accent/80 font-bold transition-colors">Так бігом входьте!</a>
     </div>
-
-    <div class="form-control">
-        <label class="label pb-1">
-            <span class="label-text font-bold text-text text-base">Пошта</span>
-        </label>
-        <input type="email" name="email" required placeholder="твоя@пошта.com"
-               class="input input-bordered w-full bg-transparent border-secondary/50 focus:border-accent focus:outline-none text-text" />
-    </div>
-
-    <div class="form-control">
-        <label class="label pb-1">
-            <span class="label-text font-bold text-text text-base">Пароль</span>
-        </label>
-        <input type="password" name="password" required placeholder="••••••••"
-               class="input input-bordered w-full bg-transparent border-secondary/50 focus:border-accent focus:outline-none text-text" />
-    </div>
-
-    <button type="submit" class="btn bg-accent hover:bg-accent/80 text-background border-none font-bold w-full mt-4">
-        Зареєструватися
-    </button>
-</form>
+</div>

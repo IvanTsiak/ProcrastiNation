@@ -88,7 +88,7 @@ namespace ProcrastiInfrastructure.Controllers
                 return View();
             }
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-            if (user != null || BCrypt.Net.BCrypt.Verify(password, user.Passwordhash))
+            if (user != null && BCrypt.Net.BCrypt.Verify(password, user.Passwordhash))
             {
                 var claims = new List<Claim>
                 {
