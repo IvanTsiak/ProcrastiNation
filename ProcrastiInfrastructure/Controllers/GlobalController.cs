@@ -43,7 +43,7 @@ namespace ProcrastiInfrastructure.Controllers
 
             viewModel.TopActivities = await _context.Activities
                 .OrderByDescending(a => a.Mentionscount)
-                .Take(3)
+                .Take(6)
                 .ToListAsync();
 
             return View(viewModel);

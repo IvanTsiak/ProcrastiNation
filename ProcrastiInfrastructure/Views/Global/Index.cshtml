@@ -55,7 +55,15 @@
             <h3 class="font-bold text-text text-base">На що ж люди витрачають свій час?</h3>
         </div>
 
-        <div class="p-8 m-4 min-h-[200px] flex flex-col items-center justify-center border-2 border-dashed border-secondary/40 rounded-xl bg-background/30">
+        <div class="p-8 m-4 min-h-[300px] flex flex-col items-center justify-center border-2 border-dashed border-secondary/40 rounded-xl bg-background/30">
+            @if (Model.TopActivities != null && Model.TopActivities.Any())
+            {
+                <canvas id="activitiesChart"></canvas>
+            }
+            else
+            {
+                <p class="text-primary font-bold">Поки що немає даних для графіка.</p>
+            }
         </div>
     </div>
 
@@ -72,3 +80,112 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const canvas = document.getElementById('activitiesChart');
+
+            if (!canvas) {
+                return;
+            }
+
+            const ctx = canvas.getContext('2d');
+
+            const rootStyles = getComputedStyle(document.documentElement);
+            const getColor = (name) => rootStyles.getPropertyValue(name).trim();
+
+            const colorAccent = getColor('--color-accent');
+            const colorText = getColor('--color-text');
+            const colorPrimary = getColor('--color-primary');
+            const colorSecondary = getColor('--color-secondary');
+
+            const labels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.TopActivities.Select(a => a.Name)));
+            const data = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.TopActivities.Select(a => a.Mentionscount)));
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Кількість згадок',
+                        data: data,
+                        backgroundColor: colorAccent,
+                        borderColor: colorText,
+                        borderWidth: 1,
+                        borderRadius: 4,
+                        barPercentage: 0.8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: colorText,
+                            titleFont: {
+                                family: 'Inter',
+                                size: 13
+                            },
+                            bodyFont: {
+                                family: 'Inter',
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            padding: 10,
+                            cornerRadius: 8,
+                            displayColors: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: colorText,
+                                font: {
+                                    family: 'Inter',
+                                    weight: '600',
+                                    size: 13
+                                }
+                            },
+                            grid: {
+                                display: true
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Кількість згадок',
+                                color: colorText,
+                                font: {
+                                    family: 'Inter',
+                                    size: 13,
+                                    weight: '600'
+                                },
+                                padding: {
+                                    bottom: 10
+                                }
+                            },
+                            ticks: {
+                                precision: 0,
+                                color: colorPrimary,
+                                font: {
+                                    family: 'Inter',
+                                    size: 12
+                                }
+                            },
+                            grid: {
+                                display: true
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+}

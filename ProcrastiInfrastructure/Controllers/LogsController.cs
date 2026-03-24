@@ -200,7 +200,7 @@ namespace ProcrastiInfrastructure.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Activityid,Logtype,Amount,Rating,Comment")] Log log)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Activityid,Logtype,Amount,Rating,Comment,Createdat")] Log log)
         {
             if (id != log.Id)
             {
@@ -281,6 +281,7 @@ namespace ProcrastiInfrastructure.Controllers
                     dbLog.Amount = log.Amount;
                     dbLog.Rating = log.Rating;
                     dbLog.Comment = log.Comment;
+                    dbLog.Createdat = log.Createdat;
 
                     await _context.SaveChangesAsync();
                 }
@@ -429,6 +430,14 @@ namespace ProcrastiInfrastructure.Controllers
                 date = newComment.Createdat?.ToString("dd.MM.yyyy"),
                 profilePicture = string.IsNullOrEmpty(user?.Profilepicture) ? "/images/avatars/default-avatar.png" : user.Profilepicture
             });
+        }
+
+        [HttpGet]
+        public IActionResult CancelCreation()
+        {
+            TempData["PendingTitle"] = "COWARD";
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }
