@@ -22,7 +22,17 @@ namespace ProcrastiInfrastructure.Controllers
         {
             if (User.Identity == null || !User.Identity.IsAuthenticated)
             {
-                return View("Landing");
+                var latestLogs = await _context.Logs
+                .Include(l => l.User).ThenInclude(u => u.Title)
+                .Include(l => l.Activity)
+                .Include(l => l.Likes)
+                .Include(l => l.Comments).ThenInclude(c => c.Author).ThenInclude(a => a.Title)
+                .Where(l => l.Isvisible == true)
+                .OrderByDescending(l => l.Createdat)
+                .Take(4)
+                .ToListAsync();
+
+                return View("Landing", latestLogs);
             }
 
             var viewModel = new DashboardViewModel();

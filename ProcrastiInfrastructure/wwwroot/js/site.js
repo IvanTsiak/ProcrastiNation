@@ -95,7 +95,7 @@ function showTitlePopup(data) {
         toast.classList.remove('opacity-100', 'translate-y-0');
         toast.classList.add('opacity-0', 'translate-y-5');
         setTimeout(() => { toast.remove(); }, 500);
-    }, 9999000);
+    }, 5000);
 }
 
 function triggerRickroll(element) {

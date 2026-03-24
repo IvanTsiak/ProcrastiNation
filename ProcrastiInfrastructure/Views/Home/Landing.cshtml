@@ -1,9 +1,140 @@
-﻿<!DOCTYPE html>
-<html>
-<body>
-    <a asp-controller="Account" asp-action="Login">Увійти</a>
-    <br />
-    <br />
-    <a asp-controller="Account" asp-action="Register">Зареєструватися</a>
-</body>
-</html>
+﻿@model IEnumerable<ProcrastiDomain.Model.Log>
+
+@{
+    Layout = "_LayoutGuest";
+    ViewData["Title"] = "Головна";
+}
+
+<header class="flex items-center justify-between p-6 bg-background">
+    <div class="text-3xl font-black text-text tracking-tighter">ProcrastiNation</div>
+
+    <div class="flex items-center gap-6">
+        <a href="/Account/Login" class="text-base font-medium text-text hover:text-accent transition-colors">Увійти</a>
+
+        <a href="/Account/Register" class="btn bg-accent hover:bg-accent/90 text-background border-none font-bold rounded-xl px-6 py-2 transition-all duration-200 hover:-translate-y-0.5">
+            Зареєструватися
+        </a>
+    </div>
+</header>
+
+<section class="flex flex-col items-center justify-center text-center p-24 md:p-32 bg-gradient-to-r from-primary to-secondary relative overflow-hidden">
+
+    <h1 class="text-5xl md:text-6xl font-black text-accent mb-6 tracking-tighter leading-tight max-w-4xl">
+        ProcrastiNation — колись та й щось буде
+    </h1>
+
+    <p class="text-xl md:text-2xl text-surface max-w-2xl mb-14 font-medium leading-relaxed">
+        П'ять-десять людей вже діляться своїм згаяним часом. А ви чому ні?
+    </p>
+
+    <a href="/Account/Register" class="btn bg-accent hover:bg-primary/90 text-background border-none font-bold rounded-xl px-12 py-4 text-xl flex items-center gap-2 transition-all duration-200 hover:-translate-y-0.5 shadow-lg shadow-primary/20">
+        Почати гаяти час
+        <span>&rarr;</span>
+    </a>
+
+</section>
+<section class="py-24 px-6 bg-background">
+    <div class="max-w-6xl mx-auto">
+
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-black text-text mb-4 tracking-tight">
+                Вражаюча статистика непродуктивності
+            </h2>
+            <p class="text-lg text-primary font-medium max-w-2xl mx-auto">
+                Я пишаюся тим, скільки часу користувачі НЕ витратили на корисні справи
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+            <div class="bg-surface border border-secondary/30 rounded-2xl p-8 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+                <div class="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center mb-6">
+                    <svg class="w-7 h-7 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                    </svg>
+                </div>
+                <div class="text-4xl font-black text-text mb-2 tracking-tight">Багацько</div>
+                <div class="text-sm font-bold text-primary">Активних прокрастинаторів</div>
+            </div>
+
+            <div class="bg-surface border border-secondary/30 rounded-2xl p-8 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+                <div class="w-14 h-14 rounded-full bg-orange-100 flex items-center justify-center mb-6">
+                    <svg class="w-7 h-7 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <div class="text-4xl font-black text-text mb-2 tracking-tight">Мільйони годин</div>
+                <div class="text-sm font-bold text-primary">Згаяно цього місяця</div>
+            </div>
+
+            <div class="bg-surface border border-secondary/30 rounded-2xl p-8 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+                <div class="w-14 h-14 rounded-full bg-purple-100 flex items-center justify-center mb-6">
+                    <svg class="w-7 h-7 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                </div>
+                <div class="text-4xl font-black text-text mb-2 tracking-tight">Занадто багато</div>
+                <div class="text-sm font-bold text-primary">Постів про відкладання</div>
+            </div>
+
+            <div class="bg-surface border border-secondary/30 rounded-2xl p-8 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+                <div class="w-14 h-14 rounded-full bg-emerald-100 flex items-center justify-center mb-6">
+                    <svg class="w-7 h-7 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                    </svg>
+                </div>
+                <div class="text-4xl font-black text-text mb-2 tracking-tight">До небес</div>
+                <div class="text-sm font-bold text-primary">Зростання прокрастинації</div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<section class="py-24 px-6 bg-surface border-t border-secondary/30">
+    <div class="max-w-3xl mx-auto">
+
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-black text-text mb-4 tracking-tight">Подивіться на щасливих користувачів</h2>
+            <p class="text-lg text-primary font-medium">Реальні історії (можливо) реальних людей (не впевнений) про їхній згаяний час.</p>
+        </div>
+
+        <div class="flex flex-col bg-background p-6 md:p-8 rounded-3xl border border-secondary/30 shadow-sm">
+            @if (Model != null && Model.Any())
+            {
+                foreach (var log in Model)
+                {
+                    <partial name="_LogCard" model="log" />
+                }
+            }
+            else
+            {
+                <div class="text-center text-primary font-bold py-8">Поки що всі працюють... Жартую, просто немає записів.</div>
+            }
+        </div>
+
+    </div>
+</section>
+<footer class="footer sm:footer-horizontal p-10 bg-[#4a4a4a] border-t border-secondary/30 text-text">
+    <aside>
+        <p class="font-black text-background text-2xl tracking-tighter">
+            ProcrastiNation
+        </p>
+        <p class="text-primary font-medium mt-1 max-w-xs text-base">
+            Я б зробив нормальний футер, але... може завтра
+        </p>
+    </aside>
+
+    <nav>
+        <h6 class="footer-title text-background opacity-100 font-bold uppercase tracking-wider">Документація</h6>
+        <a class="link link-hover text-primary font-medium transition-colors hover:text-accent">Правила (клацайте-жмякайте)</a>
+        <a class="link link-hover text-primary font-medium transition-colors hover:text-accent">Політика конфіденційності (яка?)</a>
+        <a class="link link-hover text-primary font-medium transition-colors hover:text-accent">Умови використання (користуйтесь, поки добрий)</a>
+    </nav>
+
+    <nav>
+        <h6 class="footer-title text-background opacity-100 font-bold uppercase tracking-wider">Контакти</h6>
+        <a class="link link-hover text-primary font-medium transition-colors hover:text-accent">Про нас (я хороший)</a>
+        <a class="link link-hover text-primary font-medium transition-colors hover:text-accent">Служба підтримки (спить)</a>
+        <a class="link link-hover text-primary font-medium transition-colors hover:text-accent">Соцмережі (зареєструю завтра)</a>
+    </nav>
+</footer>
