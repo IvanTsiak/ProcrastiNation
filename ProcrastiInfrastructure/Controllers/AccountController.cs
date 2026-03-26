@@ -96,6 +96,11 @@ namespace ProcrastiInfrastructure.Controllers
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
                 };
 
+                if (user.Isadmin == true)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, "Admin"));
+                }
+
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 

@@ -3,7 +3,6 @@
 }
 
 <style>
-    /* Оригінальні стилі змійки, але адаптовані під наш контейнер */
     .snake-game-area {
         width: 100%;
         display: flex;
@@ -68,7 +67,7 @@
             <div id="difficulty-controls" class="flex flex-wrap gap-2">
                 <button class="btn bg-emerald-500 hover:bg-emerald-600 text-white border-none" onclick="startGame('easy')">Легко</button>
                 <button class="btn bg-amber-500 hover:bg-amber-600 text-white border-none" onclick="startGame('medium')">Нормально</button>
-                <button class="btn bg-rose-500 hover:bg-rose-600 text-white border-none" onclick="startGame('hard')">Дедлайн горить!</button>
+                <button class="btn bg-rose-500 hover:bg-rose-600 text-white border-none" onclick="startGame('hard')">Швидко-швидко</button>
             </div>
         </div>
 
@@ -162,7 +161,7 @@
         gameStatusTitle.innerText = "Гру закінчено! Зіграємо ще?";
         difficultyControls.style.display = "flex";
 
-        snarkyComment.innerHTML = `<span class="text-rose-500 font-bold">ВРІЗАВСЯ!</span><br/>Ти згаяв <b>${secondsWasted} секунд</b> свого життя.`;
+        snarkyComment.innerHTML = `<span class="text-rose-500 font-bold">ВРІЗАВСЯ!</span> Ти згаяв ${secondsWasted} секунд свого життя.`;
     }
 
     window.startGame = (difficulty) => {
