@@ -1,0 +1,44 @@
+﻿@model IEnumerable<ProcrastiDomain.Model.Title>
+
+@{
+    ViewData["Title"] = "Керування титулами";
+}
+
+<div class="max-w-6xl mx-auto p-6 bg-surface border border-secondary/30 rounded-xl mt-6 shadow-sm">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-text">Титули</h1>
+        <a asp-action="Create" class="btn btn-sm btn-outline hover:bg-text hover:text-background border-secondary/50">Створити новий</a>
+    </div>
+
+    <div class="overflow-x-auto">
+        <table class="table w-full border-collapse">
+            <thead>
+                <tr class="border-b-2 border-secondary/50 text-text">
+                    <th class="py-3 px-4 text-left">Код</th>
+                    <th class="py-3 px-4 text-left">Назва</th>
+                    <th class="py-3 px-4 text-left">Унікальний</th>
+                    <th class="py-3 px-4 text-right">Дії</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="hover:bg-background/50 border-b border-secondary/20 transition-colors">
+                        <td class="py-3 px-4 text-text font-medium">@Html.DisplayFor(modelItem => item.Code)</td>
+                        <td class="py-3 px-4 text-primary">@Html.DisplayFor(modelItem => item.Name)</td>
+                        <td class="py-3 px-4 text-primary">@(item.Isunique == true ? "Так" : "Ні")</td>
+                        <td class="py-3 px-4 text-right">
+                            <div class="flex justify-end gap-2">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="text-xs font-bold text-emerald-600 hover:text-emerald-700 hover:underline">Edit</a>
+                                <span class="text-secondary/50">|</span>
+                                <a asp-action="Details" asp-route-id="@item.Id" class="text-xs font-bold text-blue-600 hover:text-blue-700 hover:underline">Details</a>
+                                <span class="text-secondary/50">|</span>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="text-xs font-bold text-rose-600 hover:text-rose-700 hover:underline">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

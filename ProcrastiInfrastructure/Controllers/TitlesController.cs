@@ -209,7 +209,6 @@ namespace ProcrastiInfrastructure.Controllers
             return _context.Titles.Any(e => e.Id == id);
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Unlock([FromBody] string code)
         {
@@ -243,6 +242,15 @@ namespace ProcrastiInfrastructure.Controllers
             {
                 name = title.Name
             });
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public async Task<IActionResult> Manage() 
+        {
+            var titles = await _context.Titles.ToListAsync();
+
+            return View(titles);
         }
     }
 }

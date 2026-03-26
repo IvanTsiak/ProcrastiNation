@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ProcrastiInfrastructure.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class ActivitiesController : Controller
     {
         private readonly ProcrastiContext _context;
