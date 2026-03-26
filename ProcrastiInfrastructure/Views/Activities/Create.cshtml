@@ -1,37 +1,39 @@
 ﻿@model ProcrastiDomain.Model.Activity
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Створити активність";
 }
 
-<h1>Create</h1>
-
-<h4>Activity</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Categoryid" class="control-label"></label>
-                <select asp-for="Categoryid" class ="form-control" asp-items="ViewBag.Categoryid"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="max-w-2xl mx-auto p-8 bg-surface border border-secondary/30 rounded-xl mt-6 shadow-sm">
+    <div class="mb-6 border-b border-secondary/30 pb-4">
+        <h1 class="text-2xl font-bold text-text">Створити активність</h1>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+    <form asp-action="Create" class="space-y-5">
+        <div asp-validation-summary="ModelOnly" class="text-rose-500 text-sm font-semibold"></div>
+
+        <div class="form-control">
+            <label asp-for="Name" class="label pb-1"><span class="label-text font-bold text-text">Назва активності</span></label>
+            <input asp-for="Name" class="input input-bordered w-full bg-background border-secondary/50 focus:border-text text-text" />
+            <span asp-validation-for="Name" class="text-rose-500 text-xs mt-1"></span>
+        </div>
+
+        <div class="form-control">
+            <label asp-for="Categoryid" class="label pb-1"><span class="label-text font-bold text-text">Категорія</span></label>
+            <select asp-for="Categoryid" class="select select-bordered w-full bg-background border-secondary/50 focus:border-text text-text" asp-items="ViewBag.Categoryid">
+                <option value="">-- Виберіть категорію --</option>
+            </select>
+        </div>
+
+        <div class="pt-4 flex items-center gap-4">
+            <input type="submit" value="Зберегти" class="btn bg-text text-background hover:bg-text/80 border-none px-6" />
+            <a asp-action="Index" class="text-sm font-medium text-primary hover:text-text">Скасувати</a>
+        </div>
+    </form>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

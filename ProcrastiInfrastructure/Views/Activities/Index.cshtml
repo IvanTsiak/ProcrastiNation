@@ -1,47 +1,44 @@
 ﻿@model IEnumerable<ProcrastiDomain.Model.Activity>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Керування активностями";
 }
 
-<h1>Index</h1>
+<div class="max-w-6xl mx-auto p-6 bg-surface border border-secondary/30 rounded-xl mt-6 shadow-sm">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-text">Активності</h1>
+        <a asp-action="Create" class="btn btn-sm btn-outline hover:bg-text hover:text-background border-secondary/50">Створити нову</a>
+    </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Mentionscount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Mentionscount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.Name)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <div class="overflow-x-auto">
+        <table class="table w-full border-collapse">
+            <thead>
+                <tr class="border-b-2 border-secondary/50 text-text">
+                    <th class="py-3 px-4 text-left">Назва</th>
+                    <th class="py-3 px-4 text-left">Згадок</th>
+                    <th class="py-3 px-4 text-left">Категорія</th>
+                    <th class="py-3 px-4 text-right">Дії</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="hover:bg-background/50 border-b border-secondary/20 transition-colors">
+                        <td class="py-3 px-4 text-text font-medium">@Html.DisplayFor(modelItem => item.Name)</td>
+                        <td class="py-3 px-4 text-primary">@Html.DisplayFor(modelItem => item.Mentionscount)</td>
+                        <td class="py-3 px-4 text-primary">@Html.DisplayFor(modelItem => item.Category.Name)</td>
+                        <td class="py-3 px-4 text-right">
+                            <div class="flex justify-end gap-2">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="text-xs font-bold text-emerald-600 hover:text-emerald-700 hover:underline">Edit</a>
+                                <span class="text-secondary/50">|</span>
+                                <a asp-action="Details" asp-route-id="@item.Id" class="text-xs font-bold text-blue-600 hover:text-blue-700 hover:underline">Details</a>
+                                <span class="text-secondary/50">|</span>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="text-xs font-bold text-rose-600 hover:text-rose-700 hover:underline">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
