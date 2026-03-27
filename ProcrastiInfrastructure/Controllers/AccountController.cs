@@ -111,5 +111,11 @@ namespace ProcrastiInfrastructure.Controllers
 
             return View();
         }
+
+        [HttpGet]
+        public IActionResult Banned()
+        {
+            return View();
+        }
     }
 }

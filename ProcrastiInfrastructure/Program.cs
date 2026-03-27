@@ -4,13 +4,18 @@ using Npgsql;
 using ProcrastiDomain.Model;
 using ProcrastiInfrastructure;
 using ProcrastiInfrastructure.Services;
+using ProcrastiInfrastructure.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ProcrastiContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add<BannedUserFilter>();
+});
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
