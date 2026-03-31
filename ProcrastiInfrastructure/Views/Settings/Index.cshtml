@@ -53,17 +53,45 @@
                 </div>
 
                 <div class="dropdown dropdown-end w-full group">
+
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success mb-4 rounded-xl shadow-sm text-sm font-bold">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <span>@TempData["SuccessMessage"]</span>
+                        </div>
+                    }
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-error mb-4 rounded-xl shadow-sm text-sm font-bold text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <span>@TempData["ErrorMessage"]</span>
+                        </div>
+                    }
+
                     <div tabindex="0" role="button" class="flex items-center justify-between p-4 last:rounded-b-xl hover:bg-secondary/10 transition-colors w-full outline-none">
-                        <span class="font-bold text-text">Дані записів</span>
+                        <span class="font-bold text-text">Дані записів (Excel)</span>
 
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 text-primary group-hover:text-text transition-colors">
                             <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0l-4.25-4.25a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
                         </svg>
                     </div>
 
-                    <ul tabindex="0" class="dropdown-content z-[100] menu p-2 shadow-xl bg-surface border border-secondary/30 rounded-box w-64 mt-2">
-                        <li><a href="#" class="text-text font-bold hover:bg-secondary/20">Імпортувати дані</a></li>
-                        <li><a href="#" class="text-text font-bold hover:bg-secondary/20">Експортувати дані</a></li>
+                    <ul tabindex="0" class="dropdown-content z-[100] menu p-2 shadow-xl bg-surface border border-secondary/30 rounded-box w-56 mt-2">
+                        <li>
+                            <form asp-action="Import" method="post" enctype="multipart/form-data" id="importForm" class="hidden">
+                                <input type="file" id="fileExcel" name="fileExcel" accept=".xlsx" onchange="document.getElementById('importForm').submit();" />
+                            </form>
+
+                            <a href="#" onclick="document.getElementById('fileExcel').click(); return false;" class="text-text font-bold hover:bg-secondary/20">
+                                Імпортувати дані
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-action="Export" class="text-text font-bold hover:bg-secondary/20">
+                                Експортувати дані
+                            </a>
+                        </li>
                     </ul>
                 </div>
 
