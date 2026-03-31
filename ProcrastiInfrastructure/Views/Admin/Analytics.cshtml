@@ -1,0 +1,107 @@
+﻿@{
+    ViewBag.Title = "Аналітика";
+}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="max-w-7xl mx-auto p-6 mt-6">
+    <h1 class="text-2xl font-bold text-text mb-6">Аналітика</h1>
+
+    <div class="bg-surface border border-secondary/30 rounded-lg p-6 mb-6 shadow-sm flex items-center justify-between">
+        <div>
+            <h2 class="text-sm font-bold text-primary uppercase tracking-wider">Глобально згаяний час</h2>
+            <p class="text-4xl font-black text-rose-600 mt-1">@ViewBag.TotalWastedMinutes <span class="text-lg text-text font-medium">хвилин</span></p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+
+        <div class="bg-surface border border-secondary/30 rounded-lg p-5 shadow-sm">
+            <h3 class="text-base font-bold text-text mb-4">Статистика користувачів</h3>
+            <div class="relative h-64">
+                <canvas id="usersChart"></canvas>
+            </div>
+        </div>
+
+        <div class="bg-surface border border-secondary/30 rounded-lg p-5 shadow-sm">
+            <h3 class="text-base font-bold text-text mb-4">Статистика записів</h3>
+            <div class="relative h-64">
+                <canvas id="logsChart"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="bg-surface border border-secondary/30 rounded-lg p-5 shadow-sm w-full md:w-1/2 mx-auto">
+        <h3 class="text-base font-bold text-text mb-4 text-center">Співвідношення записів</h3>
+        <div class="relative h-64">
+            <canvas id="pieChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+    Chart.defaults.font.family = 'Inter, sans-serif';
+    Chart.defaults.color = '#6b7280';
+
+    new Chart(document.getElementById('usersChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Всього користувачів', 'Нових за сьогодні'],
+            datasets: [{
+                label: 'Кількість',
+                data: [@ViewBag.TotalUsers, @ViewBag.UsersToday],
+                backgroundColor: ['#3b82f6', '#60a5fa'],
+                borderWidth: 0,
+                barThickness: 50
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+        }
+    });
+
+    new Chart(document.getElementById('logsChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Всього записів', 'Нових за сьогодні'],
+            datasets: [{
+                label: 'Кількість',
+                data: [@ViewBag.TotalLogs, @ViewBag.LogsToday],
+                backgroundColor: ['#8b5cf6', '#a78bfa'],
+                borderWidth: 0,
+                barThickness: 50
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+        }
+    });
+
+    new Chart(document.getElementById('pieChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Згаяний час', 'Проведений і слава Богу'],
+            datasets: [{
+                data: [@ViewBag.LossCount, @ViewBag.GainCount],
+                backgroundColor: ['#f43f5e', '#10b981'],
+                borderWidth: 0,
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom' }
+            },
+            cutout: '60%'
+        }
+    });
+</script>

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using ProcrastiDomain.Model;
-using ProcrastiInfrastructure;
+using ProcrastiInfrastructure.Models;
 using System.Security.Claims;
 
 namespace ProcrastiInfrastructure.Controllers
@@ -25,39 +25,38 @@ namespace ProcrastiInfrastructure.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            return View();
+            return View(new RegisterViewModel());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(string username, string email, string password)
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+            if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("", "Ти чого не все заповнив? Ану бігом, щоб усе було заповнене!");
-                return View();
+                return View(model);
             }
 
-            bool emailExists = await _context.Users.AnyAsync(u => u.Email == email);
+            bool emailExists = await _context.Users.AnyAsync(u => u.Email == model.Email);
             if (emailExists)
             {
                 ModelState.AddModelError("", "Ця пошта уже використовується.");
                 return View();
             }
 
-            bool usernameExists = await _context.Users.AnyAsync(u => u.Username == username);
+            bool usernameExists = await _context.Users.AnyAsync(u => u.Username == model.Username);
             if (usernameExists)
             {
                 ModelState.AddModelError("", "Цей нікнейм уже використовується.");
                 return View();
             }
 
-            string passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(model.Password);
 
             var newUser = new User
             {
-                Username = username,
-                Email = email,
+                Username = model.Username,
+                Email = model.Email,
                 Passwordhash = passwordHash,
                 Joineddate = DateTime.Now
             };
@@ -75,20 +74,20 @@ namespace ProcrastiInfrastructure.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            return View();
+            return View(new LoginViewModel());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(string email, string password)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
-            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+            if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("", "Ти чого не все заповнив? Ану бігом, щоб усе було заповнене!");
-                return View();
+                return View(model);
             }
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-            if (user != null && BCrypt.Net.BCrypt.Verify(password, user.Passwordhash))
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+            if (user != null && BCrypt.Net.BCrypt.Verify(model.Password, user.Passwordhash))
             {
                 var claims = new List<Claim>
                 {

@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 namespace ProcrastiInfrastructure.Controllers
 {
     [Authorize(Roles = "Admin")]
-    public class AdminUserController : Controller
+    public class AdminController : Controller
     {
         private readonly ProcrastiContext _context;
 
-        public AdminUserController(ProcrastiContext context)
+        public AdminController(ProcrastiContext context)
         {
             _context = context;
         }
@@ -89,6 +89,27 @@ namespace ProcrastiInfrastructure.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Users));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Analytics()
+        {
+            var todayUtc = DateTime.UtcNow.Date;
+            var today = DateTime.SpecifyKind(todayUtc, DateTimeKind.Unspecified);
+            var globalStat = await _context.Globalstats.FirstOrDefaultAsync();
+
+            ViewBag.TotalUsers = await _context.Users.CountAsync();
+            ViewBag.NewUsersToday = await _context.Users.CountAsync(u => u.Joineddate >= today);
+
+            ViewBag.TotalLogs = await _context.Logs.CountAsync();
+            ViewBag.LogsToday = await _context.Logs.CountAsync(l => l.Createdat >= today);
+
+            ViewBag.TotalWastedMinutes = globalStat?.Totallossamount ?? 0;
+
+            ViewBag.LossCount = await _context.Logs.CountAsync(l => l.Logtype == LogType.loss);
+            ViewBag.GainCount = await _context.Logs.CountAsync(l => l.Logtype == LogType.win);
+
+            return View();
         }
     }
 }

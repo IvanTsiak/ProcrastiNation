@@ -1,0 +1,53 @@
+﻿@model IEnumerable<ProcrastiDomain.Model.Activity>
+
+@{
+    ViewData["Title"] = "Модерація активностей";
+}
+
+<div class="max-w-6xl mx-auto p-6 bg-surface border border-secondary/30 rounded-xl mt-6 shadow-sm">
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h1 class="text-2xl font-bold text-text">Модерація активностей, створених користувачами</h1>
+        </div>
+        <a asp-action="Index" class="btn btn-sm btn-outline hover:bg-text hover:text-background border-secondary/50">Повернутися до списку</a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-12 bg-background/50 rounded-lg border border-dashed border-secondary/50">
+            <p class="text-text font-bold text-lg">Усі активності перевірено!</p>
+        </div>
+    }
+    else
+    {
+        <div class="overflow-x-auto">
+            <table class="table w-full border-collapse">
+                <thead>
+                    <tr class="border-b-2 border-secondary/50 text-text">
+                        <th class="py-3 px-4 text-left">Назва</th>
+                        <th class="py-3 px-4 text-left">Категорія</th>
+                        <th class="py-3 px-4 text-right">Дії</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="hover:bg-background/50 border-b border-secondary/20 transition-colors">
+                            <td class="py-3 px-4 text-text font-bold">@Html.DisplayFor(modelItem => item.Name)</td>
+                            <td class="py-3 px-4 text-primary">@Html.DisplayFor(modelItem => item.Category.Name)</td>
+                            <td class="py-3 px-4 text-right">
+                                <div class="flex justify-end items-center gap-3">
+                                    <form asp-action="Verify" asp-route-id="@item.Id" method="post" class="m-0 p-0 inline">
+                                        <button type="submit" class="text-xs font-bold text-emerald-600 hover:text-emerald-700 hover:underline cursor-pointer bg-transparent border-none p-0">
+                                            Затвердити
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

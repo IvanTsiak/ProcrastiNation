@@ -24,8 +24,11 @@ namespace ProcrastiInfrastructure.Controllers
         // GET: Activities
         public async Task<IActionResult> Index()
         {
-            var procrastiContext = _context.Activities.Include(a => a.Category);
-            return View(await procrastiContext.ToListAsync());
+            var procrastiContext = _context.Activities
+                .Include(a => a.Category)
+                .Where(a => a.Isverified == true)
+                .ToListAsync();
+            return View(await procrastiContext);
         }
 
         // GET: Activities/Details/5
@@ -163,6 +166,34 @@ namespace ProcrastiInfrastructure.Controllers
         private bool ActivityExists(int id)
         {
             return _context.Activities.Any(e => e.Id == id);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public async Task<IActionResult> Unverified()
+        {
+            var unverifiedActivities = await _context.Activities
+                .Include(a => a.Category)
+                .Where(a => a.Isverified == false)
+                .ToListAsync();
+
+            return View(unverifiedActivities);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Verify(int id)
+        {
+            var activity = await _context.Activities.FindAsync(id);
+            if (activity == null)
+            {
+                return NotFound();
+            }
+            activity.Isverified = true;
+            _context.Update(activity);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Unverified));
         }
     }
 }
