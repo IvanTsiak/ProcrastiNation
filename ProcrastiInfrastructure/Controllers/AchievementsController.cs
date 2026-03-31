@@ -232,5 +232,11 @@ namespace ProcrastiInfrastructure.Controllers
         {
             return View();
         }
+
+        [HttpGet]
+        public IActionResult Tetris()
+        {
+            return View(); 
+        }
     }
 }

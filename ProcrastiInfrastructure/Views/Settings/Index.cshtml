@@ -131,7 +131,7 @@
                         <div>
                             <span class="font-bold text-text">Панель адміністратора</span>
                         </div>
-                        <input type="checkbox" class="checkbox border-text checked:bg-secondary" />
+                        <input type="checkbox" id="adminFabToggle" class="checkbox border-text checked:bg-secondary" />
                     </div>
                 </div>
             </div>
@@ -145,3 +145,32 @@
 
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const fabToggle = document.getElementById('adminFabToggle');
+        if (!fabToggle) {
+            return;
+        }
+
+        const adminFab = document.getElementById('adminFab');
+
+        if (localStorage.getItem('showAdminFab') === 'true') {
+            fabToggle.checked = true;
+        }
+
+        fabToggle.addEventListener('change', function() {
+            if (this.checked) {
+                localStorage.setItem('showAdminFab', 'true');
+                if (adminFab) {
+                    adminFab.classList.remove('hidden');
+                }
+            } else {
+                localStorage.setItem('showAdminFab', 'false');
+                if (adminFab) {
+                    adminFab.classList.add('hidden');
+                }
+            }
+        });
+    });
+</script>
