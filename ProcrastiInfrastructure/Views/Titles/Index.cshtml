@@ -31,7 +31,18 @@
                          class="rounded-xl border p-6 h-full flex flex-col items-center justify-center text-center transition-all duration-300 cursor-pointer relative overflow-hidden @cardClasses">
 
                         <div class="text-4xl mb-3 opacity-90 drop-shadow-sm">
-                            @(isActive ? "✨" : "📜")
+                            @if (isActive)
+                            {
+                                <svg width="36" height="36" class="fill-secondary/70" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M19.4672 23.194L12.0002 17.706L4.5332 23.194L7.4002 14.331L-0.0628052 8.878H9.15119L12.0002 0L14.8492 8.878H24.0622L16.6002 14.331L19.4672 23.194Z"/>
+                                </svg>
+                            }
+                            else
+                            {
+                                <svg width="32" height="32" class="fill-text/70" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M13 4H11V0H13V4ZM13 20H11V24H13V20ZM4 11H0V13H4V11ZM24 11H20V13H24V11ZM22.875 17.165L19.417 15.155L18.411 16.884L21.869 18.894L22.875 17.165ZM18.891 2.126L17.162 1.126L15.152 4.585L16.881 5.585L18.891 2.126ZM22.883 6.826L21.875 5.094L18.42 7.107L19.428 8.836L22.883 6.826ZM18.918 21.864L16.9 18.408L15.172 19.416L17.185 22.872L18.918 21.864ZM5.6 16.884L4.6 15.155L1.141 17.165L2.141 18.894L5.6 16.884ZM8.86 4.584L6.854 1.122L5.126 2.122L7.136 5.581L8.86 4.584ZM5.6 7.107L2.141 5.094L1.133 6.822L4.589 8.836L5.6 7.107ZM8.841 19.416L7.112 18.408L5.1 21.864L6.828 22.872L8.841 19.416Z"/>
+                                </svg>
+                            }
                         </div>
 
                         <h5 class="font-bold text-lg drop-shadow-sm mb-2">@title.Name</h5>

@@ -1,0 +1,26 @@
+﻿@model IEnumerable<ProcrastiDomain.Model.Log>
+
+@{
+    ViewData["Title"] = "Власні записи";
+}
+
+<div class="bg-surface border border-secondary/50 rounded-xl overflow-hidden shadow-sm">
+
+    <div class="px-5 py-3 border-b border-secondary/50 bg-background/60">
+        <h3 class="font-bold text-text text-base">Усі ваші записи</h3>
+    </div>
+
+    <div class="flex flex-col">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var log in Model)
+            {
+                <partial name="_LogCard" model="log" />
+            }
+        }
+        else
+        {
+            <div class="text-center text-primary font-bold py-8">А у вас то записів нема.</div>
+        }
+    </div>
+</div>

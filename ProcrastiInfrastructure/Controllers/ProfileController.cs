@@ -80,5 +80,23 @@ namespace ProcrastiInfrastructure.Controllers
 
             return View(viewModel);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> AllLogs()
+        {
+            int userId = _currentUserService.GetCurrentUserId();
+            var logs = await _context.Logs
+                .Include(l => l.Activity)
+                .Include(l => l.User)
+                    .ThenInclude(u => u.Title)
+                .Include(l => l.Likes)
+                .Include(l => l.Comments)
+                    .ThenInclude(c => c.Author)
+                        .ThenInclude(a => a.Title)
+                .Where(l => l.Userid == userId)
+                .OrderByDescending(l => l.Createdat)
+                .ToListAsync();
+            return View(logs);
+        }
     }
 }

@@ -1,4 +1,16 @@
-﻿async function tryUnlockAchievement(achievementCode) {
+﻿function getToastContainer() {
+    let container = document.getElementById('global-toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'global-toast-container';
+
+        container.className = 'toast toast-end toast-bottom z-[9999] p-4 flex flex-col gap-3';
+        document.body.appendChild(container);
+    }
+    return container;
+}
+
+async function tryUnlockAchievement(achievementCode) {
     try {
         const response = await fetch('/Achievements/Unlock', {
             method: 'POST',
@@ -18,33 +30,39 @@
 }
 
 function showAchivementPopup(data) {
-    const toast = document.createElement('div');
-    toast.className = "fixed bottom-8 right-8 z-[9999] transition-all duration-500 opacity-0 translate-y-5";
+    const container = getToastContainer();
+    const alertBox = document.createElement('div');
+
+    alertBox.className = "alert bg-background border-2 border-accent text-text shadow-xl flex items-center gap-4 w-92 p-4 rounded-xl transition-all duration-500 opacity-0 translate-y-5";
 
     const iconSrc = data.icon ? data.icon : '/images/achievements/default-icon.png';
-    toast.innerHTML = `
-        <div class="alert bg-background border-2 border-accent text-text shadow-xl flex items-center gap-4 w-92 p-4 rounded-xl">
-            <div class="w-14 h-14 bg-secondary/20 rounded-full shrink-0 overflow-hidden flex items-center justify-center">
-                <img src="${iconSrc}" class="w-full h-full object-cover object-center" />
-            </div>
-            <div class="flex flex-col text-left">
-                <span class="text-accent font-bold text-sm uppercase tracking-wider">Досягнення розблоковано!</span>
-                <h5 class="font-bold text-base mt-0.5">${data.title}</h5>
-                <p class="text-xs text-primary mt-1 whitespace-pre-wrap">${data.description}</p>
-            </div>
+    alertBox.innerHTML = `
+        <div class="w-14 h-14 bg-secondary/20 rounded-full shrink-0 overflow-hidden flex items-center justify-center">
+            <img src="${iconSrc}" class="w-full h-full object-cover object-center" />
+        </div>
+        <div class="flex flex-col text-left">
+            <span class="text-accent font-bold text-sm uppercase tracking-wider">Досягнення розблоковано!</span>
+            <h5 class="font-bold text-base mt-0.5">${data.title}</h5>
+            <p class="text-xs text-primary mt-1 whitespace-pre-wrap">${data.description}</p>
         </div>
     `;
 
-    document.body.appendChild(toast);
+    container.appendChild(alertBox);
+
     requestAnimationFrame(() => {
-        toast.classList.remove('opacity-0', 'translate-y-5');
-        toast.classList.add('opacity-100', 'translate-y-0');
+        alertBox.classList.remove('opacity-0', 'translate-y-5');
+        alertBox.classList.add('opacity-100', 'translate-y-0');
     });
 
     setTimeout(() => {
-        toast.classList.remove('opacity-100', 'translate-y-0');
-        toast.classList.add('opacity-0', 'translate-y-5');
-        setTimeout(() => { toast.remove(); }, 500);
+        alertBox.classList.remove('opacity-100', 'translate-y-0');
+        alertBox.classList.add('opacity-0', 'translate-y-5');
+        setTimeout(() => {
+            alertBox.remove();
+            if (container.children.length === 0) {
+                container.remove();
+            }
+        }, 500);
     }, 5000);
 }
 
@@ -68,33 +86,37 @@ async function tryUnlockTitle(titleCode) {
 }
 
 function showTitlePopup(data) {
-    const toast = document.createElement('div');
+    const container = getToastContainer();
+    const alertBox = document.createElement('div');
 
-    toast.className = "fixed bottom-8 right-8 z-[9999] transition-all duration-500 opacity-0 translate-y-5";
+    alertBox.className = "alert bg-gradient-to-br from-text to-primary border-2 border-amber-400 text-background shadow-[0_0_20px_rgba(251,191,36,0.3)] flex items-center gap-4 w-92 p-4 rounded-xl transition-all duration-500 opacity-0 translate-y-5";
 
-    toast.innerHTML = `
-        <div class="alert bg-gradient-to-br from-text to-primary border-2 border-amber-400 text-background shadow-[0_0_20px_rgba(251,191,36,0.3)] flex items-center gap-4 w-92 p-4 rounded-xl">
-            <div class="w-12 h-12 bg-white/20 rounded-full shrink-0 flex justify-center items-center text-2xl">
-                👑
-            </div>
-            <div class="flex flex-col text-left">
-                <span class="text-amber-400 font-bold text-xs uppercase tracking-widest">Титул розблоковано!</span>
-                <h5 class="font-bold text-lg mt-0.5 drop-shadow-md">${data.name}</h5>
-            </div>
+    alertBox.innerHTML = `
+        <div class="w-12 h-12 bg-white/20 rounded-full shrink-0 flex justify-center items-center text-2xl">
+            👑
+        </div>
+        <div class="flex flex-col text-left">
+            <span class="text-amber-400 font-bold text-xs uppercase tracking-widest">Титул розблоковано!</span>
+            <h5 class="font-bold text-lg mt-0.5 drop-shadow-md">${data.name}</h5>
         </div>
     `;
 
-    document.body.appendChild(toast);
+    container.appendChild(alertBox);
 
     requestAnimationFrame(() => {
-        toast.classList.remove('opacity-0', 'translate-y-5');
-        toast.classList.add('opacity-100', 'translate-y-0');
+        alertBox.classList.remove('opacity-0', 'translate-y-5');
+        alertBox.classList.add('opacity-100', 'translate-y-0');
     });
 
     setTimeout(() => {
-        toast.classList.remove('opacity-100', 'translate-y-0');
-        toast.classList.add('opacity-0', 'translate-y-5');
-        setTimeout(() => { toast.remove(); }, 500);
+        alertBox.classList.remove('opacity-100', 'translate-y-0');
+        alertBox.classList.add('opacity-0', 'translate-y-5');
+        setTimeout(() => {
+            alertBox.remove();
+            if (container.children.length === 0) {
+                container.remove();
+            }
+        }, 500);
     }, 5000);
 }
 
