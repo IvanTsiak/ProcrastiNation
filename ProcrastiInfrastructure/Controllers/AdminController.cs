@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProcrastiDomain.Model;
 using ProcrastiInfrastructure;
+using ProcrastiInfrastructure.Services;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,10 +14,12 @@ namespace ProcrastiInfrastructure.Controllers
     public class AdminController : Controller
     {
         private readonly ProcrastiContext _context;
+        private readonly INotificationService _notificationService;
 
-        public AdminController(ProcrastiContext context)
+        public AdminController(ProcrastiContext context, INotificationService notificationService)
         {
             _context = context;
+            _notificationService = notificationService;
         }
 
         [HttpGet]
@@ -87,6 +90,14 @@ namespace ProcrastiInfrastructure.Controllers
 
             _context.Usertitles.Add(userTitle);
             await _context.SaveChangesAsync();
+
+            await _notificationService.AddNotificationAsync(
+                userId,
+                $"НЕПЕРЕВЕРШЕНО! Адміністратор нагородив вас УНІКАЛЬНИМ титулом: {newTitle.Name}!",
+                "Унікальний титул розблоковано!",
+                "Title",
+                "/Titles"
+            );
 
             return RedirectToAction(nameof(Users));
         }

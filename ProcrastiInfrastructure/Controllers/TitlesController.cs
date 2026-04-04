@@ -240,13 +240,10 @@ namespace ProcrastiInfrastructure.Controllers
             _context.Usertitles.Add(newTitleUnlock);
             await _context.SaveChangesAsync();
 
-            string notifHeader = title.Isunique == true ? "Унікальний титул роблоковано!" : "Титул роблоковано!";
-            string notifMessage = title.Isunique == true ? $"НЕПЕРЕВЕРШЕНО! Ви отримали унікальний титул: {title.Name}!" : $"Ви отримали титул: {title.Name}!";
-
             await _notificationService.AddNotificationAsync(
                 currentUserId,
-                notifMessage,
-                notifHeader,
+                $"Ви отримали титул: {title.Name}!",
+                "Титул розблоковано!",
                 "Title",
                 "/Titles"
             );
