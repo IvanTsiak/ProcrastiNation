@@ -38,6 +38,8 @@ public partial class ProcrastiContext : DbContext
 
     public virtual DbSet<Usertitle> Usertitles { get; set; }
 
+    public virtual DbSet<Notification> Notifications { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Achievement>(entity =>
@@ -317,6 +319,36 @@ public partial class ProcrastiContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.Usertitles)
                 .HasForeignKey(d => d.Userid)
                 .HasConstraintName("usertitles_userid_fkey");
+        });
+
+        modelBuilder.Entity<Notification>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("notifications_pkey");
+
+            entity.ToTable("notifications");
+
+            entity.Property(e => e.Id).HasColumnName("notificationid");
+            entity.Property(e => e.UserId).HasColumnName("userid");
+            entity.Property(e => e.Message).HasColumnName("message");
+            entity.Property(e => e.Isviewed)
+                .HasDefaultValue(false)
+                .HasColumnName("isviewed");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("now()")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("createdat");
+            entity.Property(e => e.Title)
+                .HasMaxLength(100)
+                .HasColumnName("title");
+            entity.Property(e => e.Type)
+                .HasMaxLength(50)
+                .HasColumnName("type");
+            entity.Property(e => e.Link).HasColumnName("link");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Notifications)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("fk_notification_user");
         });
 
         OnModelCreatingPartial(modelBuilder);

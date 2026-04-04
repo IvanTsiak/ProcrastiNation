@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\images\avatars\" />
+    <Folder Include="wwwroot\images\medals\" />
   </ItemGroup>
 
   <Target Name="TailwindBuild" BeforeTargets="Build">

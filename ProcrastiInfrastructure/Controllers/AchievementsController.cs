@@ -14,11 +14,13 @@ namespace ProcrastiInfrastructure.Controllers
     {
         private readonly ProcrastiContext _context;
         private readonly ICurrentUserService _currentUserService;
+        private readonly INotificationService _notificationService;
 
-        public AchievementsController(ProcrastiContext context, ICurrentUserService currentUserService)
+        public AchievementsController(ProcrastiContext context, ICurrentUserService currentUserService, INotificationService notificationService)
         {
             _context = context;
             _currentUserService = currentUserService;
+            _notificationService = notificationService;
         }
 
         // GET: Achievements
@@ -212,6 +214,14 @@ namespace ProcrastiInfrastructure.Controllers
             };
             _context.Userachievements.Add(newEarn);
             await _context.SaveChangesAsync();
+
+            await _notificationService.AddNotificationAsync(
+                currentUserId,
+                $"""Розблоковано нове досягнення: {achievement.Title}: "{achievement.Description}")""",
+                "ДОСЯГНЕННЯ РОЗБЛОКОВАНО",
+                "Achievement",
+                "/Achievements"
+            );
 
             return Json(new
             {

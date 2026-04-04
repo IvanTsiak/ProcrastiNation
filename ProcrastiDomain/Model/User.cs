@@ -35,4 +35,6 @@ public partial class User : Entity
 
     //public virtual ICollection<Log> Logs { get; set; } = new List<Log>();
     public virtual ICollection<Like> Likes { get; set; } = new List<Like>();
+
+    public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 }

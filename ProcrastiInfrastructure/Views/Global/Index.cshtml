@@ -21,11 +21,15 @@
             }
             @foreach (var user in Model.TopUsers)
             {
-                string medal = rank == 1 ? "🥇" : rank == 2 ? "🥈" : rank == 3 ? "🥉" : "🏅";
+                string medalSrc = rank == 1 ? "/images/medals/gold.png" :
+                                  rank == 2 ? "/images/medals/silver.png" :
+                                  "/images/medals/bronze.png";
 
                 <div class="flex items-center gap-4 p-4 border-b border-secondary/20 last:border-0 hover:bg-background/40 transition-colors">
 
-                    <div class="text-3xl w-10 text-center shrink-0 drop-shadow-sm">@medal</div>
+                    <div class="w-12 flex justify-center shrink-0">
+                        <img src="@medalSrc" class="w-12 h-12 object-contain drop-shadow-sm hover:scale-110 transition-transform" />
+                    </div>
 
                     <img src="@(string.IsNullOrEmpty(user.Profilepicture) ? "/images/avatars/default-avatar.png" : user.Profilepicture)"
                          alt="Аватар"

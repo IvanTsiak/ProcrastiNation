@@ -94,12 +94,16 @@
     </div>
 
     <div id="comments-section-@Model.Id" style="display: none;" class="mt-4 pt-4 border-t border-secondary/40">
-        <div id="comments-list-@Model.Id" style="max-height: 400px; overflow-y: auto; margin-bottom: 10px;">
+        <div id="comments-list-@Model.Id" style="max-height: 400px; overflow-y: auto; margin-bottom: 10px;" class="pr-2">
+
             @if (Model.Comments != null)
             {
-                foreach (var c in Model.Comments.OrderBy(x => x.Createdat))
+                var rootComments = Model.Comments.Where(c => c.Parentcommentid == null).OrderBy(x => x.Createdat).ToList();
+
+                foreach (var c in rootComments)
                 {
-                    <div class="border-b border-secondary/20 py-3 last:border-0">
+                    <div class="border-b border-secondary/20 py-3 last:border-0" id="comment-container-@c.Id">
+
                         <div class="flex items-start gap-3">
                             <img src="@(string.IsNullOrEmpty(c.Author?.Profilepicture) ? "/images/avatars/default-avatar.png" : c.Author.Profilepicture)"
                                  alt="Avatar"
@@ -119,8 +123,56 @@
                                 }
 
                                 <div class="mt-0.5 text-text text-sm">@c.Content</div>
+
+                                @if (isAuthenticated)
+                                {
+                                    <button onclick="setReplyContext(@Model.Id, @c.Id, '@(c.Author?.Username)')" class="text-xs text-primary/50 font-bold mt-1 text-left w-fit hover:text-accent transition-colors">Відповісти</button>
+                                }
                             </div>
                         </div>
+
+                        @{
+                            var replies = Model.Comments.Where(x => x.Parentcommentid == c.Id).OrderBy(x => x.Createdat).ToList();
+                        }
+
+                        <div class="ml-11 mt-1">
+                            @if (replies.Any())
+                            {
+                                <button onclick="toggleReplies(@c.Id)" id="reply-toggle-btn-@c.Id" class="text-xs text-text/50 font-bold flex items-center gap-2 hover:text-text transition-colors mt-2">
+                                    <span id="reply-toggle-text-@c.Id">---Показати відповіді (@replies.Count)---</span>
+                                </button>
+                            }
+
+                            <div id="replies-list-@c.Id" class="@(replies.Any() ? "hidden" : "") mt-3 space-y-3">
+                                @foreach (var r in replies)
+                                {
+                                    <div class="flex items-start gap-2">
+                                        <img src="@(string.IsNullOrEmpty(r.Author?.Profilepicture) ? "/images/avatars/default-avatar.png" : r.Author.Profilepicture)"
+                                             alt="Avatar" class="w-6 h-6 rounded-full shrink-0 object-cover border border-secondary/20" />
+                                        <div class="flex flex-col flex-1">
+                                            <div class="flex items-baseline gap-2">
+                                                <strong class="text-text text-xs">@(r.Author?.Username ?? "Анонім")</strong>
+                                                <span class="text-primary text-[10px]">@(r.Createdat?.ToString("dd.MM.yyyy"))</span>
+                                            </div>
+
+                                            @if (r.Author?.Title != null)
+                                            {
+                                                <span class="text-accent font-bold text-[10px] -mt-0.5 mb-1">
+                                                    @(r.Author.Title.Name)
+                                                </span>
+                                            }
+                                            <div class="text-text text-sm">@r.Content</div>
+
+                                            @if (isAuthenticated)
+                                            {
+                                                <button onclick="setReplyContext(@Model.Id, @c.Id, '@(r.Author?.Username)')" class="text-[10px] text-primary font-bold mt-0.5 text-left w-fit hover:text-accent transition-colors">Відповісти</button>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
                     </div>
                 }
             }
@@ -128,9 +180,17 @@
 
         @if (isAuthenticated)
         {
-            <div class="flex items-center gap-3">
-                <input type="text" id="comment-input-@Model.Id" class="flex-1 bg-transparent border border-secondary p-2 rounded text-text text-sm focus:outline-none focus:border-accent" placeholder="Напишіть щось..." />
-                <button onclick="submitComment(@Model.Id)" class="bg-primary text-background px-4 py-2 rounded text-sm font-bold hover:bg-text transition-colors">Send</button>
+            <div class="mt-2">
+                <div id="reply-badge-@Model.Id" class="hidden mb-2 text-xs font-bold text-accent flex items-center gap-2 bg-accent/10 w-fit px-2 py-1 rounded-lg">
+                    <span>Відповідь для <span id="reply-to-name-@Model.Id"></span></span>
+                    <button onclick="cancelReply(@Model.Id)" class="hover:text-rose-500 cursor-pointer ml-1">✕</button>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <input type="hidden" id="parent-comment-id-@Model.Id" value="" />
+                    <input type="text" id="comment-input-@Model.Id" class="flex-1 bg-transparent border border-secondary p-2 rounded text-text text-sm focus:outline-none focus:border-accent" placeholder="Напишіть щось..." />
+                    <button onclick="submitComment(@Model.Id)" class="bg-primary text-background px-4 py-2 rounded text-sm font-bold hover:bg-text transition-colors">Send</button>
+                </div>
             </div>
         }
         else
@@ -180,16 +240,54 @@
             section.style.display = section.style.display === 'none' ? 'block' : 'none';
         };
 
+        window.toggleReplies = function(commentId) {
+            const list = document.getElementById(`replies-list-${commentId}`);
+            const textSpan = document.getElementById(`reply-toggle-text-${commentId}`);
+
+            if (list.classList.contains('hidden')) {
+                list.classList.remove('hidden');
+                const count = textSpan.innerText.match(/\d+/)[0];
+                textSpan.innerText = `Сховати відповіді (${count})`;
+            } else {
+                list.classList.add('hidden');
+                const count = textSpan.innerText.match(/\d+/)[0];
+                textSpan.innerText = `Показати відповіді (${count})`;
+            }
+        };
+
+        window.setReplyContext = function(logId, parentCommentId, username) {
+            document.getElementById(`parent-comment-id-${logId}`).value = parentCommentId;
+            document.getElementById(`reply-to-name-${logId}`).innerText = '@@' + username;
+            document.getElementById(`reply-badge-${logId}`).classList.remove('hidden');
+            
+            const input = document.getElementById(`comment-input-${logId}`);
+            if (!input.value.startsWith(`@@`)) {
+                input.value = `@@${username} ` + input.value;
+            }
+            input.focus();
+        };
+
+        window.cancelReply = function(logId) {
+            document.getElementById(`parent-comment-id-${logId}`).value = '';
+            document.getElementById(`reply-badge-${logId}`).classList.add('hidden');
+            
+            const input = document.getElementById(`comment-input-${logId}`);
+            input.value = input.value.replace(/^@@\S+\s/, '');
+        };
+
         window.submitComment = async function(logId) {
             const input = document.getElementById(`comment-input-${logId}`);
             const text = input.value.trim();
-            if (!text) {
-                return;
-            }
+            if (!text) return;
+
+            const parentIdInput = document.getElementById(`parent-comment-id-${logId}`)?.value;
 
             const formData = new FormData();
             formData.append('logId', logId);
             formData.append('text', text);
+            if (parentIdInput) {
+                formData.append('parentCommentId', parentIdInput);
+            }
 
             try {
                 const response = await fetch('/Logs/AddComment', {
@@ -199,42 +297,78 @@
 
                 if (response.ok) {
                     const data = await response.json();
+                    const titleHtml = data.title ? `<span class="text-accent font-bold text-[10px] -mt-0.5 mb-1">${data.title}</span>` : '';
 
-                    const list = document.getElementById(`comments-list-${logId}`);
-                    const titleHtml = data.title
-                        ? `<span class="text-accent font-bold text-xs -mt-0.5 mb-1">${data.title}</span>`
-                        : '';
-                    const newCommentHtml = `
-                        <div class="border-b border-secondary/20 py-3 last:border-0 bg-accent/20 transition-colors duration-1000">
-                            <div class="flex items-start gap-3">
-                                <img src="${data.profilePicture}" alt="Avatar" class="w-8 h-8 rounded-full shrink-0 object-cover border border-secondary/20" />
-
+                    if (data.parentCommentId) {
+                        const repliesList = document.getElementById(`replies-list-${data.parentCommentId}`);
+                        const replyHtml = `
+                            <div class="flex items-start gap-2 bg-accent/20 transition-colors duration-1000">
+                                <img src="${data.profilePicture}" alt="Avatar" class="w-6 h-6 rounded-full shrink-0 object-cover border border-secondary/20" />
                                 <div class="flex flex-col flex-1">
                                     <div class="flex items-baseline gap-2">
-                                        <strong class="text-text text-sm">${data.username}</strong>
-                                        <span class="text-primary text-xs">${data.date}</span>
+                                        <strong class="text-text text-xs">${data.username}</strong>
+                                        <span class="text-primary text-[10px]">${data.date}</span>
                                     </div>
                                     ${titleHtml}
-                                    <div class="mt-0.5 text-text text-sm">${data.text}</div>
+                                    <div class="text-text text-sm">${data.text}</div>
                                 </div>
-                            </div>
-                        </div>`;
+                            </div>`;
 
-                    list.insertAdjacentHTML('beforeend', newCommentHtml);
+                        repliesList.insertAdjacentHTML('beforeend', replyHtml);
+                        repliesList.classList.remove('hidden');
 
-                    const newCommentNode = list.lastElementChild;
+                        const newReplyNode = repliesList.lastElementChild;
+                        setTimeout(() => newReplyNode.classList.remove('bg-accent/20'), 2000);
 
-                    setTimeout(() => {
-                        newCommentNode.classList.remove('bg-accent/20');
-                    }, 2000);
+                        let toggleText = document.getElementById(`reply-toggle-text-${data.parentCommentId}`);
+                        if (!toggleText) {
+                            const btnHtml = `
+                                <button onclick="toggleReplies(${data.parentCommentId})" id="reply-toggle-btn-${data.parentCommentId}" class="text-xs text-secondary font-bold flex items-center gap-2 hover:text-text transition-colors mt-2">
+                                    <span class="w-6 h-[1px] bg-secondary/50 block"></span>
+                                    <span id="reply-toggle-text-${data.parentCommentId}">Сховати відповіді (1)</span>
+                                </button>`;
+                            repliesList.insertAdjacentHTML('beforebegin', btnHtml);
+                        } else {
+                            let match = toggleText.innerText.match(/\d+/);
+                            let count = match ? parseInt(match[0]) + 1 : 1;
+                            toggleText.innerText = `Сховати відповіді (${count})`;
+                        }
+
+                        if (typeof cancelReply === 'function') {
+                            cancelReply(logId);
+                        }
+
+                    } else {
+                        const list = document.getElementById(`comments-list-${logId}`);
+                        const newCommentHtml = `
+                            <div class="border-b border-secondary/20 py-3 last:border-0 bg-accent/20 transition-colors duration-1000" id="comment-container-${data.id}">
+                                <div class="flex items-start gap-3">
+                                    <img src="${data.profilePicture}" alt="Avatar" class="w-8 h-8 rounded-full shrink-0 object-cover border border-secondary/20" />
+                                    <div class="flex flex-col flex-1">
+                                        <div class="flex items-baseline gap-2">
+                                            <strong class="text-text text-sm">${data.username}</strong>
+                                            <span class="text-primary text-xs">${data.date}</span>
+                                        </div>
+                                        ${titleHtml}
+                                        <div class="mt-0.5 text-text text-sm">${data.text}</div>
+                                        <button onclick="setReplyContext(${logId}, ${data.id}, '${data.username}')" class="text-xs text-primary font-bold mt-1 text-left w-fit hover:text-accent transition-colors">Відповісти</button>
+                                    </div>
+                                </div>
+                                <div class="ml-11 mt-1"><div id="replies-list-${data.id}" class="mt-3 space-y-3"></div></div>
+                            </div>`;
+
+                        list.insertAdjacentHTML('beforeend', newCommentHtml);
+                        const newCommentNode = list.lastElementChild;
+                        setTimeout(() => newCommentNode.classList.remove('bg-accent/20'), 2000);
+                        list.scrollTop = list.scrollHeight;
+                    }
+
                     input.value = '';
-
                     const countSpan = document.getElementById(`comment-count-${logId}`);
                     countSpan.innerText = parseInt(countSpan.innerText) + 1;
-
-                    list.scrollTop = list.scrollHeight;
                 }
-            } catch (error) {
+            } catch (error)
+            {
                 console.error('Error:', error);
             }
         };

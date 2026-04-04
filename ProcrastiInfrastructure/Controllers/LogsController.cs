@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using DocumentFormat.OpenXml.Office2013.PowerPoint;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -18,11 +19,13 @@ namespace ProcrastiInfrastructure.Controllers
     {
         private readonly ProcrastiContext _context;
         private readonly ICurrentUserService _currentUserService;
+        private readonly INotificationService _notificationService;
 
-        public LogsController(ProcrastiContext context, ICurrentUserService currentUserService)
+        public LogsController(ProcrastiContext context, ICurrentUserService currentUserService, INotificationService notificationService)
         {
             _context = context;
             _currentUserService = currentUserService;
+            _notificationService = notificationService;
         }
 
         // GET: Logs
@@ -394,11 +397,27 @@ namespace ProcrastiInfrastructure.Controllers
 
             await _context.SaveChangesAsync();
 
+            if (isLikedNow && log.Userid.HasValue && log.Userid != currentUserId)
+            {
+                var liker = await _context.Users.FindAsync(currentUserId);
+                string likerName = liker?.Username ?? "Хрін зна хто";
+
+                // Не забути тут подумати як нормально реалізувати лінк, а також подумати як саме вказати про який саме запис іде мова.
+                await _notificationService.AddNotificationAsync(
+                    log.Userid.Value,
+                    $"{likerName} вподобав ваш запис.",
+                    "Новий лайк!",
+                    "Like"
+                );
+            }
+
             return Json(new { newLikesCount = log.Likescount, isLiked = isLikedNow });
         }
 
+        // Потім реалізувати сповіщення і про коментарі,
+        // коли реалізую можливість відповідати на коментарі під записом
         [HttpPost]
-        public async Task<IActionResult> AddComment([FromForm] int logId, [FromForm] string text)
+        public async Task<IActionResult> AddComment([FromForm] int logId, [FromForm] string text, [FromForm] int? parentCommentId = null)
         {
             if (string.IsNullOrWhiteSpace(text))
             {
@@ -412,6 +431,7 @@ namespace ProcrastiInfrastructure.Controllers
                 Logid = logId,
                 Authorid = currentUserId,
                 Content = text,
+                Parentcommentid = parentCommentId,
                 Createdat = DateTime.Now
             };
 
@@ -422,9 +442,42 @@ namespace ProcrastiInfrastructure.Controllers
                 .Include(u => u.Title)
                 .FirstOrDefaultAsync(u => u.Id == currentUserId);
 
+            string commenterName = user?.Username ?? "Хрін зна хто";
+
+            if (parentCommentId.HasValue)
+            {
+                var parentComment = await _context.Comments.FindAsync(parentCommentId.Value);
+                if (parentComment != null && parentComment.Authorid.HasValue && parentComment.Authorid.Value != currentUserId)
+                {
+                    await _notificationService.AddNotificationAsync(
+                        parentComment.Authorid.Value,
+                        $"{commenterName} відповів на ваш коментар.",
+                        "Нова відповідь!",
+                        "CommentReply",
+                        "/Progile/AllLogs"
+                    );
+                }
+            }
+            else
+            {
+                var log = await _context.Logs.FindAsync(logId);
+                if (log != null && log.Userid.HasValue && log.Userid.Value != currentUserId)
+                {
+                    await _notificationService.AddNotificationAsync(
+                        log.Userid.Value,
+                        $"{commenterName} прокоментував ваш запис.",
+                        "Новий коментар!",
+                        "Comment",
+                        "/Progile/AllLogs"
+                    );
+                }
+            }
+
             return Json(new
             {
+                id = newComment.Id,
                 username = user?.Username ?? "Анонім",
+                parentCommentId = newComment.Parentcommentid,
                 title = user?.Title != null ? user.Title.Name : "",
                 text = newComment.Content,
                 date = newComment.Createdat?.ToString("dd.MM.yyyy"),

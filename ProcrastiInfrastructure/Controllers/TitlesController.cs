@@ -17,11 +17,13 @@ namespace ProcrastiInfrastructure.Controllers
     {
         private readonly ProcrastiContext _context;
         private readonly ICurrentUserService _currentUserService;
+        private readonly INotificationService _notificationService;
 
-        public TitlesController(ProcrastiContext context, ICurrentUserService currentUserService)
+        public TitlesController(ProcrastiContext context, ICurrentUserService currentUserService, INotificationService notificationService)
         {
             _context = context;
             _currentUserService = currentUserService;
+            _notificationService = notificationService;
         }
 
         // GET: Titles
@@ -237,6 +239,17 @@ namespace ProcrastiInfrastructure.Controllers
 
             _context.Usertitles.Add(newTitleUnlock);
             await _context.SaveChangesAsync();
+
+            string notifHeader = title.Isunique == true ? "Унікальний титул роблоковано!" : "Титул роблоковано!";
+            string notifMessage = title.Isunique == true ? $"НЕПЕРЕВЕРШЕНО! Ви отримали унікальний титул: {title.Name}!" : $"Ви отримали титул: {title.Name}!";
+
+            await _notificationService.AddNotificationAsync(
+                currentUserId,
+                notifMessage,
+                notifHeader,
+                "Title",
+                "/Titles"
+            );
 
             return Json(new
             {
