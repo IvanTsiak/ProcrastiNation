@@ -34,7 +34,7 @@ namespace ProcrastiInfrastructure.Services
             bool needsCleanupSave = false;
 
             var thirtyDaysAgo = DateTime.SpecifyKind(DateTime.UtcNow.AddDays(-30), DateTimeKind.Unspecified);
-            
+
             var tooOldNotifications = await _context.Notifications
                 .Where(n => n.UserId == userId && n.CreatedAt < thirtyDaysAgo)
                 .ToListAsync();
@@ -61,5 +61,6 @@ namespace ProcrastiInfrastructure.Services
             {
                 await _context.SaveChangesAsync();
             }
+        }
     }
 }
