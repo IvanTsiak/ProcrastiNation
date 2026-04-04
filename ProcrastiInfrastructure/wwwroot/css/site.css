@@ -22,4 +22,29 @@
         background-color: #4a4a4a;
         color: white;
     }
+
+    .notif-item {
+        @apply flex flex-col sm:flex-row gap-4 p-5 border-b border-secondary/40 transition-colors hover:bg-surface/50 cursor-pointer text-text no-underline;
+    }
+
+    .notif-type-achievement {
+        @apply border-accent bg-accent/10;
+    }
+
+    .notif-type-title {
+        @apply border-text bg-text/5;
+    }
+
+    .notif-type-like {
+        @apply border-secondary bg-secondary/20;
+    }
+
+    .notif-type-comment,
+    .notif-type-reply {
+        @apply border-primary bg-primary/10;
+    }
+
+    .notif-type-default {
+        @apply border-secondary bg-surface;
+    }
 }

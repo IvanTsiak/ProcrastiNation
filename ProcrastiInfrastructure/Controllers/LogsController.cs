@@ -407,15 +407,15 @@ namespace ProcrastiInfrastructure.Controllers
                     log.Userid.Value,
                     $"{likerName} вподобав ваш запис.",
                     "Новий лайк!",
-                    "Like"
+                    "Like",
+                    "/Profile/AllLogs"
                 );
             }
 
             return Json(new { newLikesCount = log.Likescount, isLiked = isLikedNow });
         }
 
-        // Потім реалізувати сповіщення і про коментарі,
-        // коли реалізую можливість відповідати на коментарі під записом
+        // Реалізувати потім, про який саме запис чи коментар іде мова
         [HttpPost]
         public async Task<IActionResult> AddComment([FromForm] int logId, [FromForm] string text, [FromForm] int? parentCommentId = null)
         {
@@ -454,7 +454,7 @@ namespace ProcrastiInfrastructure.Controllers
                         $"{commenterName} відповів на ваш коментар.",
                         "Нова відповідь!",
                         "CommentReply",
-                        "/Progile/AllLogs"
+                        "/Profile/AllLogs"
                     );
                 }
             }
@@ -468,7 +468,7 @@ namespace ProcrastiInfrastructure.Controllers
                         $"{commenterName} прокоментував ваш запис.",
                         "Новий коментар!",
                         "Comment",
-                        "/Progile/AllLogs"
+                        "/Profile/AllLogs"
                     );
                 }
             }

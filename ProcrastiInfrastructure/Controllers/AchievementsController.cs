@@ -217,7 +217,7 @@ namespace ProcrastiInfrastructure.Controllers
 
             await _notificationService.AddNotificationAsync(
                 currentUserId,
-                $"""Розблоковано нове досягнення: {achievement.Title}: "{achievement.Description}")""",
+                $"""Розблоковано нове досягнення: {achievement.Title}: "{achievement.Description}" """,
                 "ДОСЯГНЕННЯ РОЗБЛОКОВАНО",
                 "Achievement",
                 "/Achievements"

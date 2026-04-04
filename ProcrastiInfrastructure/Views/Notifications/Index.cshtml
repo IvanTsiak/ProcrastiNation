@@ -1,0 +1,70 @@
+﻿@model IEnumerable<ProcrastiDomain.Model.Notification>
+
+@{
+    ViewData["Title"] = "Сповіщення";
+}
+
+<div class="banner">
+    <h1 class="text-5xl font-black text-white drop-shadow-md tracking-tight">Сповіщення</h1>
+</div>
+
+<div class="max-w-5xl mx-auto mb-16">
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-16 text-primary font-bold">
+            <svg class="w-16 h-16 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+            </svg>
+            <p>Тут поки що тихо. Ніхто вас не турбує, на щастя чи на жаль.</p>
+        </div>
+    }
+    else
+    {
+        <div class="flex flex-col border-t border-secondary/40">
+            @foreach (var n in Model)
+            {
+                string typeClass = n.Type switch
+                {
+                    "Achievement" => "notif-type-achievement",
+                    "Title" => "notif-type-title",
+                    "Like" => "notif-type-like",
+                    "Comment" => "notif-type-comment",
+                    "Reply" => "notif-type-reply",
+                    _ => "notif-type-default"
+                };
+
+                @if (string.IsNullOrEmpty(n.Link))
+                {
+                    <div class="notif-item @typeClass">
+                        <div class="flex flex-col flex-1 justify-center">
+                            <div class="flex justify-between items-start gap-4">
+                                @if (!string.IsNullOrEmpty(n.Title))
+                                {
+                                    <h4 class="font-bold text-sm uppercase tracking-wider">@n.Title</h4>
+                                }
+                                <span class="text-xs text-primary font-semibold whitespace-nowrap">@n.CreatedAt.ToString("dd.MM.yyyy HH:mm")</span>
+                            </div>
+                            <p class="text-sm mt-1 opacity-90">@n.Message</p>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <a href="@n.Link" class="notif-item @typeClass">
+                        <div class="flex flex-col flex-1 justify-center">
+                            <div class="flex justify-between items-start gap-4">
+                                @if (!string.IsNullOrEmpty(n.Title))
+                                {
+                                    <h4 class="font-bold text-sm uppercase tracking-wider">@n.Title</h4>
+                                }
+                                <span class="text-xs text-primary font-semibold whitespace-nowrap">@n.CreatedAt.ToString("dd.MM.yyyy HH:mm")</span>
+                            </div>
+                            <p class="text-sm mt-1 opacity-90">@n.Message</p>
+                        </div>
+                    </a>
+                }
+            }
+        </div>
+    }
+</div>
