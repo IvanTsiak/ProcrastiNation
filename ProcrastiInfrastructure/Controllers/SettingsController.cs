@@ -120,6 +120,17 @@ namespace ProcrastiInfrastructure.Controllers
                     return View(user);
                 }
 
+                if (!string.IsNullOrEmpty(user.Profilepicture))
+                {
+                    string oldRelativePath = user.Profilepicture.TrimStart('/');
+                    string oldPhysicalPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", oldRelativePath);
+
+                    if (System.IO.File.Exists(oldPhysicalPath))
+                    {
+                        System.IO.File.Delete(oldPhysicalPath);
+                    }
+                }
+
                 string fileName = $"avatar_{currentUserId}_{Guid.NewGuid()}{extension}";
 
                 string uploadFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "avatars");
