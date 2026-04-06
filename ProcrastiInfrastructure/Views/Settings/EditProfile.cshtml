@@ -1,0 +1,70 @@
+﻿@model ProcrastiDomain.Model.User
+
+@{
+    ViewData["Title"] = "Редагувати профіль";
+}
+
+<div class="max-w-2xl mx-auto bg-surface relative pb-8 shadow-sm rounded-xl overflow-hidden mt-0 border border-secondary/30">
+
+    <div class="sticky top-0 z-50 bg-surface/90 backdrop-blur-md border-b border-secondary/30 px-4 py-3 flex items-center gap-4">
+        <a asp-controller="Settings" asp-action="Index" class="btn btn-circle btn-ghost btn-sm text-text hover:bg-secondary/20">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+            </svg>
+        </a>
+        <h1 class="text-xl font-bold text-text mb-0">Редагувати профіль</h1>
+    </div>
+
+    <form asp-action="EditProfile" method="post" enctype="multipart/form-data" class="px-4 pt-6 space-y-6">
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="bg-rose-100 text-rose-700 p-3 rounded-xl text-sm font-bold shadow-sm">
+                @Html.ValidationSummary(false)
+            </div>
+        }
+
+        <div class="bg-background rounded-xl border border-secondary/30 p-8 flex flex-col items-center justify-center cursor-pointer hover:bg-secondary/10 transition-colors group relative overflow-hidden" onclick="document.getElementById('avatarInput').click();">
+
+            <img id="avatarPreview"
+                 src="@(string.IsNullOrEmpty(Model.Profilepicture) ? "/images/avatars/default-avatar.png" : Model.Profilepicture)"
+                 class="w-28 h-28 rounded-full object-cover border-4 border-surface shadow-md mb-4 group-hover:scale-105 transition-transform duration-300" />
+
+            <span class="text-sm font-bold text-primary group-hover:text-text transition-colors">
+                Натисніть, щоб змінити фото
+            </span>
+
+            <input type="file" id="avatarInput" name="avatarFile" accept="image/png, image/jpeg, image/jpg, image/gif" class="hidden" onchange="previewImage(event)" />
+        </div>
+
+        <div class="bg-background rounded-xl border border-secondary/30 p-4">
+            <label class="label px-0 pt-0 pb-2">
+                <span class="label-text font-bold text-primary text-xs uppercase tracking-widest">Ім'я користувача</span>
+            </label>
+            <input type="text" name="username" value="@Model.Username" required
+                   class="w-full bg-surface border border-secondary/50 p-3 rounded focus:outline-none focus:border-accent text-text transition-colors font-bold text-lg" />
+        </div>
+
+        <div class="pt-4">
+            <button type="submit" class="btn w-full bg-accent hover:bg-text text-background border-none font-bold shadow-sm transition-colors">
+                Зберегти зміни
+            </button>
+        </div>
+
+    </form>
+</div>
+
+<script>
+    function previewImage(event) {
+        const input = event.target;
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                document.getElementById('avatarPreview').src = e.target.result;
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>

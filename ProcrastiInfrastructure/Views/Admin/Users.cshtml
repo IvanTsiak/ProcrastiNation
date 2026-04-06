@@ -46,6 +46,7 @@
                                     Нагородити
                                 </a>
 
+
                                 <span class="text-secondary/50">|</span>
 
                                 <form asp-action="ToggleBlock" asp-route-id="@item.Id" method="post" class="m-0 p-0 inline">
@@ -53,6 +54,12 @@
                                         @(item.Isbanned == true ? "Розблокувати" : "Заблокувати")
                                     </button>
                                 </form>
+
+                                <span class="text-secondary/50">|</span>
+
+                                <a asp-action="SendNotification" asp-route-id="@item.Id" class="text-xs font-bold text-accent hover:text-text transition-colors hover:underline">
+                                    Написати
+                                </a>
                             </div>
                         </td>
                     </tr>

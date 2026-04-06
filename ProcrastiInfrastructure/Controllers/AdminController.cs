@@ -122,5 +122,40 @@ namespace ProcrastiInfrastructure.Controllers
 
             return View();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> SendNotification(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null) {
+                return NotFound();
+            }
+
+            return View(user);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SendNotification(int userId, string title, string message)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null) {
+                return NotFound();
+            }
+
+            if (string.IsNullOrWhiteSpace(message) || string.IsNullOrWhiteSpace(title)) {
+                ModelState.AddModelError("", "Повідомлення та заголовок обов'язкові! Що ти хочеш їм сказати? Думай головою.");
+                return View(user);
+            }
+
+            await _notificationService.AddNotificationAsync(
+                userId,
+                message,
+                title,
+                "AdminMessage"
+            );
+
+            return RedirectToAction(nameof(Users));
+        }
     }
 }

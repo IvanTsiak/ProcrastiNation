@@ -150,19 +150,54 @@
 
             <div>
                 <span class="mr-2 text-text font-bold text-sm bg-surface/90 px-2 py-1 rounded-lg shadow-sm">Користувачі</span>
-                <a asp-controller="Admin" asp-action="Users" class="btn btn-lg btn-circle bg-surface border-secondary/50 text-xl hover:bg-secondary/20 shadow-lg">👥</a>
+                <a asp-controller="Admin" asp-action="Users" class="btn btn-lg btn-circle bg-surface border-secondary/50 text-xl hover:bg-secondary/20 shadow-lg">
+                    <svg width="24" height="24" class="fill-text" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0_406_8)">
+                            <path d="M21 24.0006H18V19.0006C18 18.4702 17.7893 17.9615 17.4142 17.5864C17.0391 17.2113 16.5304 17.0006 16 17.0006H7.99999C7.46956 17.0006 6.96085 17.2113 6.58578 17.5864C6.21071 17.9615 5.99999 18.4702 5.99999 19.0006V24.0006H2.99999V19.0006C3.00158 17.675 3.52887 16.4042 4.46621 15.4668C5.40355 14.5295 6.6744 14.0022 7.99999 14.0006H16C17.3256 14.0022 18.5964 14.5295 19.5338 15.4668C20.4711 16.4042 20.9984 17.675 21 19.0006V24.0006Z"/>
+                            <path d="M12 11.9999C10.8134 11.9999 9.65332 11.648 8.66663 10.9888C7.67993 10.3295 6.9109 9.3924 6.45677 8.29604C6.00265 7.19969 5.88383 5.99329 6.11534 4.8294C6.34685 3.66551 6.91829 2.59642 7.75741 1.7573C8.59652 0.918186 9.66562 0.346741 10.8295 0.11523C11.9934 -0.116281 13.1998 0.00253868 14.2961 0.456664C15.3925 0.91079 16.3296 1.67983 16.9889 2.66652C17.6482 3.65321 18 4.81325 18 5.99994C17.9985 7.59075 17.3658 9.11595 16.2409 10.2408C15.1161 11.3657 13.5909 11.9984 12 11.9999ZM12 2.99994C11.4067 2.99994 10.8267 3.17589 10.3333 3.50553C9.83999 3.83518 9.45547 4.30371 9.22841 4.85189C9.00135 5.40007 8.94194 6.00327 9.05769 6.58521C9.17345 7.16716 9.45917 7.7017 9.87873 8.12126C10.2983 8.54082 10.8328 8.82654 11.4148 8.9423C11.9967 9.05805 12.5999 8.99864 13.1481 8.77158C13.6963 8.54452 14.1648 8.16 14.4945 7.66665C14.8241 7.17331 15 6.59329 15 5.99994C15 5.20429 14.684 4.44123 14.1214 3.87862C13.5588 3.31601 12.7957 2.99994 12 2.99994Z"/>
+                        </g>
+                        <defs>
+                            <clipPath id="clip0_406_8">
+                                <rect width="24" height="24" fill="white" />
+                            </clipPath>
+                        </defs>
+                    </svg>
+                </a>
             </div>
             <div>
                 <span class="mr-2 text-text font-bold text-sm bg-surface/90 px-2 py-1 rounded-lg shadow-sm">Активності</span>
-                <a asp-controller="Activities" asp-action="Index" class="btn btn-lg btn-circle bg-surface border-secondary/50 text-xl hover:bg-secondary/20 shadow-lg">📋</a>
+                <a asp-controller="Activities" asp-action="Index" class="btn btn-lg btn-circle bg-surface border-secondary/50 text-xl hover:bg-secondary/20 shadow-lg">
+                    <svg width="20" height="24" viewBox="0 0 20 24" class="fill-text" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 10H15V13H5V10ZM5 18H12V15H5V18ZM20 5.879V24H0V3C0 2.20435 0.316071 1.44129 0.87868 0.87868C1.44129 0.31607 2.20435 0 3 0L14.121 0L20 5.879ZM17 21V8H12V3H3V21H17Z"/>
+                    </svg>
+                </a>
             </div>
             <div>
                 <span class="mr-2 text-text font-bold text-sm bg-surface/90 px-2 py-1 rounded-lg shadow-sm">Титули</span>
-                <a asp-controller="Titles" asp-action="Manage" class="btn btn-lg btn-circle bg-surface border-secondary/50 text-xl hover:bg-secondary/20 shadow-lg">✨</a>
+                <a asp-controller="Titles" asp-action="Manage" class="btn btn-lg btn-circle bg-surface border-secondary/50 text-xl hover:bg-secondary/20 shadow-lg">
+                    <svg width="24" height="21" viewBox="0 0 24 21" class="fill-text" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21 20.4H3C2.20435 20.4 1.44129 20.0839 0.87868 19.5213C0.31607 18.9587 0 18.1957 0 17.4L0 0L6.272 6.276L12 0.548L17.728 6.276L24 0V17.4C24 18.1957 23.6839 18.9587 23.1213 19.5213C22.5587 20.0839 21.7956 20.4 21 20.4ZM3 7.245V17.4H21V7.245L17.728 10.518L12 4.79L6.272 10.518L3 7.245Z"/>
+                    </svg>
+                </a>
             </div>
             <div>
                 <span class="mr-2 text-text font-bold text-sm bg-surface/90 px-2 py-1 rounded-lg shadow-sm">Аналітика</span>
-                <a asp-controller="Admin" asp-action="Analytics" class="btn btn-lg btn-circle bg-surface border-secondary/50 text-xl hover:bg-secondary/20 shadow-lg">📈</a>
+                <a asp-controller="Admin" asp-action="Analytics" class="btn btn-lg btn-circle bg-surface border-secondary/50 text-xl hover:bg-secondary/20 shadow-lg">
+                    <svg width="24" height="24" viewBox="0 0 24 24" class="fill-text" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0_406_303)">
+                            <path d="M9.99985 9H6.99985V18H9.99985V9Z"/>
+                            <path d="M17.0002 12H14.0002V18H17.0002V12Z"/>
+                            <path d="M24 7.99988H21V17.9999H24V7.99988Z"/>
+                            <path d="M16.1281 8.03301C15.5279 8.03291 14.9524 7.79443 14.5281 7.37001L10.3721 3.21801L8.30007 5.30001L6.17407 3.17401L8.76907 0.579009C9.20081 0.166112 9.77518 -0.0643311 10.3726 -0.0643311C10.97 -0.0643311 11.5443 0.166112 11.9761 0.579009L16.1281 4.73001L20.4391 0.419009L22.5611 2.54101L17.7311 7.37001C17.5207 7.58069 17.2708 7.74773 16.9957 7.86151C16.7206 7.97529 16.4258 8.03358 16.1281 8.03301Z"/>
+                            <path d="M24 24H3.5C2.57174 24 1.6815 23.6313 1.02513 22.9749C0.368749 22.3185 0 21.4283 0 20.5L0 0H3V20.5C3 20.6326 3.05268 20.7598 3.14645 20.8536C3.24021 20.9473 3.36739 21 3.5 21H24V24Z"/>
+                        </g>
+                        <defs>
+                            <clipPath id="clip0_406_303">
+                                <rect width="24" height="24" fill="white" />
+                            </clipPath>
+                        </defs>
+                    </svg>
+                </a>
             </div>
         </div>
 
