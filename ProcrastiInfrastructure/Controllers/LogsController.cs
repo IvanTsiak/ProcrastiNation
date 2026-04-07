@@ -365,7 +365,10 @@ namespace ProcrastiInfrastructure.Controllers
         {
             int currentUserId = _currentUserService.GetCurrentUserId();
 
-            var log = await _context.Logs.FindAsync(id);
+            var log = await _context.Logs
+                .Include(l => l.Activity)
+                .FirstOrDefaultAsync(l => l.Id == id);
+
             if (log == null)
             {
                 return NotFound(); 
@@ -401,21 +404,21 @@ namespace ProcrastiInfrastructure.Controllers
             {
                 var liker = await _context.Users.FindAsync(currentUserId);
                 string likerName = liker?.Username ?? "Хрін зна хто";
+                string activityName = log.Activity?.Name ?? "запис";
+                int amount = log.Amount;
 
-                // Не забути тут подумати як нормально реалізувати лінк, а також подумати як саме вказати про який саме запис іде мова.
                 await _notificationService.AddNotificationAsync(
                     log.Userid.Value,
-                    $"{likerName} вподобав ваш запис.",
+                    $"{likerName} вподобав ваш запис у \"{activityName}\" ({amount} хв).",
                     "Новий лайк!",
                     "Like",
-                    "/Profile/AllLogs"
+                    $"/Profile/AllLogs#log-{id}"
                 );
             }
 
             return Json(new { newLikesCount = log.Likescount, isLiked = isLikedNow });
         }
 
-        // Реалізувати потім, про який саме запис чи коментар іде мова
         [HttpPost]
         public async Task<IActionResult> AddComment([FromForm] int logId, [FromForm] string text, [FromForm] int? parentCommentId = null)
         {
@@ -449,26 +452,41 @@ namespace ProcrastiInfrastructure.Controllers
                 var parentComment = await _context.Comments.FindAsync(parentCommentId.Value);
                 if (parentComment != null && parentComment.Authorid.HasValue && parentComment.Authorid.Value != currentUserId)
                 {
+                    var log = await _context.Logs
+                        .Include(l => l.Activity)
+                        .FirstOrDefaultAsync(l => l.Id == logId);
+                    string activityInfo = log != null ? $" (під записом \"{log.Activity?.Name}\" {log.Amount} хв)" : "";
+
+                    string parentText = parentComment.Content.Length > 20 ? parentComment.Content.Substring(0, 20) + "..." : parentComment.Content;
+                    string replyText = text.Length > 30 ? text.Substring(0, 30) + "..." : text;
+
+                    // Не буде працювати лінк на запис, під яким залишили коментар, якщо коментар залишили під записом не користувача, який отримає сповіщення
+                    // Мені лінь щось з цим робити, та і я не знаю, що саме робити
                     await _notificationService.AddNotificationAsync(
                         parentComment.Authorid.Value,
-                        $"{commenterName} відповів на ваш коментар.",
+                        $"{commenterName} відповів на ваш коментар \"{parentText}\"{activityInfo}: \"{replyText}\"",
                         "Нова відповідь!",
-                        "CommentReply",
-                        "/Profile/AllLogs"
+                        "Reply",
+                        $"/Profile/AllLogs#log-{logId}"
                     );
                 }
             }
             else
             {
-                var log = await _context.Logs.FindAsync(logId);
+                var log = await _context.Logs
+                    .Include(l => l.Activity)
+                    .FirstOrDefaultAsync(l => l.Id == logId);
                 if (log != null && log.Userid.HasValue && log.Userid.Value != currentUserId)
                 {
+                    string activityName = log.Activity?.Name ?? "запис";
+                    string commentText = text.Length > 30 ? text.Substring(0, 30) + "..." : text;
+
                     await _notificationService.AddNotificationAsync(
                         log.Userid.Value,
-                        $"{commenterName} прокоментував ваш запис.",
+                        $"{commenterName} прокоментував ваш запис \"{activityName}\" ({log.Amount} хв): \"{commentText}\"",
                         "Новий коментар!",
                         "Comment",
-                        "/Profile/AllLogs"
+                        $"/Profile/AllLogs#log-{logId}"
                     );
                 }
             }
