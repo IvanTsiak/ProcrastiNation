@@ -203,14 +203,14 @@
 
                 if (i.value === 'Перемога') {
                     snarkyCommentBox.innerHTML = "ТИ ВИГРАВ!? Ну що за лудоман?..";
-                    snarkyCommentBox.classList.add('text-rose-500', 'text-lg');
+                    snarkyCommentBox.classList.add('text-rose', 'text-lg');
 
                     if (typeof tryUnlockAchievement === 'function') {
                         tryUnlockAchievement("WINNER");
                     }
                 } else {
                     snarkyCommentBox.innerHTML = comments[currentCommentIndex];
-                    snarkyCommentBox.classList.remove('text-rose-500', 'text-lg');
+                    snarkyCommentBox.classList.remove('text-rose', 'text-lg');
 
                     if (currentCommentIndex < comments.length - 1) {
                         currentCommentIndex++;

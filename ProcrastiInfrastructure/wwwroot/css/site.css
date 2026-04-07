@@ -3,18 +3,44 @@
 
 @theme {
     --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-    
-    --color-text: #060707;
-    --color-background: #f9fafa;
-    --color-primary: #788393;
-    --color-secondary: #c5b7be;
-    --color-accent: #a5938f;
-    --color-surface: #f7efef;
+
+    --color-text: var(--app-text);
+    --color-background: var(--app-background);
+    --color-primary: var(--app-primary);
+    --color-secondary: var(--app-secondary);
+    --color-accent: var(--app-accent);
+    --color-surface: var(--app-surface);
+    --color-rose: var(--app-rose);
+    --color-emerald: var(--app-emerald);
+}
+
+@layer base {
+    :root, [data-theme="light"] {
+        --app-text: #060707;
+        --app-background: #f9fafa;
+        --app-primary: #788393;
+        --app-secondary: #c5b7be;
+        --app-accent: #a5938f;
+        --app-surface: #f7efef;
+        --app-rose: #ff2056;
+        --app-emerald: #00bc7d;
+    }
+
+    [data-theme="dark"] {
+        --app-text: #e4e7eb;
+        --app-background: #121416;
+        --app-primary: #5f6a7a;
+        --app-secondary: #8f7f87;
+        --app-accent: #7f6d69;
+        --app-surface: #1a1d21;
+        --app-rose: #d94a6a;
+        --app-emerald: #3aa37a;
+    }
 }
 
 @layer components {
     .nav-link {
-        @apply flex items-center gap-3 px-3 py-2 text-sm font-semibold text-text rounded-lg hover:bg-zinc-200 transition-colors cursor-pointer;
+        @apply flex items-center gap-3 px-3 py-2 text-sm font-semibold text-text rounded-lg hover:bg-text/10 transition-colors cursor-pointer;
     }
 
     .banner {

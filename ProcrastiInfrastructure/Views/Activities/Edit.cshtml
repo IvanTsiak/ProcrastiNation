@@ -10,13 +10,13 @@
     </div>
 
     <form asp-action="Edit" class="space-y-5">
-        <div asp-validation-summary="ModelOnly" class="text-rose-500 text-sm font-semibold"></div>
+        <div asp-validation-summary="ModelOnly" class="text-rose text-sm font-semibold"></div>
         <input type="hidden" asp-for="Id" />
 
         <div class="form-control">
             <label asp-for="Name" class="label pb-1"><span class="label-text font-bold text-text">Назва активності</span></label>
             <input asp-for="Name" class="input input-bordered w-full bg-background border-secondary/50 focus:border-text text-text" />
-            <span asp-validation-for="Name" class="text-rose-500 text-xs mt-1"></span>
+            <span asp-validation-for="Name" class="text-rose text-xs mt-1"></span>
         </div>
 
         <div class="form-control">
@@ -24,13 +24,13 @@
             <select asp-for="Categoryid" class="select select-bordered w-full bg-background border-secondary/50 focus:border-text text-text" asp-items="ViewBag.Categoryid">
                 <option value="">-- Виберіть категорію --</option>
             </select>
-            <span asp-validation-for="Categoryid" class="text-rose-500 text-xs mt-1"></span>
+            <span asp-validation-for="Categoryid" class="text-rose text-xs mt-1"></span>
         </div>
 
         <div class="form-control">
             <label asp-for="Mentionscount" class="label pb-1"><span class="label-text font-bold text-text">Кількість згадок</span></label>
             <input asp-for="Mentionscount" class="input input-bordered w-full bg-background border-secondary/50 focus:border-text text-text" />
-            <span asp-validation-for="Mentionscount" class="text-rose-500 text-xs mt-1"></span>
+            <span asp-validation-for="Mentionscount" class="text-rose text-xs mt-1"></span>
         </div>
 
         <div class="pt-4 flex items-center gap-4">

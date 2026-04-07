@@ -5,7 +5,7 @@
 
 @{
     bool isLoss = Model.Logtype == LogType.loss;
-    string actionColorClass = isLoss ? "text-rose-500" : "text-emerald-500";
+    string actionColorClass = isLoss ? "text-rose" : "text-emerald";
     string sign = isLoss ? "Програв" : "Насолоджувався";
 
     string likeBtnId = $"like-btn-{Model.Id}";
@@ -15,7 +15,7 @@
     int currentUserId = isAuthenticated ? CurrentUserService.GetCurrentUserId() : 0;
     bool isLikedByCurrentUser = isAuthenticated && Model.Likes != null && Model.Likes.Any(l => l.Userid == currentUserId);
 
-    string btnColorClass = isLikedByCurrentUser ? "text-rose-500" : "text-text";
+    string btnColorClass = isLikedByCurrentUser ? "text-rose" : "text-text";
     string heartFill = isLikedByCurrentUser ? "currentColor" : "none";
 }
 
@@ -69,7 +69,7 @@
     <div class="mt-4 flex items-center gap-5 text-base font-bold text-text">
         @if (isAuthenticated)
         {
-            <button id="@likeBtnId" onclick="likeLog(@Model.Id)" class="flex items-center gap-1.5 transition-colors cursor-pointer @btnColorClass hover:text-rose-500">
+            <button id="@likeBtnId" onclick="likeLog(@Model.Id)" class="flex items-center gap-1.5 transition-colors cursor-pointer @btnColorClass hover:text-rose">
                 <svg class="w-5 h-5" fill="@heartFill" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
                 <span id="@likeCountId">@(Model.Likescount ?? 0)</span>
             </button>
@@ -81,7 +81,7 @@
         }
         else
         {
-            <a href="/Account/Login" class="flex items-center gap-1.5 transition-colors cursor-pointer text-text hover:text-rose-500">
+            <a href="/Account/Login" class="flex items-center gap-1.5 transition-colors cursor-pointer text-text hover:text-rose">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
                 <span>@(Model.Likescount ?? 0)</span>
             </a>
@@ -183,7 +183,7 @@
             <div class="mt-2">
                 <div id="reply-badge-@Model.Id" class="hidden mb-2 text-xs font-bold text-accent flex items-center gap-2 bg-accent/10 w-fit px-2 py-1 rounded-lg">
                     <span>Відповідь для <span id="reply-to-name-@Model.Id"></span></span>
-                    <button onclick="cancelReply(@Model.Id)" class="hover:text-rose-500 cursor-pointer ml-1">✕</button>
+                    <button onclick="cancelReply(@Model.Id)" class="hover:text-rose cursor-pointer ml-1">✕</button>
                 </div>
 
                 <div class="flex items-center gap-3">
@@ -218,12 +218,12 @@
                     const svg = btn.querySelector('svg');
                     if (data.isLiked) {
                         svg.setAttribute('fill', 'currentColor');
-                        btn.classList.add('text-rose-500');
+                        btn.classList.add('text-rose');
                         btn.classList.remove('text-text');
                     } else {
                         svg.setAttribute('fill', 'none');
                         btn.classList.add('text-text');
-                        btn.classList.remove('text-rose-500');
+                        btn.classList.remove('text-rose');
                     }
                 } else {
                     console.error('Failed to toggle like. Status:', response.status);

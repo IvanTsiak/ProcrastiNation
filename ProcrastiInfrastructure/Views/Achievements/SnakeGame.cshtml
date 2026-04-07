@@ -65,9 +65,9 @@
             <span id="game-status-title" class="text-text font-bold text-lg mb-4 block">Виберіть складність:</span>
 
             <div id="difficulty-controls" class="flex flex-wrap gap-2">
-                <button class="btn bg-emerald-500 hover:bg-emerald-600 text-white border-none" onclick="startGame('easy')">Легко</button>
+                <button class="btn bg-emerald hover:bg-emerald-600 text-white border-none" onclick="startGame('easy')">Легко</button>
                 <button class="btn bg-amber-500 hover:bg-amber-600 text-white border-none" onclick="startGame('medium')">Нормально</button>
-                <button class="btn bg-rose-500 hover:bg-rose-600 text-white border-none" onclick="startGame('hard')">Швидко-швидко</button>
+                <button class="btn bg-rose hover:bg-rose-600 text-white border-none" onclick="startGame('hard')">Швидко-швидко</button>
             </div>
         </div>
 
@@ -78,11 +78,11 @@
             </div>
             <div class="bg-surface border border-secondary/50 rounded-xl p-4 shadow-sm flex-1 flex flex-col items-center justify-center">
                 <span class="text-text font-bold text-xs uppercase tracking-widest opacity-70">Рекорд</span>
-                <span id="highscore-display" class="text-3xl font-black text-emerald-500 mt-1">0</span>
+                <span id="highscore-display" class="text-3xl font-black text-emerald mt-1">0</span>
             </div>
             <div class="bg-surface border border-secondary/50 rounded-xl p-4 shadow-sm flex-1 flex flex-col items-center justify-center">
                 <span class="text-text font-bold text-xs uppercase tracking-widest opacity-70">Секунд</span>
-                <span id="time-display" class="text-3xl font-black text-rose-500 mt-1">0</span>
+                <span id="time-display" class="text-3xl font-black text-rose mt-1">0</span>
             </div>
         </div>
 
@@ -161,7 +161,7 @@
         gameStatusTitle.innerText = "Гру закінчено! Зіграємо ще?";
         difficultyControls.style.display = "flex";
 
-        snarkyComment.innerHTML = `<span class="text-rose-500 font-bold">ВРІЗАВСЯ!</span> Ти згаяв ${secondsWasted} секунд свого життя.`;
+        snarkyComment.innerHTML = `<span class="text-rose font-bold">ВРІЗАВСЯ!</span> Ти згаяв ${secondsWasted} секунд свого життя.`;
     }
 
     window.startGame = (difficulty) => {
@@ -205,7 +205,7 @@
                     if (typeof tryUnlockAchievement === 'function') {
                         tryUnlockAchievement("SNAKE_LOVER");
                     }
-                    snarkyComment.innerHTML = "<span class='text-emerald-500 font-bold'>5 хвилин!?</span> Ти серйозно? Ачівка твоя, але якою ціною...";
+                    snarkyComment.innerHTML = "<span class='text-emerald font-bold'>5 хвилин!?</span> Ти серйозно? Ачівка твоя, але якою ціною...";
                 }
             }
         }, 1000);

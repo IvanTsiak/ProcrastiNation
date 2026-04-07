@@ -10,25 +10,25 @@
     </div>
 
     <form asp-action="Edit" class="space-y-5">
-        <div asp-validation-summary="ModelOnly" class="text-rose-500 text-sm font-semibold"></div>
+        <div asp-validation-summary="ModelOnly" class="text-rose text-sm font-semibold"></div>
         <input type="hidden" asp-for="Id" />
 
         <div class="form-control">
             <label asp-for="Code" class="label pb-1"><span class="label-text font-bold text-text">Код титулу</span></label>
             <input asp-for="Code" class="input input-bordered w-full bg-background border-secondary/50 focus:border-text text-text" />
-            <span asp-validation-for="Code" class="text-rose-500 text-xs mt-1"></span>
+            <span asp-validation-for="Code" class="text-rose text-xs mt-1"></span>
         </div>
 
         <div class="form-control">
             <label asp-for="Name" class="label pb-1"><span class="label-text font-bold text-text">Назва</span></label>
             <input asp-for="Name" class="input input-bordered w-full bg-background border-secondary/50 focus:border-text text-text" />
-            <span asp-validation-for="Name" class="text-rose-500 text-xs mt-1"></span>
+            <span asp-validation-for="Name" class="text-rose text-xs mt-1"></span>
         </div>
 
         <div class="form-control flex flex-row items-center gap-3 mt-4">
             <input asp-for="Isunique" class="checkbox checkbox-sm border-secondary/50 checked:bg-text checked:border-text" />
             <label asp-for="Isunique" class="label-text font-bold text-text cursor-pointer">Унікальний титул?</label>
-            <span asp-validation-for="Isunique" class="text-rose-500 text-xs"></span>
+            <span asp-validation-for="Isunique" class="text-rose text-xs"></span>
         </div>
 
         <div class="pt-4 flex items-center gap-4">

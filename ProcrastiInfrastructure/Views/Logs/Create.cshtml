@@ -9,19 +9,19 @@
     <div class="border-b border-secondary/40 mb-6"></div>
 
     <form asp-action="Create">
-        <div asp-validation-summary="ModelOnly" class="text-rose-500 mb-4 text-sm font-semibold"></div>
+        <div asp-validation-summary="ModelOnly" class="text-rose mb-4 text-sm font-semibold"></div>
 
         <div class="form-control mb-6 flex flex-col gap-2 items-start">
             <span class="font-bold text-text text-base">Як пройшла прокрастинація?</span>
 
             <label class="cursor-pointer inline-flex items-center gap-3">
-                <span class="font-bold text-emerald-500 text-sm uppercase tracking-wider">Чудово</span>
-                <input type="checkbox" id="visualToggle" class="toggle bg-emerald-500 border-emerald-500 checked:bg-rose-500 checked:border-rose-500" checked />
-                <span class="font-bold text-rose-500 text-sm uppercase tracking-wider">Марно</span>
+                <span class="font-bold text-emerald text-sm uppercase tracking-wider">Чудово</span>
+                <input type="checkbox" id="visualToggle" class="toggle bg-emerald border-emerald checked:bg-rose checked:border-rose" checked />
+                <span class="font-bold text-rose text-sm uppercase tracking-wider">Марно</span>
             </label>
 
             <input type="hidden" asp-for="Logtype" id="hiddenLogType" value="loss" />
-            <span asp-validation-for="Logtype" class="text-rose-500 text-xs"></span>
+            <span asp-validation-for="Logtype" class="text-rose text-xs"></span>
         </div>
 
         <div class="form-control mb-6">
@@ -30,7 +30,7 @@
             </label>
             <input name="activityName" list="verifiedActivities" placeholder="Виберіть або напишіть нове..." required autocomplete="off"
                    class="input input-bordered w-full bg-transparent border-secondary/50 focus:border-accent focus:outline-none text-text" />
-            <span class="text-rose-500 text-xs mt-1">@Html.ValidationMessage("activityName")</span>
+            <span class="text-rose text-xs mt-1">@Html.ValidationMessage("activityName")</span>
 
             <datalist id="verifiedActivities">
                 @if (ViewBag.VerifiedActivityNames != null)
@@ -49,7 +49,7 @@
             </label>
             <input asp-for="Amount" type="number" min="1"
                    class="input input-bordered w-full bg-transparent border-secondary/50 focus:border-accent focus:outline-none text-text" />
-            <span asp-validation-for="Amount" class="text-rose-500 text-xs mt-1"></span>
+            <span asp-validation-for="Amount" class="text-rose text-xs mt-1"></span>
         </div>
 
         <div class="form-control mb-6 flex flex-col gap-2 items-start">
@@ -63,7 +63,7 @@
                 <input type="radio" name="Rating" value="5" class="mask mask-star-2 bg-amber-400" />
             </div>
 
-            <span asp-validation-for="Rating" class="text-rose-500 text-xs"></span>
+            <span asp-validation-for="Rating" class="text-rose text-xs"></span>
         </div>
 
         <div class="form-control mb-8 flex flex-col gap-2 items-stretch">
@@ -72,7 +72,7 @@
             <textarea asp-for="Comment" placeholder="Для прикладу: Я знову дивився Тік-ток..."
                       class="textarea textarea-bordered h-28 w-full bg-transparent border-secondary/50 focus:border-accent focus:outline-none text-text text-base leading-relaxed resize-none"></textarea>
 
-            <span asp-validation-for="Comment" class="text-rose-500 text-xs"></span>
+            <span asp-validation-for="Comment" class="text-rose text-xs"></span>
         </div>
 
         <div class="flex items-center gap-4 pt-2 border-t border-secondary/40 mt-6 pt-6">

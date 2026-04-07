@@ -107,7 +107,7 @@
         <div class="bg-surface border border-secondary/50 rounded-xl p-6 shadow-sm flex flex-col items-center">
             <div class="w-full flex justify-between items-center mb-4">
                 <div class="flex-1">
-                    <button id="start" class="btn bg-emerald-500 hover:bg-emerald-600 text-white border-none w-full text-lg shadow-sm">Старт</button>
+                    <button id="start" class="btn bg-emerald hover:bg-emerald-600 text-white border-none w-full text-lg shadow-sm">Старт</button>
                     <p class="text-xs text-primary mt-3 text-center opacity-70">Esc — пауза. Стрілочки — рух.</p>
                 </div>
                 <div class="flex-1 flex flex-col items-center border-l border-secondary/30 ml-4 pl-4">
@@ -124,7 +124,7 @@
             </div>
             <div id="level" class="bg-surface border border-secondary/50 rounded-xl p-4 shadow-sm flex flex-col items-center justify-center">
                 <div class="text-text font-bold text-xs uppercase tracking-widest opacity-70">Рівень</div>
-                <span class="text-3xl font-black text-emerald-500 mt-1">1</span>
+                <span class="text-3xl font-black text-emerald mt-1">1</span>
             </div>
             <div id="lines" class="bg-surface border border-secondary/50 rounded-xl p-4 shadow-sm flex flex-col items-center justify-center">
                 <div class="text-text font-bold text-xs uppercase tracking-widest opacity-70">Лінії</div>
@@ -132,7 +132,7 @@
             </div>
             <div id="time" class="bg-surface border border-secondary/50 rounded-xl p-4 shadow-sm flex flex-col items-center justify-center">
                 <div class="text-text font-bold text-xs uppercase tracking-widest opacity-70">Секунди</div>
-                <span class="text-3xl font-black text-rose-500 mt-1">0</span>
+                <span class="text-3xl font-black text-rose mt-1">0</span>
             </div>
         </div>
 
@@ -408,7 +408,7 @@
           this.clearTimers();
           isStart = false;
           this.canvas.innerHTML = "<h1>ПРОГРАВ</h1>";
-          document.getElementById('snarky-comment').innerHTML = "<span class='text-rose-500 font-bold'>ГРА ЗАКІНЧЕНА.</span> Як і твоя продуктивність на сьогодні.";
+          document.getElementById('snarky-comment').innerHTML = "<span class='text-rose font-bold'>ГРА ЗАКІНЧЕНА.</span> Як і твоя продуктивність на сьогодні.";
           document.getElementById('start').style.display = "block";
           document.getElementById('start').innerText = "Спробувати знову";
         },
@@ -670,7 +670,7 @@
               //     if (typeof tryUnlockAchievement === 'function') {
               //         tryUnlockAchievement("TETRIS_MASTER");
               //     }
-              //     document.getElementById('snarky-comment').innerHTML = "<span class='text-emerald-500 font-bold'>5 хвилин!?</span> Ачівочка твоя. Хоч щось корисне сьогодні зробив.";
+              //     document.getElementById('snarky-comment').innerHTML = "<span class='text-emerald font-bold'>5 хвилин!?</span> Ачівочка твоя. Хоч щось корисне сьогодні зробив.";
               // }
           }
       }, 1000);
