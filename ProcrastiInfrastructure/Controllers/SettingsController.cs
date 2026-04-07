@@ -155,5 +155,17 @@ namespace ProcrastiInfrastructure.Controllers
 
             return RedirectToAction("Index", "Profile");
         }
+
+        [HttpGet]
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Contacts()
+        {
+            return View();
+        }
     }
 }

@@ -98,14 +98,17 @@
             <h2 class="text-xs font-bold text-primary uppercase tracking-widest mb-2 ml-2">Інформація</h2>
             <div class="bg-background rounded-xl border border-secondary/30 overflow-hidden divide-y divide-secondary/20">
 
-                <a href="#" class="flex items-center justify-between p-4 hover:bg-secondary/10 transition-colors group">
-                    <span class="font-bold text-text">Політика конфіденційності</span>
+                <a asp-action="Privacy" class="flex items-center justify-between p-4 hover:bg-secondary/10 transition-colors group">
+                    <div>
+                        <p class="font-bold text-text">Політика конфіденційності</p>
+                        <p class="text-xs text-primary mt-0.5">А також безпека та умови використання</p>
+                    </div>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 text-primary group-hover:text-text transition-colors">
                         <path fill-rule="evenodd" d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
                     </svg>
                 </a>
 
-                <a href="#" class="flex items-center justify-between p-4 hover:bg-secondary/10 transition-colors group">
+                <a asp-action="Contacts" class="flex items-center justify-between p-4 hover:bg-secondary/10 transition-colors group">
                     <div>
                         <p class="font-bold text-text">Контакти</p>
                         <p class="text-xs text-primary mt-0.5">Про нас, підтримка, соцмережі</p>

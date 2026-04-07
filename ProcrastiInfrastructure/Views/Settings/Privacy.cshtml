@@ -1,0 +1,88 @@
+﻿@{
+    ViewData["Title"] = "Політика конфіденційності";
+}
+
+<div class="max-w-2xl mx-auto bg-surface relative pb-12 shadow-sm rounded-xl overflow-hidden mt-0 border border-secondary/30">
+
+    <div class="sticky top-0 z-50 bg-surface/90 backdrop-blur-md border-b border-secondary/30 px-4 py-3 flex items-center gap-4">
+        <a asp-controller="Settings" asp-action="Index" class="btn btn-circle btn-ghost btn-sm text-text hover:bg-secondary/20">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+            </svg>
+        </a>
+        <h1 class="text-xl font-bold text-text mb-0">Політика конфіденційності, безпека, умови</h1>
+    </div>
+
+    <div class="px-6 pt-6 pb-4 space-y-8 text-text">
+
+        <div>
+            <p class="text-sm opacity-90 leading-relaxed mb-4">
+                Останнє оновлення: @DateTime.Now.ToString("dd.MM.yyyy")
+            </p>
+        </div>
+
+        <div>
+            <h2 class="text-lg font-bold text-accent mb-3">1. Збір та обробка даних</h2>
+            <p class="text-sm opacity-90 leading-relaxed mb-2">
+                Під час реєстрації та використання застосунку ми збираємо наступні дані:
+            </p>
+            <ul class="list-disc list-inside text-sm opacity-90 space-y-1.5 ml-2">
+                <li>Електронна адреса та нікнейм.</li>
+                <li>Зашифрований пароль (ми не маємо доступу до вашого відкритого пароля).</li>
+                <li>Завантажені медіафайли (фотографії профілю).</li>
+                <li>Дані про вашу активність: створені записи, витрачений час, коментарі та вподобайки.</li>
+            </ul>
+        </div>
+
+        <div>
+            <h2 class="text-lg font-bold text-accent mb-3">2. Використання інформації</h2>
+            <p class="text-sm opacity-90 leading-relaxed">
+                Зібрані дані використовуються виключно для забезпечення функціонування сервісу. Ваша активність (записи, досягнення, статистика) може відображатися в публічних або загальних таблицях лідерів. Ми не передаємо і не продаємо ваші персональні дані третім особам для маркетингових цілей.
+            </p>
+        </div>
+
+        <div>
+            <h2 class="text-lg font-bold text-accent mb-3">3. Зберігання та безпека</h2>
+            <p class="text-sm opacity-90 leading-relaxed">
+                Ми вживаємо розумних технічних та організаційних заходів для захисту ваших даних від несанкціонованого доступу, втрати чи знищення. Однак жоден метод передачі даних через Інтернет не є на 100% безпечним. Ви несете відповідальність за збереження конфіденційності ваших даних для входу.
+            </p>
+        </div>
+
+        <div>
+            <h2 class="text-lg font-bold text-accent mb-3">4. Умови використання сервісу</h2>
+            <p class="text-sm opacity-90 leading-relaxed mb-2">
+                Користуючись нашим сервісом, ви погоджуєтесь дотримуватися наступних правил:
+            </p>
+            <ul class="list-disc list-inside text-sm opacity-90 space-y-1.5 ml-2">
+                <li>Надавати достовірну або хоча б не надто абсурдну та вульгарну інформацію під час реєстрації.</li>
+                <li>Не використовувати сервіс для поширення незаконного, образливого, шкідливого або спам-контенту у коментарях чи назвах записів.</li>
+                <li>Не здійснювати спроб несанкціонованого доступу до систем застосунку.</li>
+            </ul>
+            <p class="text-sm opacity-90 leading-relaxed mt-3 border-l-2 border-rose-500 pl-3">
+                <strong class="text-text">Увага:</strong> Адміністрація сервісу залишає за собою право заблокувати обліковий запис (бан) без попередження у разі порушення цих умов. Також адміністрація може вас заблокувати за те, що ви їм не сподобалися, або тому, що вони були в поганому настрої.
+            </p>
+        </div>
+
+        <div>
+            <h2 class="text-lg font-bold text-accent mb-3">5. Зміни до Політики та Умов</h2>
+            <p class="text-sm opacity-90 leading-relaxed">
+                Ми залишаємо за собою право в будь-який час оновлювати цей документ. Усі зміни вступають в силу з моменту їх публікації на цій сторінці. Ми рекомендуємо періодично перевіряти цей розділ для ознайомлення з актуальними правилами. Хоча ми розуміємо, що цей розділ переглянуть три з половиною людини (за половину людини я маю на увазі користувача в нетверезому стані).
+            </p>
+        </div>
+
+        <div>
+            <h2 class="text-lg font-bold text-accent mb-3">6. Жарти в застосунку</h2>
+            <p class="text-sm opacity-90 leading-relaxed">
+                Наш застосунок містить багато жартів, мемів та гумористичних елементів, які можуть бути не зрозумілі всім користувачам (деякі незрозумілі і авторам). Ми не намагаємося 
+            </p>
+        </div>
+
+        <div class="bg-background rounded-xl p-4 border border-secondary/30 mt-8">
+            <h2 class="text-base font-bold text-text mb-2">Залишилися питання?</h2>
+            <p class="text-sm opacity-90 leading-relaxed">
+                Якщо у вас виникли запитання щодо цієї Політики або вашого облікового запису, ви можете звернутися до адміністрації сервісу через сторінку контактів, але ми не рекомендуємо звертатися, бо нам буде ліньки відповідати (але відповімо).
+            </p>
+        </div>
+
+    </div>
+</div>
