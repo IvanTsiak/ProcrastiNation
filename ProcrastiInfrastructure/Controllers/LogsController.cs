@@ -155,6 +155,20 @@ namespace ProcrastiInfrastructure.Controllers
                     TempData["PendingAchievement"] = "SURVIVOR";
                 }
 
+                if (log.Logtype == LogType.loss)
+                {
+                    string normalizedActivity = activityName.Trim().ToLower();
+
+                    if (normalizedActivity == "notion")
+                    {
+                        TempData["PendingAchievement"] = "PRODUCTIVITY_ILLUSION";
+                    }
+                    else if (normalizedActivity == "procrastination")
+                    {
+                        TempData["PendingAchievement"] = "PROPROCRASTINATOR";
+                    }
+                }
+
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction("Index", "Home");
@@ -460,14 +474,14 @@ namespace ProcrastiInfrastructure.Controllers
                     string parentText = parentComment.Content.Length > 20 ? parentComment.Content.Substring(0, 20) + "..." : parentComment.Content;
                     string replyText = text.Length > 30 ? text.Substring(0, 30) + "..." : text;
 
-                    // Не буде працювати лінк на запис, під яким залишили коментар, якщо коментар залишили під записом не користувача, який отримає сповіщення
+                    // Не буде працювати лінк на запис, який аж надто старий, що вже не відображається на головній сторінці
                     // Мені лінь щось з цим робити, та і я не знаю, що саме робити
                     await _notificationService.AddNotificationAsync(
                         parentComment.Authorid.Value,
                         $"{commenterName} відповів на ваш коментар \"{parentText}\"{activityInfo}: \"{replyText}\"",
                         "Нова відповідь!",
                         "Reply",
-                        $"/Profile/AllLogs#log-{logId}"
+                        $"#log-{logId}"
                     );
                 }
             }
