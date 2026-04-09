@@ -14,8 +14,33 @@
 
 <div class="bg-surface border border-secondary/50 rounded-xl overflow-hidden shadow-sm">
 
-    <div class="px-5 py-3 border-b border-secondary/50 bg-background/60">
-        <h3 class="font-bold text-text text-base">Як там інші поживають?</h3>
+    <div class="px-5 py-3 border-b border-secondary/50 bg-background/60 flex justify-between items-center">
+        <h3 class="font-bold text-text text-base mb-0">Як там інші поживають?</h3>
+
+        <div class="dropdown dropdown-end">
+            <div tabindex="0" role="button" class="btn btn-sm btn-ghost text-text border border-secondary/30 hover:bg-secondary/20 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" /></svg>
+                Фільтр
+            </div>
+
+            <ul tabindex="0" class="dropdown-content z-[100] menu p-2 shadow-xl bg-surface text-text rounded-box w-44 mt-2 border border-secondary/30">
+                <li>
+                    <a href="?sortOrder=newest" class="@(Model.CurrentSort == "newest" ? "bg-accent text-white font-bold" : "hover:bg-secondary/20")">
+                        Найновіші
+                    </a>
+                </li>
+                <li>
+                    <a href="?sortOrder=popular" class="@(Model.CurrentSort == "popular" ? "bg-accent text-white font-bold" : "hover:bg-secondary/20")">
+                        Популярні
+                    </a>
+                </li>
+                <li>
+                    <a href="?sortOrder=oldest" class="@(Model.CurrentSort == "oldest" ? "bg-accent text-white font-bold" : "hover:bg-secondary/20")">
+                        Найстаріші
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
 
     <div class="flex flex-col">

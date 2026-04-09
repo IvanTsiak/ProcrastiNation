@@ -6,6 +6,7 @@ namespace ProcrastiInfrastructure.Models
     public class DashboardViewModel
     {
         public int GlobalLossAmount { get; set; }
-        public List<Log> RecentLogs { get; set; }
+        public List<Log> RecentLogs { get; set; } = new List<Log>();
+        public string CurrentSort { get; set; } = "newest";
     }
 }

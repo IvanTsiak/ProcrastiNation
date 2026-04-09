@@ -16,14 +16,23 @@ namespace ProcrastiInfrastructure.Services
 
         public async Task ImportFromStreamAsync(Stream stream, int userId, CancellationToken cancellationToken)
         {
-            if (!stream.CanRead) throw new ArgumentException("Дані не можуть бути прочитані", nameof(stream));
+            if (!stream.CanRead)
+            {
+                throw new ArgumentException("Дані не можуть бути прочитані", nameof(stream));
+            }
 
             using var workBook = new XLWorkbook(stream);
             var worksheet = workBook.Worksheets.FirstOrDefault();
-            if (worksheet == null) return;
+            if (worksheet == null)
+            {
+                return;
+            }
 
             var user = await _context.Users.FindAsync(new object[] { userId }, cancellationToken);
-            if (user == null) return;
+            if (user == null)
+            {
+                return;
+            }
 
             var globalStat = await _context.Globalstats.FirstOrDefaultAsync(cancellationToken);
             if (globalStat == null)
@@ -47,7 +56,10 @@ namespace ProcrastiInfrastructure.Services
             var activityName = row.Cell(3).Value.ToString().Trim();
             var categoryName = row.Cell(4).Value.ToString().Trim();
 
-            if (string.IsNullOrEmpty(activityName)) return;
+            if (string.IsNullOrEmpty(activityName))
+            {
+                return;
+            }
 
             int amount = row.Cell(5).TryGetValue(out int a) ? a : 0;
             int rating = row.Cell(6).TryGetValue(out int r) ? r : 0;
