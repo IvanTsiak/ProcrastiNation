@@ -22,15 +22,18 @@ namespace ProcrastiInfrastructure.Controllers
             _currentUserService = currentUserService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? id)
         {
-            int userId = _currentUserService.GetCurrentUserId();
+            int currentUserId = _currentUserService.GetCurrentUserId();
+
+            int targetUserId = id ?? currentUserId;
+            bool isCurrentUser = targetUserId == currentUserId;
 
             var user = await _context.Users
                 .Include(u => u.Title)
                 .Include(u => u.Userachievements)
                 .Include(u => u.Usertitles)
-                .FirstOrDefaultAsync(u => u.Id == userId);
+                .FirstOrDefaultAsync(u => u.Id == targetUserId);
 
             if (user == null)
             {
@@ -45,7 +48,8 @@ namespace ProcrastiInfrastructure.Controllers
                 JoinedDate = user.Joineddate,
                 AchievementsCount = user.Userachievements?.Count ?? 0,
                 TitlesCount = user.Usertitles?.Count ?? 0,
-                TotalLoss = user.Totalloss ?? 0
+                TotalLoss = user.Totalloss ?? 0,
+                IsCurrentUser = isCurrentUser
             };
 
             viewModel.RecentLogs = await _context.Logs
@@ -56,7 +60,7 @@ namespace ProcrastiInfrastructure.Controllers
                 .Include(l => l.Comments)
                     .ThenInclude(c => c.Author)
                         .ThenInclude(a => a.Title)
-                .Where(l => l.Userid == userId)
+                .Where(l => l.Userid == targetUserId)
                 .OrderByDescending(l => l.Createdat)
                 .Take(3)
                 .ToListAsync();
@@ -66,7 +70,7 @@ namespace ProcrastiInfrastructure.Controllers
             var startOfNextMonth = startOfMonth.AddMonths(1);
 
             var monthLogs = await _context.Logs
-                .Where(l => l.Userid == userId &&
+                .Where(l => l.Userid == targetUserId &&
                 l.Logtype == LogType.loss &&
                 l.Createdat >= startOfMonth &&
                 l.Createdat < startOfNextMonth)

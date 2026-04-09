@@ -29,7 +29,9 @@
 
             <div class="flex flex-col">
                 <div class="flex items-baseline gap-2">
-                    <span class="font-extrabold text-text text-base">@(Model.User?.Username ?? "Анонім")</span>
+                    <a href="/Profile/Index/@Model.Userid" class="font-extrabold text-text text-base hover:underline hover:text-accent transition-colors">
+                        @(Model.User?.Username ?? "Анонім")
+                    </a>
                     <span class="text-primary text-sm">@(Model.Createdat?.ToString("dd.MM.yyyy") ?? "")</span>
                 </div>
 
@@ -115,7 +117,9 @@
 
                             <div class="flex flex-col flex-1">
                                 <div class="flex items-baseline gap-2">
-                                    <strong class="text-text text-sm">@(c.Author?.Username ?? "Анонім")</strong>
+                                    <a href="/Profile/Index/@c.Author?.Id" class="font-extrabold text-text text-sm hover:underline hover:text-accent transition-colors">
+                                        @(c.Author?.Username ?? "Анонім")
+                                    </a>
                                     <span class="text-primary text-xs">@(c.Createdat?.ToString("dd.MM.yyyy"))</span>
                                 </div>
 
@@ -155,7 +159,9 @@
                                              alt="Avatar" class="w-6 h-6 rounded-full shrink-0 object-cover border border-secondary/20" />
                                         <div class="flex flex-col flex-1">
                                             <div class="flex items-baseline gap-2">
-                                                <strong class="text-text text-xs">@(r.Author?.Username ?? "Анонім")</strong>
+                                                <a href="/Profile/Index/@r.Author?.Id" class="font-extrabold text-text text-sm hover:underline hover:text-accent transition-colors">
+                                                    @(r.Author?.Username ?? "Анонім")
+                                                </a>
                                                 <span class="text-primary text-[10px]">@(r.Createdat?.ToString("dd.MM.yyyy"))</span>
                                             </div>
 

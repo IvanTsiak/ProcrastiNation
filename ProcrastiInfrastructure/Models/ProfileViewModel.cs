@@ -16,5 +16,7 @@ namespace ProcrastiInfrastructure.Models
         public List<Log> RecentLogs { get; set; } = new List<Log>();
 
         public Dictionary<string, int> MonthlyLossData { get; set; } = new Dictionary<string, int>();
+
+        public bool IsCurrentUser { get; set; }
     }
 }
