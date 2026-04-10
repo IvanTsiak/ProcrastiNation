@@ -74,15 +74,26 @@
                     </div>
 
                     <ul tabindex="0" class="dropdown-content z-[100] menu p-2 shadow-xl bg-surface border border-secondary/30 rounded-box w-56 mt-2">
-                        <li>
-                            <form asp-action="Import" method="post" enctype="multipart/form-data" id="importForm" class="hidden">
-                                <input type="file" id="fileExcel" name="fileExcel" accept=".xlsx" onchange="document.getElementById('importForm').submit();" />
-                            </form>
+                        @if (ViewBag.HasImported != true)
+                        {
+                            <li>
+                                <form asp-action="Import" method="post" enctype="multipart/form-data" id="importForm" class="hidden">
+                                    <input type="file" id="fileExcel" name="fileExcel" accept=".xlsx" onchange="document.getElementById('importForm').submit();" />
+                                </form>
 
-                            <a href="#" onclick="document.getElementById('fileExcel').click(); return false;" class="text-text font-bold hover:bg-secondary/20">
-                                Імпортувати дані
-                            </a>
-                        </li>
+                                <a href="#" onclick="document.getElementById('fileExcel').click(); return false;" class="text-text font-bold hover:bg-secondary/20">
+                                    Імпортувати дані
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <span class="text-primary font-bold opacity-50 cursor-not-allowed" title="Ви вже використали свій шанс на імпорт">
+                                    Імпорт — все!
+                                </span>
+                            </li>
+                        }
                         <li>
                             <a asp-action="Export" class="text-text font-bold hover:bg-secondary/20">
                                 Експортувати дані

@@ -82,7 +82,8 @@ namespace ProcrastiInfrastructure.Controllers
         {
             log.Userid = _currentUserService.GetCurrentUserId();
             log.Createdat = DateTime.Now;
-            log.Isvisible = true;
+            int moderateAmount = 720;
+            log.Isvisible = log.Amount <= moderateAmount;
             log.Likescount = 0;
 
             if (string.IsNullOrWhiteSpace(activityName))
@@ -129,7 +130,7 @@ namespace ProcrastiInfrastructure.Controllers
                     }
                 }
 
-                if (log.Logtype == LogType.loss)
+                if (log.Logtype == LogType.loss && log.Isvisible)
                 {
                     var globalStat = await _context.Globalstats.FirstOrDefaultAsync();
 

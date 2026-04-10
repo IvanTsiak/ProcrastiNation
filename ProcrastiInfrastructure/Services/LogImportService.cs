@@ -41,7 +41,7 @@ namespace ProcrastiInfrastructure.Services
                 _context.Globalstats.Add(globalStat);
             }
 
-            foreach (var row in worksheet.RowsUsed().Skip(1))
+            foreach (var row in worksheet.RowsUsed().Skip(1).Take(50))
             {
                 await ProcessRowAsync(row, user, globalStat, cancellationToken);
             }

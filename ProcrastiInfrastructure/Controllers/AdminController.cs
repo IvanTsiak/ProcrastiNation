@@ -157,5 +157,67 @@ namespace ProcrastiInfrastructure.Controllers
 
             return RedirectToAction(nameof(Users));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Logs()
+        {
+            var pendingLogs = await _context.Logs
+                .Include(l => l.User)
+                    .ThenInclude(u => u.Title)
+                .Include(l => l.Activity)
+                .Where(l => l.Isvisible == false)
+                .OrderByDescending(l => l.Createdat)
+                .ToListAsync();
+
+            return View(pendingLogs);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ApproveLog(int id)
+        {
+            var log = await _context.Logs.FindAsync(id);
+            if (log != null && !log.Isvisible)
+            {
+                log.Isvisible = true;
+                if (log.Logtype == LogType.loss)
+                {
+                    var globalStat = await _context.Globalstats.FirstOrDefaultAsync();
+                    if (globalStat != null)
+                    {
+                        globalStat.Totallossamount = (globalStat.Totallossamount ?? 0) + log.Amount;
+                        globalStat.Lastupdated = DateTime.Now;
+                        _context.Update(globalStat);
+                    }
+                }
+                _context.Update(log);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Logs));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteLog(int id)
+        {
+            var log = await _context.Logs.FindAsync(id);
+            if (log != null)
+            {
+                if (log.Activityid.HasValue)
+                {
+                    var activity = await _context.Activities.FindAsync(log.Activityid);
+                    if (activity != null)
+                    {
+                        activity.Mentionscount = Math.Max(0, (activity.Mentionscount ?? 1) - 1);
+                        _context.Update(activity);
+                    }
+                }
+
+                _context.Logs.Remove(log);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(Logs));
+        }
     }
 }

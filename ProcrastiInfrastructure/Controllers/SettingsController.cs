@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ProcrastiDomain.Model;
 using ProcrastiInfrastructure.Services;
 using System.Security.Claims;
@@ -21,8 +22,14 @@ namespace ProcrastiInfrastructure.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            int userId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+
+            ViewBag.HasImported = await _context.Userachievements
+                .Include(ua => ua.Achievement)
+                .AnyAsync(ua => ua.Userid == userId && ua.Achievement.Code == "DATA_SMUGGLER");
+
             return View();
         }
 
@@ -54,6 +61,18 @@ namespace ProcrastiInfrastructure.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            bool hasImported = await _context.Userachievements
+                .Include(ua => ua.Achievement)
+                .AnyAsync(ua => ua.Userid == userId && ua.Achievement.Code == "DATA_SMUGGLER");
+
+            if (hasImported)
+            {
+                TempData["ErrorMessage"] = "Ви вже використовували свій єдиний шанс на імпорт даних. Навіщо тобі знову це використовувати?";
+                return RedirectToAction(nameof(Index));
+            }
+
             try
             {
                 var expectedContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
@@ -61,11 +80,12 @@ namespace ProcrastiInfrastructure.Controllers
 
                 using var stream = fileExcel.OpenReadStream();
 
-                int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                
 
                 await importService.ImportFromStreamAsync(stream, userId, cancellationToken);
 
                 TempData["SuccessMessage"] = "Дані успішно імпортовано!";
+                TempData["PendingAchievement"] = "DATA_SMUGGLER";
             }
             catch (Exception ex)
             {
