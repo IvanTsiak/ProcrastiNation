@@ -36,7 +36,9 @@
                          class="w-12 h-12 rounded-full object-cover shrink-0 border border-secondary/30 shadow-sm" />
 
                     <div class="flex flex-col flex-1">
-                        <span class="font-extrabold text-text text-base">@(user.Username ?? "Анонім")</span>
+                        <a href="/Profile/Index/@user.Id" class="font-extrabold text-text text-base hover:underline hover:text-accent transition-colors">
+                            @(user.Username ?? "Анонім")
+                        </a>
 
                         @if (user.Title != null)
                         {
