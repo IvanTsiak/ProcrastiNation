@@ -4,7 +4,7 @@
     ViewData["Title"] = "Редагувати профіль";
 }
 
-<div class="max-w-2xl mx-auto bg-surface relative pb-8 shadow-sm rounded-xl overflow-hidden mt-0 border border-secondary/30">
+<div class="div-settings">
 
     <div class="sticky top-0 z-50 bg-surface/90 backdrop-blur-md border-b border-secondary/30 px-4 py-3 flex items-center gap-4">
         <a asp-controller="Settings" asp-action="Index" class="btn btn-circle btn-ghost btn-sm text-text hover:bg-secondary/20">
@@ -12,7 +12,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
             </svg>
         </a>
-        <h1 class="text-xl font-bold text-text mb-0">Редагувати профіль</h1>
+        <h1 class="main-h1">Редагувати профіль</h1>
     </div>
 
     <form asp-action="EditProfile" method="post" enctype="multipart/form-data" class="px-4 pt-6 space-y-6">

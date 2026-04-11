@@ -49,6 +49,26 @@
         color: white;
     }
 
+    .main-div {
+        @apply bg-surface border border-secondary/50 rounded-xl overflow-hidden shadow-sm;
+    }
+
+    .m-div-header {
+        @apply px-5 py-3 border-b border-secondary/50 bg-background/60 flex justify-between items-center;
+    }
+
+    .main-h3 {
+        @apply font-bold text-text text-base mb-0;
+    }
+
+    .main-h1 {
+        @apply text-xl font-bold text-text mb-0;
+    }
+
+    .div-settings {
+        @apply max-w-2xl mx-auto bg-surface relative pb-12 shadow-sm rounded-xl overflow-hidden mt-0 border border-secondary/30;
+    }
+
     .notif-item {
         @apply flex flex-col sm:flex-row gap-4 p-5 border-b border-secondary/40 transition-colors hover:bg-surface/50 cursor-pointer text-text no-underline;
     }
