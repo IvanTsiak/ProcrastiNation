@@ -11,6 +11,7 @@ namespace ProcrastiInfrastructure.Shared
             public const int TopActivities = 6;
 
             public const int LatestLogs = 4;
+            public const int LogsInHome = 100;
 
             public const int NotifReplyTextLen = 30;
             public const int NotificationLimit = 30;

@@ -67,7 +67,7 @@ namespace ProcrastiInfrastructure.Controllers
                     break;
             }
 
-            viewModel.RecentLogs = await logsQuery.Take(100).ToListAsync();
+            viewModel.RecentLogs = await logsQuery.Take(Constants.Limits.LogsInHome).ToListAsync();
 
             return View(viewModel);
         }
