@@ -67,18 +67,15 @@ namespace ProcrastiInfrastructure.Controllers
             var startOfMonth = new DateTime(today.Year, today.Month, 1);
             var startOfNextMonth = startOfMonth.AddMonths(1);
 
-            var monthLogs = await _context.Logs
+            viewModel.MonthlyLossData = await _context.Logs
                 .Where(l => l.Userid == targetUserId &&
-                l.Logtype == LogType.loss &&
-                l.Createdat >= startOfMonth &&
-                l.Createdat < startOfNextMonth)
-                .ToListAsync();
-
-            viewModel.MonthlyLossData = monthLogs
-                .Where(l => l.Createdat.HasValue)
+                            l.Logtype == LogType.loss &&
+                            l.Createdat >= startOfMonth &&
+                            l.Createdat < startOfNextMonth &&
+                            l.Createdat.HasValue)
                 .GroupBy(l => l.Createdat.Value.Date)
-                .OrderBy(g => g.Key)
-                .ToDictionary(g => g.Key.ToString("dd.MM.yyyy"), g => g.Sum(l => l.Amount));
+                .Select(g => new { Date = g.Key, TotalAmount = g.Sum(l => l.Amount) })
+                .ToDictionaryAsync(g => g.Date.ToString("dd.MM.yyyy"), g => g.TotalAmount);
 
             return View(viewModel);
         }

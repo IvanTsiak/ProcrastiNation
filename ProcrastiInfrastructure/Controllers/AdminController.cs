@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProcrastiDomain.Model;
+using ProcrastiInfrastructure.Models;
 using ProcrastiInfrastructure.Services;
 
 namespace ProcrastiInfrastructure.Controllers
@@ -102,18 +103,21 @@ namespace ProcrastiInfrastructure.Controllers
             var today = DateTime.SpecifyKind(todayUtc, DateTimeKind.Unspecified);
             var globalStat = await _context.Globalstats.FirstOrDefaultAsync();
 
-            ViewBag.TotalUsers = await _context.Users.CountAsync();
-            ViewBag.NewUsersToday = await _context.Users.CountAsync(u => u.Joineddate >= today);
+            var viewModel = new AnalyticsViewModel
+            {
+                TotalUsers = await _context.Users.CountAsync(),
+                NewUsersToday = await _context.Users.CountAsync(u => u.Joineddate >= today),
 
-            ViewBag.TotalLogs = await _context.Logs.CountAsync();
-            ViewBag.LogsToday = await _context.Logs.CountAsync(l => l.Createdat >= today);
+                TotalLogs = await _context.Logs.CountAsync(),
+                LogsToday = await _context.Logs.CountAsync(l => l.Createdat >= today),
 
-            ViewBag.TotalWastedMinutes = globalStat?.Totallossamount ?? 0;
+                TotalWastedMinutes = globalStat?.Totallossamount ?? 0,
 
-            ViewBag.LossCount = await _context.Logs.CountAsync(l => l.Logtype == LogType.loss);
-            ViewBag.GainCount = await _context.Logs.CountAsync(l => l.Logtype == LogType.win);
+                LossCount = await _context.Logs.CountAsync(l => l.Logtype == LogType.loss),
+                GainCount = await _context.Logs.CountAsync(l => l.Logtype == LogType.win)
+            };
 
-            return View();
+            return View(viewModel);
         }
 
         [HttpGet]

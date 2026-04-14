@@ -16,7 +16,7 @@ namespace ProcrastiInfrastructure.Shared
             public const int NotifReplyTextLen = 30;
             public const int NotificationLimit = 30;
 
-            public const int CheckBanFreqMinutes = 5;
+            public const int CheckBanFreqMinutes = 2;
         }
 
         public static class LogTypes

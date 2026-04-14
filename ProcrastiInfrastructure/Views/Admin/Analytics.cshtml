@@ -1,4 +1,6 @@
-﻿@{
+﻿@model ProcrastiInfrastructure.Models.AnalyticsViewModel
+
+@{
     ViewBag.Title = "Аналітика";
 }
 
@@ -10,7 +12,7 @@
     <div class="bg-surface border border-secondary/30 rounded-lg p-6 mb-6 shadow-sm flex items-center justify-between">
         <div>
             <h2 class="text-sm font-bold text-primary uppercase tracking-wider">Глобально згаяний час</h2>
-            <p class="text-4xl font-black text-rose-600 mt-1">@ViewBag.TotalWastedMinutes <span class="text-lg text-text font-medium">хвилин</span></p>
+            <p class="text-4xl font-black text-rose-600 mt-1">@Model.TotalWastedMinutes <span class="text-lg text-text font-medium">хвилин</span></p>
         </div>
     </div>
 
@@ -50,7 +52,7 @@
             labels: ['Всього користувачів', 'Нових за сьогодні'],
             datasets: [{
                 label: 'Кількість',
-                data: [@ViewBag.TotalUsers, @ViewBag.UsersToday],
+                data: [@Model.TotalUsers, @Model.NewUsersToday],
                 backgroundColor: ['#3b82f6', '#60a5fa'],
                 borderWidth: 0,
                 barThickness: 50
@@ -70,7 +72,7 @@
             labels: ['Всього записів', 'Нових за сьогодні'],
             datasets: [{
                 label: 'Кількість',
-                data: [@ViewBag.TotalLogs, @ViewBag.LogsToday],
+                data: [@Model.TotalLogs, @Model.LogsToday],
                 backgroundColor: ['#8b5cf6', '#a78bfa'],
                 borderWidth: 0,
                 barThickness: 50
@@ -89,7 +91,7 @@
         data: {
             labels: ['Згаяний час', 'Проведений і слава Богу'],
             datasets: [{
-                data: [@ViewBag.LossCount, @ViewBag.GainCount],
+                data: [@Model.LossCount, @Model.GainCount],
                 backgroundColor: ['#f43f5e', '#10b981'],
                 borderWidth: 0,
                 hoverOffset: 4
