@@ -1,16 +1,10 @@
-﻿using DocumentFormat.OpenXml.Office2013.PowerPoint;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProcrastiDomain.Model;
-using ProcrastiInfrastructure;
 using ProcrastiInfrastructure.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Threading.Tasks;
+using ProcrastiInfrastructure.Shared;
 
 namespace ProcrastiInfrastructure.Controllers
 {
@@ -65,8 +59,8 @@ namespace ProcrastiInfrastructure.Controllers
 
             var logTypes = new List<SelectListItem>
             {
-                new SelectListItem { Value = LogType.win.ToString(), Text = "Win" },
-                new SelectListItem { Value = LogType.loss.ToString(), Text = "Loss" }
+                new SelectListItem { Value = LogType.win.ToString(), Text = Constants.LogTypes.WinText },
+                new SelectListItem { Value = LogType.loss.ToString(), Text = Constants.LogTypes.LossText }
             };
             ViewData["Logtype"] = logTypes;
 
@@ -88,7 +82,7 @@ namespace ProcrastiInfrastructure.Controllers
 
             if (string.IsNullOrWhiteSpace(activityName))
             {
-                ModelState.AddModelError("activityName", "You must specify an activity.");
+                ModelState.AddModelError("activityName", "Ви повинні вказати активність.");
             }
 
             if (ModelState.IsValid)
@@ -126,7 +120,7 @@ namespace ProcrastiInfrastructure.Controllers
 
                     if (user.Totalloss >= 1440)
                     {
-                        TempData["PendingTitle"] = "PROcrastinator";
+                        TempData["PendingTitle"] = Constants.Achievements.PROcrastinator;
                     }
                 }
 
@@ -151,9 +145,9 @@ namespace ProcrastiInfrastructure.Controllers
                     }
                 }
 
-                if (log.Logtype == LogType.loss && log.Amount >= 300)
+                if (log.Logtype == LogType.loss && log.Amount >= Constants.Achievements.SurvivorTimeSeconds)
                 {
-                    TempData["PendingAchievement"] = "SURVIVOR";
+                    TempData["PendingAchievement"] = Constants.Achievements.Survivor;
                 }
 
                 if (log.Logtype == LogType.loss)
@@ -162,11 +156,11 @@ namespace ProcrastiInfrastructure.Controllers
 
                     if (normalizedActivity == "notion")
                     {
-                        TempData["PendingAchievement"] = "PRODUCTIVITY_ILLUSION";
+                        TempData["PendingAchievement"] = Constants.Achievements.ProductivityIllusion;
                     }
                     else if (normalizedActivity == "procrastination")
                     {
-                        TempData["PendingAchievement"] = "PROPROCRASTINATOR";
+                        TempData["PendingAchievement"] = Constants.Achievements.ProProCrastinator;
                     }
                 }
 
@@ -206,8 +200,8 @@ namespace ProcrastiInfrastructure.Controllers
 
             var logTypes = new List<SelectListItem>
             {
-                new SelectListItem { Value = LogType.win.ToString(), Text = "Win" },
-                new SelectListItem { Value = LogType.loss.ToString(), Text = "Loss" }
+                new SelectListItem { Value = LogType.win.ToString(), Text = Constants.LogTypes.WinText },
+                new SelectListItem { Value = LogType.loss.ToString(), Text = Constants.LogTypes.LossText }
             };
             ViewData["Logtype"] = logTypes;
             return View(log);
@@ -319,8 +313,8 @@ namespace ProcrastiInfrastructure.Controllers
             ViewData["Activityid"] = new SelectList(_context.Activities, "Id", "Name", log.Activityid);
             ViewData["Logtype"] = new List<SelectListItem>
             {
-                new SelectListItem { Value = LogType.win.ToString(), Text = "Win" },
-                new SelectListItem { Value = LogType.loss.ToString(), Text = "Loss" }
+                new SelectListItem { Value = LogType.win.ToString(), Text = Constants.LogTypes.WinText },
+                new SelectListItem { Value = LogType.loss.ToString(), Text = Constants.LogTypes.LossText }
             };
             return View(log);
         }
@@ -418,8 +412,8 @@ namespace ProcrastiInfrastructure.Controllers
             if (isLikedNow && log.Userid.HasValue && log.Userid != currentUserId)
             {
                 var liker = await _context.Users.FindAsync(currentUserId);
-                string likerName = liker?.Username ?? "Хрін зна хто";
-                string activityName = log.Activity?.Name ?? "запис";
+                string likerName = liker?.Username ?? Constants.Unknown.UnkUserFunny;
+                string activityName = log.Activity?.Name ?? Constants.Unknown.UnkActivity;
                 int amount = log.Amount;
 
                 await _notificationService.AddNotificationAsync(
@@ -439,7 +433,7 @@ namespace ProcrastiInfrastructure.Controllers
         {
             if (string.IsNullOrWhiteSpace(text))
             {
-                return BadRequest("Comment text cannot be empty.");
+                return BadRequest("Коментар не може бути порожнім");
             }
 
             int currentUserId = _currentUserService.GetCurrentUserId();
@@ -460,7 +454,7 @@ namespace ProcrastiInfrastructure.Controllers
                 .Include(u => u.Title)
                 .FirstOrDefaultAsync(u => u.Id == currentUserId);
 
-            string commenterName = user?.Username ?? "Хрін зна хто";
+            string commenterName = user?.Username ?? Constants.Unknown.UnkUserFunny;
 
             if (parentCommentId.HasValue)
             {
@@ -473,7 +467,7 @@ namespace ProcrastiInfrastructure.Controllers
                     string activityInfo = log != null ? $" (під записом \"{log.Activity?.Name}\" {log.Amount} хв)" : "";
 
                     string parentText = parentComment.Content.Length > 20 ? parentComment.Content.Substring(0, 20) + "..." : parentComment.Content;
-                    string replyText = text.Length > 30 ? text.Substring(0, 30) + "..." : text;
+                    string replyText = text.Length > Constants.Limits.NotifReplyTextLen ? text.Substring(0, Constants.Limits.NotifReplyTextLen) + "..." : text;
 
                     // Не буде працювати лінк на запис, який аж надто старий, що вже не відображається на головній сторінці
                     // Мені лінь щось з цим робити, та і я не знаю, що саме робити
@@ -493,8 +487,8 @@ namespace ProcrastiInfrastructure.Controllers
                     .FirstOrDefaultAsync(l => l.Id == logId);
                 if (log != null && log.Userid.HasValue && log.Userid.Value != currentUserId)
                 {
-                    string activityName = log.Activity?.Name ?? "запис";
-                    string commentText = text.Length > 30 ? text.Substring(0, 30) + "..." : text;
+                    string activityName = log.Activity?.Name ?? Constants.Unknown.UnkActivity;
+                    string commentText = text.Length > Constants.Limits.NotifReplyTextLen ? text.Substring(0, Constants.Limits.NotifReplyTextLen) + "..." : text;
 
                     await _notificationService.AddNotificationAsync(
                         log.Userid.Value,
@@ -509,19 +503,19 @@ namespace ProcrastiInfrastructure.Controllers
             return Json(new
             {
                 id = newComment.Id,
-                username = user?.Username ?? "Анонім",
+                username = user?.Username ?? Constants.Unknown.UnkUser,
                 parentCommentId = newComment.Parentcommentid,
                 title = user?.Title != null ? user.Title.Name : "",
                 text = newComment.Content,
                 date = newComment.Createdat?.ToString("dd.MM.yyyy"),
-                profilePicture = string.IsNullOrEmpty(user?.Profilepicture) ? "/images/avatars/default-avatar.png" : user.Profilepicture
+                profilePicture = string.IsNullOrEmpty(user?.Profilepicture) ? Constants.Paths.DefaultProfilePicture : user.Profilepicture
             });
         }
 
         [HttpGet]
         public IActionResult CancelCreation()
         {
-            TempData["PendingTitle"] = "COWARD";
+            TempData["PendingTitle"] = Constants.Achievements.Coward;
 
             return RedirectToAction("Index", "Home");
         }

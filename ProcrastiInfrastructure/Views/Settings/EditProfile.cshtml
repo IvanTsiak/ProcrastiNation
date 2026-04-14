@@ -1,4 +1,5 @@
 ﻿@model ProcrastiDomain.Model.User
+@using ProcrastiInfrastructure.Shared
 
 @{
     ViewData["Title"] = "Редагувати профіль";
@@ -27,7 +28,7 @@
         <div class="bg-background rounded-xl border border-secondary/30 p-8 flex flex-col items-center justify-center cursor-pointer hover:bg-secondary/10 transition-colors group relative overflow-hidden" onclick="document.getElementById('avatarInput').click();">
 
             <img id="avatarPreview"
-                 src="@(string.IsNullOrEmpty(Model.Profilepicture) ? "/images/avatars/default-avatar.png" : Model.Profilepicture)"
+                 src="@(string.IsNullOrEmpty(Model.Profilepicture) ? Constants.Paths.DefaultProfilePicture : Model.Profilepicture)"
                  class="w-28 h-28 rounded-full object-cover border-4 border-surface shadow-md mb-4 group-hover:scale-105 transition-transform duration-300" />
 
             <span class="text-sm font-bold text-primary group-hover:text-text transition-colors">

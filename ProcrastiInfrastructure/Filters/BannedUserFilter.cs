@@ -1,18 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using ProcrastiDomain.Model;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using ProcrastiInfrastructure.Shared;
 
 namespace ProcrastiInfrastructure.Filters
 {
     public class BannedUserFilter : IAsyncActionFilter
     {
         private readonly ProcrastiContext _context;
-
-        public BannedUserFilter(ProcrastiContext context)
+        private readonly IMemoryCache _cache;
+        public BannedUserFilter(ProcrastiContext context, IMemoryCache cache)
         {
             _context = context;
+            _cache = cache;
         }
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
@@ -21,13 +24,24 @@ namespace ProcrastiInfrastructure.Filters
             {
                 var path = context.HttpContext.Request.Path.Value?.ToLower();
 
-                if (path != null && !path.Contains("/account/banned")  && !path.Contains("/account/logout"))
+                if (path != null && !path.Contains(Constants.Paths.Banned) && !path.Contains(Constants.Paths.Logout))
                 {
                     var userIdClaim = context.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
                     if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
                     {
-                        var user = await _context.Users.FindAsync(userId);
-                        if (user != null && (user.Isbanned ?? false))
+                        string cacheKey = $"UserBanStatus_{userId}";
+
+                        bool isBanned = await _cache.GetOrCreateAsync(cacheKey, async entry =>
+                        {
+                            entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(Constants.Limits.CheckBanFreqMinutes);
+
+                            return await _context.Users
+                                .Where(u => u.Id == userId)
+                                .Select(u => u.Isbanned ?? false)
+                                .FirstOrDefaultAsync();
+                        });
+
+                        if (isBanned)
                         {
                             context.Result = new RedirectToActionResult("Banned", "Account", null);
                             return;

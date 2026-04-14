@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using ProcrastiDomain.Model;
 using ProcrastiInfrastructure.Services;
 using System.Security.Claims;
+using ProcrastiInfrastructure.Shared;
 
 namespace ProcrastiInfrastructure.Controllers
 {
@@ -28,7 +29,7 @@ namespace ProcrastiInfrastructure.Controllers
 
             ViewBag.HasImported = await _context.Userachievements
                 .Include(ua => ua.Achievement)
-                .AnyAsync(ua => ua.Userid == userId && ua.Achievement.Code == "DATA_SMUGGLER");
+                .AnyAsync(ua => ua.Userid == userId && ua.Achievement.Code == Constants.Achievements.DataSmuggler);
 
             return View();
         }
@@ -65,7 +66,7 @@ namespace ProcrastiInfrastructure.Controllers
 
             bool hasImported = await _context.Userachievements
                 .Include(ua => ua.Achievement)
-                .AnyAsync(ua => ua.Userid == userId && ua.Achievement.Code == "DATA_SMUGGLER");
+                .AnyAsync(ua => ua.Userid == userId && ua.Achievement.Code == Constants.Achievements.DataSmuggler);
 
             if (hasImported)
             {
@@ -85,7 +86,7 @@ namespace ProcrastiInfrastructure.Controllers
                 await importService.ImportFromStreamAsync(stream, userId, cancellationToken);
 
                 TempData["SuccessMessage"] = "Дані успішно імпортовано!";
-                TempData["PendingAchievement"] = "DATA_SMUGGLER";
+                TempData["PendingAchievement"] = Constants.Achievements.DataSmuggler;
             }
             catch (Exception ex)
             {
@@ -123,7 +124,7 @@ namespace ProcrastiInfrastructure.Controllers
 
             if (string.IsNullOrWhiteSpace(username))
             {
-                ModelState.AddModelError("Username", "Username cannot be empty.");
+                ModelState.AddModelError("Username", "Ім'я не має бути порожнім");
                 return View(user);
             }
 
@@ -136,7 +137,7 @@ namespace ProcrastiInfrastructure.Controllers
 
                 if (!allowedExtensions.Contains(extension))
                 {
-                    ModelState.AddModelError("AvatarFile", "Unsupported file type. Allowed types: .jpg, .jpeg, .png, .gif");
+                    ModelState.AddModelError("AvatarFile", "Тип файлу не підтримується. Дозволені типи: .jpg, .jpeg, .png, .gif");
                     return View(user);
                 }
 
@@ -153,7 +154,7 @@ namespace ProcrastiInfrastructure.Controllers
 
                 string fileName = $"avatar_{currentUserId}_{Guid.NewGuid()}{extension}";
 
-                string uploadFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "avatars");
+                string uploadFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", Constants.Paths.AvatarFolderName);
 
                 if (!Directory.Exists(uploadFolder))
                 {
@@ -167,7 +168,7 @@ namespace ProcrastiInfrastructure.Controllers
                     await avatarFile.CopyToAsync(stream);
                 }
 
-                user.Profilepicture = $"/images/avatars/{fileName}";
+                user.Profilepicture = $"{Constants.Paths.AvatarFolder}{fileName}";
             }
 
             _context.Users.Update(user);

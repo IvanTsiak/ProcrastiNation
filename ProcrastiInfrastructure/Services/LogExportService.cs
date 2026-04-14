@@ -1,6 +1,7 @@
 ﻿using ClosedXML.Excel;
 using Microsoft.EntityFrameworkCore;
 using ProcrastiDomain.Model;
+using ProcrastiInfrastructure.Shared;
 
 namespace ProcrastiInfrastructure.Services
 {
@@ -44,9 +45,9 @@ namespace ProcrastiInfrastructure.Services
             foreach (var log in logs)
             {
                 worksheet.Cell(rowIndex, 1).Value = log.Createdat?.ToString("dd.MM.yyyy HH:mm") ?? "";
-                worksheet.Cell(rowIndex, 2).Value = log.Logtype == LogType.win ? "Win" : "Loss";
-                worksheet.Cell(rowIndex, 3).Value = log.Activity?.Name ?? "Невідомо";
-                worksheet.Cell(rowIndex, 4).Value = log.Activity?.Category?.Name ?? "Невідомо";
+                worksheet.Cell(rowIndex, 2).Value = log.Logtype == LogType.win ? Constants.LogTypes.WinText : Constants.LogTypes.LossText;
+                worksheet.Cell(rowIndex, 3).Value = log.Activity?.Name ?? Constants.Unknown.UnkActivity;
+                worksheet.Cell(rowIndex, 4).Value = log.Activity?.Category?.Name ?? Constants.Unknown.UnkCategory;
                 worksheet.Cell(rowIndex, 5).Value = log.Amount;
                 worksheet.Cell(rowIndex, 6).Value = log.Rating;
                 worksheet.Cell(rowIndex, 7).Value = log.Comment ?? "";

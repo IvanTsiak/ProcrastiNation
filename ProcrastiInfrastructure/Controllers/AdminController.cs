@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProcrastiDomain.Model;
-using ProcrastiInfrastructure;
 using ProcrastiInfrastructure.Services;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ProcrastiInfrastructure.Controllers
 {
@@ -79,13 +75,10 @@ namespace ProcrastiInfrastructure.Controllers
                 Isunique = true
             };
 
-            _context.Titles.Add(newTitle);
-            await _context.SaveChangesAsync();
-
             var userTitle = new Usertitle
             {
                 Userid = userId,
-                Titleid = newTitle.Id,
+                Title = newTitle
             };
 
             _context.Usertitles.Add(userTitle);

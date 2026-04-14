@@ -1,4 +1,5 @@
 ﻿@model ProcrastiInfrastructure.Models.AchievementsViewModel;
+@using ProcrastiInfrastructure.Shared;
 
 @{
     ViewData["Title"] = "Досягнення";
@@ -24,7 +25,7 @@
 <div class="flex flex-wrap justify-center gap-6">
     @foreach (var achievement in Model.Achievements)
     {
-        bool isRickroll = achievement.Title == "Rick Astley";
+        bool isRickroll = achievement.Title == Constants.Achievements.RickRollAchivementName;
 
         string cardStateClass = achievement.IsUnlocked
             ? "border-accent bg-background shadow-sm"

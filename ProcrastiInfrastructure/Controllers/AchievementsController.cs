@@ -4,8 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using ProcrastiDomain.Model;
 using ProcrastiInfrastructure.Models;
 using ProcrastiInfrastructure.Services;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ProcrastiInfrastructure.Controllers
 {
@@ -196,7 +194,7 @@ namespace ProcrastiInfrastructure.Controllers
             var achievement = await _context.Achievements.FirstOrDefaultAsync(a => a.Code == code);
             if (achievement == null)
             {
-                return NotFound("Achievement not found");
+                return NotFound("Досягнення не знайдено");
             }
 
             bool alreadyUnlocked = await _context.Userachievements
@@ -204,7 +202,7 @@ namespace ProcrastiInfrastructure.Controllers
 
             if (alreadyUnlocked)
             {
-                return BadRequest("Achievement already unlocked");
+                return BadRequest("Досягнення уже розблоковано");
             }
 
             var newEarn = new Userachievement

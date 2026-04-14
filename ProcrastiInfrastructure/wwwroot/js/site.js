@@ -25,7 +25,7 @@ async function tryUnlockAchievement(achievementCode) {
             showAchivementPopup(achivementData);
         }
     } catch (error) {
-        console.error('Error unlocking achievement:', error);
+        console.error('Помилка розблокування досягнення:', error);
     }
 }
 
@@ -81,7 +81,7 @@ async function tryUnlockTitle(titleCode) {
             showTitlePopup(titleData);
         }
     } catch (error) {
-        console.error('Error unlocking title:', error);
+        console.error('Помилка розблокування титулу:', error);
     }
 }
 
@@ -130,7 +130,7 @@ function triggerRickroll(element) {
 
     const statusText = element.querySelector('.mt-4 p');
     if (statusText) {
-        statusText.innerText = "Unlocked";
+        statusText.innerText = "Відкрито";
 
         statusText.classList.remove('text-primary', 'italic');
         statusText.classList.add('text-accent', 'font-bold', 'uppercase', 'tracking-wider');

@@ -1,4 +1,5 @@
 ﻿@model ProcrastiInfrastructure.Models.GlobalStatsViewModel
+@using ProcrastiInfrastructure.Shared;
 
 @{
     ViewData["Title"] = "Зал слави";
@@ -21,9 +22,9 @@
             }
             @foreach (var user in Model.TopUsers)
             {
-                string medalSrc = rank == 1 ? "/images/medals/gold.png" :
-                                  rank == 2 ? "/images/medals/silver.png" :
-                                  "/images/medals/bronze.png";
+                string medalSrc = rank == 1 ? Constants.Paths.GoldMedal :
+                                  rank == 2 ? Constants.Paths.SilverMedal :
+                                  Constants.Paths.BronzeMedal;
 
                 <div class="flex items-center gap-4 p-4 border-b border-secondary/20 last:border-0 hover:bg-background/40 transition-colors">
 
@@ -31,13 +32,13 @@
                         <img src="@medalSrc" class="w-12 h-12 object-contain drop-shadow-sm hover:scale-110 transition-transform" />
                     </div>
 
-                    <img src="@(string.IsNullOrEmpty(user.Profilepicture) ? "/images/avatars/default-avatar.png" : user.Profilepicture)"
+                    <img src="@(string.IsNullOrEmpty(user.Profilepicture) ? Constants.Paths.DefaultProfilePicture : user.Profilepicture)"
                          alt="Аватар"
                          class="w-12 h-12 rounded-full object-cover shrink-0 border border-secondary/30 shadow-sm" />
 
                     <div class="flex flex-col flex-1">
                         <a href="/Profile/Index/@user.Id" class="font-extrabold text-text text-base hover:underline hover:text-accent transition-colors">
-                            @(user.Username ?? "Анонім")
+                            @(user.Username ?? Constants.Unknown.UnkUser)
                         </a>
 
                         @if (user.Title != null)

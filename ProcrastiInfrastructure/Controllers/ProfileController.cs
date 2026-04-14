@@ -4,9 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using ProcrastiDomain.Model;
 using ProcrastiInfrastructure.Models;
 using ProcrastiInfrastructure.Services;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
+using ProcrastiInfrastructure.Shared;
 
 namespace ProcrastiInfrastructure.Controllers
 {
@@ -42,9 +40,9 @@ namespace ProcrastiInfrastructure.Controllers
 
             var viewModel = new ProfileViewModel
             {
-                Username = user.Username ?? "Анонім",
-                ProfilePicture = user.Profilepicture ?? "/images/avatars/default-avatar.png",
-                CurrentTitle = user.Title?.Name ?? "Немає титулу",
+                Username = user.Username ?? Constants.Unknown.UnkUser,
+                ProfilePicture = user.Profilepicture ?? Constants.Paths.DefaultProfilePicture,
+                CurrentTitle = user.Title?.Name ?? Constants.Unknown.UnkTitle,
                 JoinedDate = user.Joineddate,
                 AchievementsCount = user.Userachievements?.Count ?? 0,
                 TitlesCount = user.Usertitles?.Count ?? 0,

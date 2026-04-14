@@ -3,6 +3,7 @@ using ProcrastiDomain.Model;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using ProcrastiInfrastructure.Shared;
 
 namespace ProcrastiInfrastructure.Services
 {
@@ -48,7 +49,7 @@ namespace ProcrastiInfrastructure.Services
             var excessNotifications = await _context.Notifications
                 .Where(n => n.UserId == userId)
                 .OrderByDescending(n => n.CreatedAt)
-                .Skip(30)
+                .Skip(Constants.Limits.NotificationLimit)
                 .ToListAsync();
 
             if (excessNotifications.Any())

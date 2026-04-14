@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
-using ProcrastiDomain.Model;
 using ProcrastiInfrastructure.Models;
-using System.Linq;
-using System.Threading.Tasks;
+using ProcrastiInfrastructure.Shared;
 
 namespace ProcrastiInfrastructure.Controllers
 {
@@ -33,17 +30,17 @@ namespace ProcrastiInfrastructure.Controllers
                         .ThenInclude(a => a.Title)
                 .Where(l => !string.IsNullOrEmpty(l.Comment) && l.Isvisible == true)
                 .OrderByDescending(l => l.Likescount)
-                .Take(5)
+                .Take(Constants.Limits.TopComents)
                 .ToListAsync();
 
             viewModel.TopUsers = await _context.Users
                 .OrderByDescending(u => u.Totalloss)
-                .Take(3)
+                .Take(Constants.Limits.TopUsers)
                 .ToListAsync();
 
             viewModel.TopActivities = await _context.Activities
                 .OrderByDescending(a => a.Mentionscount)
-                .Take(6)
+                .Take(Constants.Limits.TopActivities)
                 .ToListAsync();
 
             return View(viewModel);

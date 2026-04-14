@@ -1,4 +1,5 @@
 ﻿@model ProcrastiDomain.Model.Log
+@using ProcrastiInfrastructure.Shared
 
 @{
     ViewData["Title"] = "Створити запис";
@@ -106,7 +107,7 @@
                 
                 if (validationFailCount === NUM_OF_FAILS) {
                     if (typeof tryUnlockAchievement == 'function') {
-                        tryUnlockAchievement("INTELLECTUAL");
+                        tryUnlockAchievement(@Constants.Achievements.Intelectual);
                     }
                 }
             }

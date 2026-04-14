@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProcrastiInfrastructure.Models;
 using System.Diagnostics;
-using System.Threading.Tasks;
+using ProcrastiInfrastructure.Shared;
 
 namespace ProcrastiInfrastructure.Controllers
 {
@@ -29,7 +29,7 @@ namespace ProcrastiInfrastructure.Controllers
                 .Include(l => l.Comments).ThenInclude(c => c.Author).ThenInclude(a => a.Title)
                 .Where(l => l.Isvisible == true)
                 .OrderByDescending(l => l.Createdat)
-                .Take(4)
+                .Take(Constants.Limits.LatestLogs)
                 .ToListAsync();
 
                 return View("Landing", latestLogs);

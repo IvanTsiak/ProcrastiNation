@@ -1,4 +1,5 @@
 ﻿@using ProcrastiDomain.Model
+@using ProcrastiInfrastructure.Shared
 
 @inject ProcrastiInfrastructure.Services.ICurrentUserService CurrentUserService
 @model Log
@@ -23,14 +24,14 @@
 
     <div class="flex justify-between items-start">
         <div class="flex items-start gap-3">
-            <img src="@(string.IsNullOrEmpty(Model.User?.Profilepicture) ? "/images/avatars/default-avatar.png" : Model.User.Profilepicture)"
+            <img src="@(string.IsNullOrEmpty(Model.User?.Profilepicture) ? Constants.Paths.DefaultProfilePicture : Model.User.Profilepicture)"
                  alt="Avatar"
                  class="w-11 h-11 rounded-full shrink-0 object-cover border border-secondary/20" />
 
             <div class="flex flex-col">
                 <div class="flex items-baseline gap-2">
                     <a href="/Profile/Index/@Model.Userid" class="font-extrabold text-text text-base hover:underline hover:text-accent transition-colors">
-                        @(Model.User?.Username ?? "Анонім")
+                        @(Model.User?.Username ?? Constants.Unknown.UnkUser)
                     </a>
                     <span class="text-primary text-sm">@(Model.Createdat?.ToString("dd.MM.yyyy") ?? "")</span>
                 </div>
@@ -64,7 +65,7 @@
     </div>
 
     <div class="font-bold text-base mt-3 @actionColorClass">
-        @sign @Model.Amount хв у "@(Model.Activity?.Name ?? "Не знати де")"
+        @sign @Model.Amount хв у "@(Model.Activity?.Name ?? Constants.Unknown.UnkActivity)"
     </div>
 
     @if (!string.IsNullOrEmpty(Model.Comment))
@@ -111,14 +112,14 @@
                     <div class="border-b border-secondary/20 py-3 last:border-0" id="comment-container-@c.Id">
 
                         <div class="flex items-start gap-3">
-                            <img src="@(string.IsNullOrEmpty(c.Author?.Profilepicture) ? "/images/avatars/default-avatar.png" : c.Author.Profilepicture)"
+                            <img src="@(string.IsNullOrEmpty(c.Author?.Profilepicture) ? Constants.Paths.DefaultProfilePicture : c.Author.Profilepicture)"
                                  alt="Avatar"
                                  class="w-8 h-8 rounded-full shrink-0 object-cover border border-secondary/20" />
 
                             <div class="flex flex-col flex-1">
                                 <div class="flex items-baseline gap-2">
                                     <a href="/Profile/Index/@c.Author?.Id" class="font-extrabold text-text text-sm hover:underline hover:text-accent transition-colors">
-                                        @(c.Author?.Username ?? "Анонім")
+                                        @(c.Author?.Username ?? Constants.Unknown.UnkUser)
                                     </a>
                                     <span class="text-primary text-xs">@(c.Createdat?.ToString("dd.MM.yyyy"))</span>
                                 </div>
@@ -155,12 +156,12 @@
                                 @foreach (var r in replies)
                                 {
                                     <div class="flex items-start gap-2">
-                                        <img src="@(string.IsNullOrEmpty(r.Author?.Profilepicture) ? "/images/avatars/default-avatar.png" : r.Author.Profilepicture)"
+                                        <img src="@(string.IsNullOrEmpty(r.Author?.Profilepicture) ? Constants.Paths.DefaultProfilePicture : r.Author.Profilepicture)"
                                              alt="Avatar" class="w-6 h-6 rounded-full shrink-0 object-cover border border-secondary/20" />
                                         <div class="flex flex-col flex-1">
                                             <div class="flex items-baseline gap-2">
                                                 <a href="/Profile/Index/@r.Author?.Id" class="font-extrabold text-text text-sm hover:underline hover:text-accent transition-colors">
-                                                    @(r.Author?.Username ?? "Анонім")
+                                                    @(r.Author?.Username ?? Constants.Unknown.UnkUser)
                                                 </a>
                                                 <span class="text-primary text-[10px]">@(r.Createdat?.ToString("dd.MM.yyyy"))</span>
                                             </div>
