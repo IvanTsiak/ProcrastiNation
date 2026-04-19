@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ProcrastiDomain.Model;
 using System.Globalization;
+using ProcrastiInfrastructure.Shared;
 
 namespace ProcrastiInfrastructure.Services
 {
@@ -41,7 +42,7 @@ namespace ProcrastiInfrastructure.Services
                 _context.Globalstats.Add(globalStat);
             }
 
-            foreach (var row in worksheet.RowsUsed().Skip(1).Take(50))
+            foreach (var row in worksheet.RowsUsed().Skip(1).Take(Constants.Limits.LogsImportMax))
             {
                 await ProcessRowAsync(row, user, globalStat, cancellationToken);
             }

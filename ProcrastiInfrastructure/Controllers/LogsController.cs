@@ -76,8 +76,7 @@ namespace ProcrastiInfrastructure.Controllers
         {
             log.Userid = _currentUserService.GetCurrentUserId();
             log.Createdat = DateTime.Now;
-            int moderateAmount = 720;
-            log.Isvisible = log.Amount <= moderateAmount;
+            log.Isvisible = log.Amount <= Constants.Limits.ModerateTimeAmount;
             log.Likescount = 0;
 
             if (string.IsNullOrWhiteSpace(activityName))

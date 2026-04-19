@@ -12,6 +12,8 @@ namespace ProcrastiInfrastructure.Shared
 
             public const int LatestLogs = 4;
             public const int LogsInHome = 100;
+            public const int LogsImportMax = 50;
+            public const int ModerateTimeAmount = 720;
 
             public const int NotifReplyTextLen = 30;
             public const int NotificationLimit = 30;
@@ -62,9 +64,7 @@ namespace ProcrastiInfrastructure.Shared
             public const string AvatarFolderName = "avatars";
 
             public const string Banned = "/account/banned";
-            public const string Logout = "/account/logout";
-
-            
+            public const string Logout = "/account/logout";    
         }
     }
 }
