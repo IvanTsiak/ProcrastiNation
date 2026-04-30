@@ -117,7 +117,7 @@ namespace ProcrastiInfrastructure.Controllers
                     user.Totalloss += log.Amount;
                     _context.Update(user);
 
-                    if (user.Totalloss >= 1440)
+                    if (user.Totalloss >= Constants.Achievements.PROcrastinatorTime)
                     {
                         TempData["PendingTitle"] = Constants.Achievements.PROcrastinator;
                     }

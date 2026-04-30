@@ -28,6 +28,7 @@ namespace ProcrastiInfrastructure.Shared
         }
         public static class Achievements
         {
+            public const int PROcrastinatorTime = 1440;
             public const string PROcrastinator = "PROcrastinator";
             public const string ProProCrastinator = "PROPROCRASTINATOR";
 
