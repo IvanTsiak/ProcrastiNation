@@ -48,7 +48,7 @@ git clone https://github.com/yourusername/ProcrastiNation.git
 cd ProcrastiNation
 ```
 2. Configure the Database Connection:
-Open `appsettings.jso`n and update the DefaultConnection string with your PostgreSQL credentials:
+Open `appsettings.json` and update the DefaultConnection string with your PostgreSQL credentials:
 ```JSON
 "ConnectionStrings": {
   "DefaultConnection": "Host=localhost;Database=ProcrastinationDb;Username=postgres;Password=yourpassword"
