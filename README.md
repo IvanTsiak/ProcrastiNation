@@ -16,6 +16,15 @@ ProcrastiNation is a specialized web application designed to transform the proce
 - User Management;
 - Activity Dictionary Control;
 - Global Analytics.
+
+# Some screenshots
+<img height="500" alt="Landing page" src="https://github.com/user-attachments/assets/cfc358ce-7df0-4f0b-8e56-5b274ba90d18" />
+<img height="500" alt="Home" src="https://github.com/user-attachments/assets/968fed35-7375-480a-a2c6-6236c146ded0" />
+<img height="500" alt="Global" src="https://github.com/user-attachments/assets/21cb91b1-39a8-4cc2-abfd-c8e3ca5b6779" />
+<img height="500" alt="Achievements" src="https://github.com/user-attachments/assets/d7e120cb-047f-4063-badf-70400660f656" />
+<img height="500" alt="image" src="https://github.com/user-attachments/assets/a81e001e-dc33-45a2-aac5-2a3d4b3614a0" />
+<img height="500" alt="Profile" src="https://github.com/user-attachments/assets/9bc0dad5-4cee-4c01-bbf1-8bff5f7cd7d7" />
+
   
 # Technology Stack
 - Backend: C#, ASP.NET Core MVC (.NET 10.0);
